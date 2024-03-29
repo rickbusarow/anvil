@@ -7,6 +7,8 @@ import com.squareup.anvil.compiler.compile
 import com.squareup.anvil.compiler.contributingInterface
 import com.squareup.anvil.compiler.generatedBindingModules
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode
+import com.tschuchort.compiletesting.KotlinCompilation
+import io.kotest.matchers.shouldBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -93,7 +95,18 @@ class ContributesBindingGeneratorTest(
         System.getProperty("kase.baseWorkingDir"),
         "legacy/${mode::class.simpleName}",
       ),
+      trackSourceFiles = false,
     ) {
+
+      println(
+        """
+        ############################################################### messages
+        $messages
+        ###############################################################
+        """.trimIndent(),
+      )
+
+      exitCode shouldBe KotlinCompilation.ExitCode.OK
 
       val pi1 = classLoader.loadClass("com.squareup.test.ParentInterface1")
       val pi2 = classLoader.loadClass("com.squareup.test.ParentInterface2")

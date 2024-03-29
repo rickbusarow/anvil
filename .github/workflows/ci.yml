@@ -38,6 +38,7 @@ jobs:
         uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
         if: failure() || success()
         with:
+          detailed_summary: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: '**/build/**/TEST-*.xml'
           check_name: Unit Test Results - ${{ matrix.runner }} - ${{ matrix.kotlin-version }}
@@ -47,7 +48,7 @@ jobs:
         if: ${{ failure() }}
         with:
           name: test-reports-${{ matrix.runner }}-${{ matrix.kotlin-version }}
-          path: '**/[root-]build/reports/'
+          path: '**/build/**/reports/**'
 
       - name: Upload test Kase artifacts
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
