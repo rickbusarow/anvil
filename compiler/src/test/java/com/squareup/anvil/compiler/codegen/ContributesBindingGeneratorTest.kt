@@ -95,6 +95,7 @@ class ContributesBindingGeneratorTest(
         System.getProperty("kase.baseWorkingDir"),
         "legacy/${mode::class.simpleName}",
       ),
+      allWarningsAsErrors = false,
       trackSourceFiles = false,
     ) {
 
