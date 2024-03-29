@@ -48,7 +48,9 @@ jobs:
         with:
           name: test-reports-${{ matrix.runner }}-${{ matrix.kotlin-version }}
           path: |
-            build/**/reports/**
+            build/reports/
+            included-build/reports/
+            root-build/reports/
 
       - name: Upload test Kase artifacts
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
@@ -56,7 +58,9 @@ jobs:
         with:
           name: test-kase-artifacts-${{ matrix.runner }}-${{ matrix.kotlin-version }}
           path: |
-            build/**/kase/**
+            build/kase/
+            included-build/kase/
+            root-build/kase/
 
   all-checks:
     if: always()
