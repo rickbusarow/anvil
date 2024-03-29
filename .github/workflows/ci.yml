@@ -57,10 +57,7 @@ jobs:
         if: ${{ failure() }}
         with:
           name: test-kase-artifacts-${{ matrix.runner }}-${{ matrix.kotlin-version }}
-          path: |
-            build/kase/
-            included-build/kase/
-            root-build/kase/
+          path: '**/build/kase/** **/included-build/kase/** **/root-build/kase/**'
 
   all-checks:
     if: always()
