@@ -32,7 +32,7 @@ jobs:
         with:
           cache-read-only: false
           gradle-home-cache-cleanup: true
-          arguments: test -Doverride_kotlin=${{ matrix.kotlin-version }}
+          arguments: :compiler:test -Doverride_kotlin=${{ matrix.kotlin-version }}
 
       - name: Unit test results
         uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
