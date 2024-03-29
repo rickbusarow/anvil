@@ -45,7 +45,10 @@ class ContributesBindingGeneratorTest(
       class ContributingInterface : ParentInterface1, ParentInterface2
       """,
       mode = mode,
-      workingDir = File(System.getProperty("kase.baseWorkingDir"), "1/${mode::class.simpleName}"),
+      workingDir = File(
+        System.getProperty("kase.baseWorkingDir"),
+        "ints/${mode::class.simpleName}",
+      ),
     ) {
 
       val bindingModules = contributingInterface.generatedBindingModules()
@@ -86,7 +89,27 @@ class ContributesBindingGeneratorTest(
       class ContributingInterface : ParentInterface1, ParentInterface2
       """,
       mode = mode,
+      workingDir = File(
+        System.getProperty("kase.baseWorkingDir"),
+        "legacy/${mode::class.simpleName}",
+      ),
     ) {
+
+      val pi1 = classLoader.loadClass("com.squareup.test.ParentInterface1")
+      val pi2 = classLoader.loadClass("com.squareup.test.ParentInterface2")
+
+      val ci = classLoader.loadClass("com.squareup.test.ContributingInterface")
+
+      println(
+        """
+        |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |   pi1: $pi1
+        |   pi2: $pi2
+        |    ci: $ci
+        |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """.trimMargin(),
+      )
+
       val bindingModules = contributingInterface.generatedBindingModules()
         .associate { clazz ->
           val bindingMarker = clazz.getAnnotation(InternalBindingMarker::class.java)
