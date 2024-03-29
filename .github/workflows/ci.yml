@@ -15,7 +15,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk-version: [ 11, 17 ]
         kotlin-version: [ 1.9.22 ]
         runner: [ ubuntu-latest, windows-latest, macos-latest, macos-14 ]
     runs-on: ${{ matrix.runner }}
@@ -25,7 +24,7 @@ jobs:
       - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk-version }}
+          java-version: 17
           check-latest: true
 
       - name: Gradle build action
@@ -35,21 +34,27 @@ jobs:
           gradle-home-cache-cleanup: true
           arguments: test -Doverride_kotlin=${{ matrix.kotlin-version }}
 
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          name: test-results-${{ matrix.runner }}-${{ matrix.jdk-version }}-${{ matrix.kotlin-version }}
-          path: '**/build/**/kase/**'
-#          path: '**/build/**/TEST-*.xml'
-
       - name: Unit test results
         uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
         if: failure() || success()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: '**/build/**/TEST-*.xml'
-          check_name: Unit Test Results - ${{ matrix.runner }} - ${{ matrix.jdk-version }} - ${{ matrix.kotlin-version }}
+          check_name: Unit Test Results - ${{ matrix.runner }} - ${{ matrix.kotlin-version }}
+
+      - name: Upload html reports
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: test-reports-${{ matrix.runner }}-${{ matrix.kotlin-version }}
+          path: '**/[root-]build/reports/'
+
+      - name: Upload test Kase artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: test-kase-artifacts-${{ matrix.runner }}-${{ matrix.kotlin-version }}
+          path: '**/build/**/kase/'
 
   all-checks:
     if: always()
