@@ -9,14 +9,15 @@ on:
   pull_request:
 
 jobs:
-  binary-compatibility-check:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
 
+  unit-tests:
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
         kotlin-version: [ 1.9.22 ]
+        runner: [ ubuntu-latest, windows-latest, macos-latest, macos-14 ]
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -26,298 +27,34 @@ jobs:
           java-version: '17'
           check-latest: true
 
-      - name: API check
-        run: ./gradlew apiCheck --no-daemon --stacktrace
-
-  test-ubuntu:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    strategy:
-      fail-fast: false
-      matrix:
-        kotlin-version: [ 1.9.22 ]
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
+      - name: Gradle build action
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Test on Ubuntu
-        run: ./gradlew assemble test --no-build-cache --no-daemon --stacktrace -Doverride_kotlin=${{ matrix.kotlin-version }}
+          cache-read-only: false
+          gradle-home-cache-cleanup: true
+          arguments: test -Doverride_kotlin=${{ matrix.kotlin-version }}
 
       - name: Upload Test Results
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
-          name: test-results-${{ matrix.kotlin-version }}
-          path: ./**/build/reports/tests/
+          name: test-results-${{ runner.os }}-${{ matrix.kotlin-version }}
+          path: '**/build/**/kase/**'
+#          path: '**/build/**/TEST-*.xml'
 
-  test-windows:
-    runs-on: windows-latest
-    timeout-minutes: 25
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
+      - name: Unit test results
+        uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
+        if: failure() || success()
         with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      # On Windows the command looks a little bit different. Notice that we use the .bat file and
-      # quotes for the Kotlin version, because dots "." in the Kotlin version and parameter name
-      # cause issues.
-      #
-      # Expressions in Github actions are limited. If there would be an if expression, then we
-      # wouldn't need to duplicate the next step and depending on the OS enable / disable them.
-      - name: Test on Windows
-        run: ./gradlew.bat assemble test --no-build-cache --no-daemon --stacktrace -Doverride_config-fullTestRun=false -Doverride_config-includeKspTests=false
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          name: test-results-windows
-          path: ./**/build/reports/tests/
-
-  dependency-guard:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Dependency Guard Check
-        run: ./gradlew dependencyGuard --no-build-cache --no-daemon --stacktrace
-
-  ktlint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: KtLint
-        run: ./gradlew ktlintCheck --no-build-cache --no-daemon --stacktrace
-
-  lint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Android Lint
-        run: ./gradlew -p build-logic/delegate lint --no-build-cache --no-daemon --stacktrace
-
-      - name: Upload Lint Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          name: lint-results
-          path: ./**/build/reports/lint-results.html
-
-  publish-maven-local:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Publish to Maven Local
-        run: ./gradlew clean publishToMavenLocal --no-build-cache --no-daemon --stacktrace
-
-  test-gradle-plugin:
-    runs-on: ubuntu-latest
-
-    timeout-minutes: 15
-
-    strategy:
-      # Run all tasks, even if some fail. Note that they don't share an output, some tasks overlap
-      # which is expected. If they need to share their outputs, then we need a proper caching
-      # solution.
-      fail-fast: false
-      matrix:
-        kotlin-version: [ 1.9.22 ]
-        agp-version: [ 7.1.1, 7.2.0, 7.3.1 ]
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Test Gradle Plugin
-        run: ./gradlew :gradle-plugin:assemble :gradle-plugin:test --no-build-cache --no-daemon --stacktrace -Doverride_kotlin=${{ matrix.kotlin-version }} -Doverride_agp=${{ matrix.agp-version }}
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          # Use the Kotlin version to prevent overrides.
-          name: test-results-gradle-plugin-${{ matrix.kotlin-version }}-${{ matrix.agp-version }}
-          path: ./**/build/reports/tests/
-
-  kapt-for-dagger-factories:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    strategy:
-      # Run all tasks, even if some fail. Note that they don't share an output, some tasks overlap
-      # which is expected. If they need to share their outputs, then we need a proper caching
-      # solution.
-      fail-fast: false
-      matrix:
-        kotlin-version: [ 1.9.22 ]
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Run integration tests
-        run: ./gradlew -p build-logic/delegate test --no-build-cache --no-daemon --stacktrace -Doverride_kotlin=${{ matrix.kotlin-version }} -Doverride_config-generateDaggerFactoriesWithAnvil=false
-
-      - name: Build the sample
-        run: ./gradlew :delegate:sample:app:assembleDebug --no-build-cache --no-daemon --stacktrace -Doverride_kotlin=${{ matrix.kotlin-version }} -Doverride_config-generateDaggerFactoriesWithAnvil=false
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          # Use the Kotlin version to prevent overrides.
-          name: test-results-kapt-${{ matrix.kotlin-version }}
-          path: ./**/build/reports/tests/
-
-  instrumentation-tests:
-    name: Instrumentation tests
-    runs-on: macos-latest
-    timeout-minutes: 20
-    strategy:
-      # Allow tests to continue on other devices if they fail on one device.
-      fail-fast: false
-      matrix:
-        api-level:
-          # Consider other devices in case it's needed.
-          #- 24
-          - 29
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Instrumentation Tests
-        uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2 # v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: default
-          arch: x86_64
-          script: ./gradlew connectedCheck --no-build-cache --no-daemon --stacktrace
-
-      - name: Upload results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        with:
-          name: insrumentation-test-results
-          path: ./**/build/reports/androidTests/connected/**
-
-  gradle-integration-tests:
-    name: Gradle integration tests
-    runs-on: macos-14
-    timeout-minutes: 25
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: Gradle integration tests
-        run: ./gradlew gradleTest --stacktrace
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
-        if: ${{ failure() }}
-        with:
-          name: test-results-gradle-integration
-          path: ./**/build/reports/tests/
-
-  gradle-wrapper-validation:
-    name: "Validate the Gradle Wrapper"
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: gradle/wrapper-validation-action@b231772637bb498f11fdbc86052b6e8a8dc9fc92 # v2
-
-  build-benchmark-project:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          check-latest: true
-
-      - name: "Generate Project"
-        run: ./gradlew :createBenchmarkProject
-
-      - name: "Build Benchmark Project"
-        run: ./gradlew -p benchmark :app:assemble
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: '**/build/**/TEST-*.xml'
+          check_name: Unit Test Results - ${{runner.os}}
 
   all-checks:
     if: always()
     runs-on: ubuntu-latest
     needs:
-      - binary-compatibility-check
-      - test-ubuntu
-      - test-windows
-      - dependency-guard
-      - ktlint
-      - lint
-      - publish-maven-local
-      - test-gradle-plugin
-      - kapt-for-dagger-factories
-      - instrumentation-tests
-      - gradle-integration-tests
-      - gradle-wrapper-validation
-      - build-benchmark-project
+      - unit-tests
 
     steps:
       - name: require that all other jobs have passed
