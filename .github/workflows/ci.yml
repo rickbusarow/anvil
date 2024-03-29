@@ -15,6 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        jdk-version: [ 8, 11, 17 ]
         kotlin-version: [ 1.9.22 ]
         runner: [ ubuntu-latest, windows-latest, macos-latest, macos-14 ]
     runs-on: ${{ matrix.runner }}
@@ -24,7 +25,7 @@ jobs:
       - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.jdk-version }}
           check-latest: true
 
       - name: Gradle build action
@@ -38,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
-          name: test-results-${{ runner.os }}-${{ matrix.kotlin-version }}
+          name: test-results-${{ runner.name }}-${{ matrix.kotlin-version }}
           path: '**/build/**/kase/**'
 #          path: '**/build/**/TEST-*.xml'
 
@@ -48,7 +49,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: '**/build/**/TEST-*.xml'
-          check_name: Unit Test Results - ${{runner.os}}
+          check_name: Unit Test Results - ${{ runner.name }}
 
   all-checks:
     if: always()

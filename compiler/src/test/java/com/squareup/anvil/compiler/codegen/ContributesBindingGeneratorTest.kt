@@ -47,6 +47,7 @@ class ContributesBindingGeneratorTest(
       mode = mode,
       workingDir = File(System.getProperty("kase.baseWorkingDir"), "1/${mode::class.simpleName}"),
     ) {
+
       val bindingModules = contributingInterface.generatedBindingModules()
         .associate { clazz ->
           val bindingMarker = clazz.getAnnotation(InternalBindingMarker::class.java)
