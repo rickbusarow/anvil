@@ -8,6 +8,7 @@ import com.squareup.anvil.compiler.contributingInterface
 import com.squareup.anvil.compiler.generatedBindingModules
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode
 import com.tschuchort.compiletesting.KotlinCompilation
+import io.kotest.assertions.fail
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -98,29 +99,33 @@ class ContributesBindingGeneratorTest(
       allWarningsAsErrors = false,
       trackSourceFiles = false,
     ) {
-
-      println(
-        """
-        ############################################################### messages
-        $messages
-        ###############################################################
-        """.trimIndent(),
-      )
-
       exitCode shouldBe KotlinCompilation.ExitCode.OK
-
-      val pi1 = classLoader.loadClass("com.squareup.test.ParentInterface1")
-      val pi2 = classLoader.loadClass("com.squareup.test.ParentInterface2")
-
-      val ci = classLoader.loadClass("com.squareup.test.ContributingInterface")
-
-      println(
+      fail(
         """
-        |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        |   pi1: $pi1
-        |   pi2: $pi2
-        |    ci: $ci
-        |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |             _ _,---._
+        |          ,-','       `-.___
+        |         /-;'               `._
+        |        /\/          ._   _,'o \
+        |       ( /\       _,--'\,','"`. )
+        |        |\      ,'o     \'    //\
+        |        |      \        /   ,--'""`-.
+        |        :       \_    _/ ,-'         `-._
+        |         \        `--'  /                )
+        |          `.  \`._    ,'     ________,','
+        |            .--`     ,'  ,--` __\___,;'
+        |             \`.,-- ,' ,`_)--'  /`.,'
+        |              \( ;  | | )      (`-/
+        |                `--'| |)       |-/
+        |                  | | |        | |
+        |                  | | |,.,-.   | |_
+        |                  | `./ /   )---`  )
+        |                 _|  /    ,',   ,-'
+        |                ,'|_(    /-<._,' |--,
+        |                |    `--'---.     \/ \
+        |                |          / \    /\  \
+        |              ,-^---._     |  \  /  \  \
+        |           ,-'        \----'   \/    \--`.
+        |          /            \              \   \        
         """.trimMargin(),
       )
 

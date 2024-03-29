@@ -39,23 +39,22 @@ jobs:
         if: failure() || success()
         with:
           detailed_summary: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          annotate_only: true
           report_paths: '**/build/**/TEST-*.xml'
-          check_name: Unit Test Results - ${{ matrix.runner }} - ${{ matrix.kotlin-version }}
 
       - name: Upload html reports
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
           name: test-reports-${{ matrix.runner }}-${{ matrix.kotlin-version }}
-          path: '**/build/**/reports/**'
+          path: '**/{root-build,included-build,build}/reports/**'
 
       - name: Upload test Kase artifacts
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
           name: test-kase-artifacts-${{ matrix.runner }}-${{ matrix.kotlin-version }}
-          path: '**/build/**/kase/'
+          path: '**/{root-build,included-build,build}/kase/'
 
   all-checks:
     if: always()
