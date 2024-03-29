@@ -324,14 +324,18 @@ jobs:
         if: ${{ failure() }}
         with:
           name: gradle-test-reports-${{ runner.os }}-${{ matrix.kotlin-version }}
-          path: '**/{root-build,included-build,build}/reports/**'
+#          path: '**/{root-build,included-build,build}/reports/**'
+          path: |
+            **/build/**/reports/**
 
       - name: Upload test Kase artifacts
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
           name: gradle-test-kase-artifacts-${{ runner.os }}-${{ matrix.kotlin-version }}
-          path: '**/{root-build,included-build,build}/kase/'
+#          path: '**/{root-build,included-build,build}/kase/'
+          path: |
+            **/build/**/kase/**
 
   gradle-wrapper-validation:
     name: "Validate the Gradle Wrapper"
