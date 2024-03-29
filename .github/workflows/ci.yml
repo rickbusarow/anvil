@@ -46,15 +46,36 @@ jobs:
           java-version: '17'
           check-latest: true
 
-      - name: Test on Ubuntu
-        run: ./gradlew assemble test --no-build-cache --no-daemon --stacktrace -Doverride_kotlin=${{ matrix.kotlin-version }}
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3
+        with:
+          cache-read-only: false
+          gradle-home-cache-cleanup: true
 
-      - name: Upload Test Results
+      - name: Test on Ubuntu
+        run: ./gradlew assemble test -Doverride_kotlin=${{ matrix.kotlin-version }}
+
+      - name: Unit test results
+        uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
+        if: failure() || success()
+        with:
+          detailed_summary: true
+          annotate_only: true
+          report_paths: '**/build/**/TEST-*.xml'
+
+      - name: Upload html reports
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
-          name: test-results-${{ matrix.kotlin-version }}
-          path: ./**/build/reports/tests/
+          name: test-reports-${{ runner.os }}-${{ matrix.kotlin-version }}
+          path: '**/{root-build,included-build,build}/reports/**'
+
+      - name: Upload test Kase artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: test-kase-artifacts-${{ runner.os }}-${{ matrix.kotlin-version }}
+          path: '**/{root-build,included-build,build}/kase/'
 
   test-windows:
     runs-on: windows-latest
@@ -77,12 +98,27 @@ jobs:
       - name: Test on Windows
         run: ./gradlew.bat assemble test --no-build-cache --no-daemon --stacktrace -Doverride_config-fullTestRun=false -Doverride_config-includeKspTests=false
 
-      - name: Upload Test Results
+      - name: Unit test results
+        uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
+        if: failure() || success()
+        with:
+          detailed_summary: true
+          annotate_only: true
+          report_paths: '**/build/**/TEST-*.xml'
+
+      - name: Upload html reports
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         if: ${{ failure() }}
         with:
-          name: test-results-windows
-          path: ./**/build/reports/tests/
+          name: test-reports-windows
+          path: '**/{root-build,included-build,build}/reports/**'
+
+      - name: Upload test Kase artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: test-kase-artifacts-windows
+          path: '**/{root-build,included-build,build}/kase/'
 
   dependency-guard:
     runs-on: ubuntu-latest
@@ -274,6 +310,28 @@ jobs:
         with:
           name: test-results-gradle-integration
           path: ./**/build/reports/tests/
+
+      - name: Gradle test results
+        uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4
+        if: failure() || success()
+        with:
+          detailed_summary: true
+          annotate_only: true
+          report_paths: '**/build/**/TEST-*.xml'
+
+      - name: Upload html reports
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: gradle-test-reports-${{ runner.os }}-${{ matrix.kotlin-version }}
+          path: '**/{root-build,included-build,build}/reports/**'
+
+      - name: Upload test Kase artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        if: ${{ failure() }}
+        with:
+          name: gradle-test-kase-artifacts-${{ runner.os }}-${{ matrix.kotlin-version }}
+          path: '**/{root-build,included-build,build}/kase/'
 
   gradle-wrapper-validation:
     name: "Validate the Gradle Wrapper"
