@@ -1,20 +1,12 @@
 package com.squareup.anvil.compiler.k2.fir.merging
 
 import com.squareup.anvil.compiler.k2.fir.AnvilFirSupertypeGenerationExtension
-import com.squareup.anvil.compiler.k2.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.fir.contributions.ContributedBinding
 import com.squareup.anvil.compiler.k2.fir.contributions.ContributedModule
 import com.squareup.anvil.compiler.k2.fir.contributions.anvilFirScopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.internal.requireClassId
-import com.squareup.anvil.compiler.k2.fir.contributions.BindingModuleData
-import com.squareup.anvil.compiler.k2.fir.contributions.contributesBindingSessionComponent
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.utils.fir.argumentAt
 import com.squareup.anvil.compiler.k2.utils.fir.classListArgumentAt
-import com.squareup.anvil.compiler.k2.utils.fir.ktPsiFactory
-import com.squareup.anvil.compiler.k2.utils.fir.contributesToScope
-import com.squareup.anvil.compiler.k2.utils.fir.fqName
-import com.squareup.anvil.compiler.k2.utils.fir.requireFqName
 import com.squareup.anvil.compiler.k2.utils.fir.requireClassId
 import com.squareup.anvil.compiler.k2.utils.fir.requireScopeArgument
 import com.squareup.anvil.compiler.k2.utils.fir.resolveConeType
