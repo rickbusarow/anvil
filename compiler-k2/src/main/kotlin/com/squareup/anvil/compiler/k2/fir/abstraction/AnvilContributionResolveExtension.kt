@@ -1,11 +1,11 @@
-package com.squareup.anvil.compiler.k2.fir.merging
+package com.squareup.anvil.compiler.k2.fir.abstraction
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirSupertypeGenerationExtension
-import com.squareup.anvil.compiler.k2.fir.contributions.AnvilFirScopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.contributions.anvilFirScopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.abstraction.providers.RequiresTypesResolutionPhase
+import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
@@ -17,25 +17,29 @@ import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 /**
  * This extension exists in order to ensure that a
  * [FirSupertypeGenerationExtension.TypeResolveService] is provided to
- * [AnvilFirScopedContributionProvider], so that annotation parameter expressions
- * (like `MyScope::class`) can be evaluated inside a `FirDeclarationGenerationExtension`.
+ * [com.squareup.anvil.compiler.k2.fir.abstraction.providers.AnvilFirScopedContributionProvider],
+ * so that annotation parameter expressions (like `MyScope::class`) can be evaluated
+ * inside a `FirDeclarationGenerationExtension`.
  */
 public class AnvilContributionResolveExtension(
   anvilFirContext: AnvilFirContext,
   session: FirSession,
 ) : AnvilFirSupertypeGenerationExtension(anvilFirContext, session) {
 
+  @OptIn(RequiresTypesResolutionPhase::class)
   override fun computeAdditionalSupertypes(
     classLikeDeclaration: FirClassLikeDeclaration,
     resolvedSupertypes: List<FirResolvedTypeRef>,
     typeResolver: TypeResolveService,
   ): List<ConeKotlinType> {
-    session.anvilFirScopedContributionProvider.getContributions(typeResolver)
+    session.scopedContributionProvider.bindTypeResolveService(typeResolver)
+    // session.anvilFirDependencyHintProvider.getContributions(typeResolver)
     return emptyList()
   }
 
   override fun needTransformSupertypes(declaration: FirClassLikeDeclaration): Boolean {
-    return !session.anvilFirScopedContributionProvider.isInitialized()
+    @OptIn(RequiresTypesResolutionPhase::class)
+    return !session.scopedContributionProvider.isInitialized()
   }
 
   override fun FirDeclarationPredicateRegistrar.registerPredicates() {

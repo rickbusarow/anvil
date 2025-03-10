@@ -9,12 +9,12 @@ import com.squareup.anvil.compiler.k2.utils.fir.toGetClassCall
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
 import com.squareup.anvil.compiler.k2.utils.names.Names
 import org.jetbrains.kotlin.descriptors.ClassKind
-import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.builder.buildPackageDirective
 import org.jetbrains.kotlin.fir.declarations.FirDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.FirFile
+import org.jetbrains.kotlin.fir.declarations.FirProperty
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildFile
 import org.jetbrains.kotlin.fir.declarations.getKClassArgument
@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.fir.expressions.impl.FirAnnotationArgumentMappingImp
 import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
 import org.jetbrains.kotlin.fir.extensions.FirExtension
 import org.jetbrains.kotlin.fir.moduleData
+import org.jetbrains.kotlin.fir.packageFqName
 import org.jetbrains.kotlin.fir.plugin.createTopLevelClass
 import org.jetbrains.kotlin.fir.resolve.providers.firProvider
 import org.jetbrains.kotlin.fir.resolve.providers.impl.FirProviderImpl
@@ -35,7 +36,6 @@ import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.visitors.FirDefaultTransformer
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -62,37 +62,17 @@ public class BindingModuleData(
   }
 
   public val generatedClassSymbol: FirClassLikeSymbol<*> by lazy {
-
-    val bindingFile = buildFile {
-      origin = FirDeclarationOrigin.Synthetic.Builtins
-      moduleData = session.moduleData
-      packageDirective = buildPackageDirective {
-        this.packageFqName = generatedClassId.packageFqName
-      }
-      name = generatedClassId.asFqNameString()
-      declarations += generatedClass
-    }
-
-    (session.firProvider as FirProviderImpl).recordFile(file = bindingFile)
-
-    val matchedFile = session.firProvider.getFirFilesByPackage(generatedClassId.packageFqName)
-      .single { it.declarations.any { it is FirRegularClass && it.symbol == matchedClassSymbol } }
-
-    matchedFile.transformDeclarations(
-      object : FirDefaultTransformer<Nothing?>() {
-        override fun <E : FirElement> transformElement(element: E, data: Nothing?): E {
-          println("########## element: $element")
-          return element
-        }
-      },
-      null,
-    )
-
-    generatedClass.symbol
+    generatedClass
+      .wrapInSyntheticFile(session)
+      .symbol
   }
 
   public val contributesBindingAnnotation: FirAnnotationCall by lazy {
-    matchedClassSymbol.requireAnnotationCall(ClassIds.anvilContributesBinding, session)
+    matchedClassSymbol.requireAnnotationCall(
+      ClassIds.anvilContributesBinding,
+      session,
+      resolveArguments = true,
+    )
   }
 
   public val boundType: ConeKotlinType by lazy {
@@ -133,6 +113,15 @@ public fun FirRegularClass.wrapInSyntheticFile(session: FirSession): FirRegularC
     origin = origin,
     packageName = classId.packageFqName,
     simpleName = "${classId.shortClassName.asString()}.kt",
+    declarations = listOf(this),
+  )
+}
+
+public fun FirProperty.wrapInSyntheticFile(session: FirSession): FirProperty = apply {
+  session.createSyntheticFile(
+    origin = origin,
+    packageName = symbol.packageFqName(),
+    simpleName = "${name.asString()}.kt",
     declarations = listOf(this),
   )
 }

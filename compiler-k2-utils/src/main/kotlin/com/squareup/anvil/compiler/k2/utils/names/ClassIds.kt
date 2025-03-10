@@ -4,6 +4,7 @@ import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import java.security.MessageDigest
 
 /** Well-known class ids used by Anvil. */
 public object ClassIds {
@@ -45,9 +46,13 @@ public object ClassIds {
   public val anvilContributesTo: ClassId =
     classId("com.squareup.anvil.annotations", "ContributesTo")
 
-  /** `com.squareup.anvil.annotations.internal.InternalContributedModule` */
-  public val anvilInternalContributedModule: ClassId =
-    classId("com.squareup.anvil.annotations.internal", "InternalContributedModule")
+  /** `com.squareup.anvil.annotations.internal.InternalContributedModuleHints` */
+  public val anvilInternalContributedModuleHints: ClassId =
+    classId("com.squareup.anvil.annotations.internal", "InternalContributedModuleHints")
+
+  /** `com.squareup.anvil.annotations.internal.InternalContributedModuleHints` */
+  public val anvilInternalAnvilApi: ClassId =
+    classId("com.squareup.anvil.annotations.internal", "InternalAnvilApi")
 
   /** `com.squareup.anvil.annotations.MergeComponent` */
   public val anvilMergeComponent: ClassId =
@@ -68,6 +73,9 @@ public object ClassIds {
   /** `dagger.Binds` */
   public val daggerBinds: ClassId = classId("dagger", "Binds")
 
+  /** `dagger.Provides` */
+  public val daggerProvides: ClassId = classId("dagger", "Provides")
+
   /** `dagger.Component` */
   public val daggerComponent: ClassId = classId("dagger", "Component")
 
@@ -85,6 +93,48 @@ public object ClassIds {
 
   /** `dagger.Subcomponent` */
   public val daggerSubcomponent: ClassId = classId("dagger", "Subcomponent")
+
+  /*
+  dagger.assisted.Assisted
+  dagger.assisted.AssistedFactory
+  dagger.assisted.AssistedInject
+
+  dagger.Binds
+  dagger.BindsInstance
+  dagger.BindsOptionalOf
+  dagger.Component
+  dagger.MapKey
+  dagger.Module
+  dagger.Provides
+  dagger.Reusable
+  dagger.Subcomponent
+
+  dagger.multibindings.ClassKey
+  dagger.multibindings.ElementsIntoSet
+  dagger.multibindings.IntKey
+  dagger.multibindings.IntoMap
+  dagger.multibindings.IntoSet
+  dagger.multibindings.LazyClassKey
+  dagger.multibindings.LongKey
+  dagger.multibindings.Multibinds
+  dagger.multibindings.StringKey
+   */
+
+  public fun anvilContributedModules(moduleTypes: List<ClassId>): ClassId {
+    return ClassId(
+      FqNames.anvilHintPackage,
+      Name.identifier("AnvilModuleHints_${md5Hash(moduleTypes.map { it.asString() })}"),
+    )
+  }
+
+  private const val HASH_STRING_LENGTH: Int = 8
+
+  private fun md5Hash(params: List<Any>): String =
+    MessageDigest.getInstance("MD5")
+      .apply { for (it in params) update(it.toString().toByteArray()) }
+      .digest()
+      .take(HASH_STRING_LENGTH / 2)
+      .joinToString("") { "%02x".format(it) }
 }
 
 private fun classId(

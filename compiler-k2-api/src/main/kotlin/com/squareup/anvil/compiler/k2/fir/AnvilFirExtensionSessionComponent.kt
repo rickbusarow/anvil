@@ -8,22 +8,27 @@ import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 
 public abstract class AnvilFirExtensionSessionComponent(
+  override val anvilFirContext: AnvilFirContext,
   session: FirSession,
-) : FirExtensionSessionComponent(session) {
+) : FirExtensionSessionComponent(session),
+  AnvilFirExtension {
 
   protected inline fun <T, R> FirLazyValue<T>.map(
     crossinline transform: (T) -> R,
-  ): FirLazyValue<R> = session.firCachesFactory.createLazyValue { transform(this.getValue()) }
+  ): FirLazyValue<R> = session.firCachesFactory.createLazyValue {
+    transform(this.getValue())
+  }
 
-  protected inline fun <T> lazyValue(crossinline initializer: () -> T): FirLazyValue<T> {
-
+  protected inline fun <T> cachedLazy(crossinline initializer: () -> T): FirLazyValue<T> {
     return session.firCachesFactory.createLazyValue { initializer() }
   }
 
   protected inline fun <reified T> lazySymbols(predicate: LookupPredicate): FirLazyValue<List<T>> {
-    return lazyValue {
+    return cachedLazy {
       session.predicateBasedProvider.getSymbolsByPredicate(predicate)
         .filterIsInstance<T>()
     }
   }
+
+  public fun interface Factory : AnvilFirExtensionFactory<FirExtensionSessionComponent.Factory>
 }
