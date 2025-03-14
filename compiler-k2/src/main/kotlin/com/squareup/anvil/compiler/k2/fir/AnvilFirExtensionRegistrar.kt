@@ -18,10 +18,16 @@ public class AnvilFirExtensionRegistrar(
 
     +FirExtensionSessionComponent.Factory { AnvilFirContext(messageCollector, it) }
 
-    val factories = ServiceLoader.load(
-      FirExtensionSessionComponent.Factory::class.java,
-      javaClass.classLoader,
-    )
+    FirExtensionSessionComponent.Factory { session ->
+      val ctx = AnvilFirContext2(session, messageCollector)
+      AnvilFirProcessorProvider(ctx)
+    }
+      .unaryPlus()
+
+    +::SupertypeProcessorExtension
+    +::TopLevelClassProcessorExtension
+
+    val factories = ServiceLoader.load(FirExtensionSessionComponent.Factory::class.java)
 
     for (factory in factories) {
       +factory
