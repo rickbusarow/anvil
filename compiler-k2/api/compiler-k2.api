@@ -39,24 +39,18 @@ public final class com/squareup/anvil/compiler/k2/fir/abstraction/extensions/Top
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirDependencyHintProvider : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 	public final fun getAllDependencyContributedComponents ()Ljava/util/List;
 	public final fun getAllDependencyContributedModules ()Ljava/util/List;
 	public fun registerPredicates (Lorg/jetbrains/kotlin/fir/extensions/FirDeclarationPredicateRegistrar;)V
-}
-
-public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirDependencyHintProviderFactory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent$Factory {
-	public fun <init> ()V
-	public synthetic fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
-	public fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent$Factory;
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirDependencyHintProviderKt {
 	public static final fun getAnvilFirDependencyHintProvider (Lorg/jetbrains/kotlin/fir/FirSession;)Lcom/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirDependencyHintProvider;
 }
 
-public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirProcessorProvider : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext2;)V
+public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirProcessorProvider : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 	public final fun getFlushingSupertypeProcessors ()Ljava/util/List;
 	public final fun getSupertypeProcessors ()Ljava/util/List;
 	public final fun getTopLevelClassProcessors ()Ljava/util/List;
@@ -67,14 +61,8 @@ public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/Anvi
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirSymbolProvider : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 	public fun registerPredicates (Lorg/jetbrains/kotlin/fir/extensions/FirDeclarationPredicateRegistrar;)V
-}
-
-public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirSymbolProviderFactory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent$Factory {
-	public fun <init> ()V
-	public synthetic fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
-	public fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent$Factory;
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/AnvilFirSymbolProviderKt {
@@ -82,18 +70,12 @@ public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/Anvi
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/ScopedContributionProvider : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 	public final fun getContributedBindingModules ()Ljava/util/List;
 	public final fun getContributedBindings ()Ljava/util/List;
 	public final fun getContributedModules ()Ljava/util/List;
 	public final fun getContributedSupertypes ()Ljava/util/List;
 	public final fun getMergedComponents ()Ljava/util/List;
-}
-
-public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/ScopedContributionProviderFactory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent$Factory {
-	public fun <init> ()V
-	public synthetic fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
-	public fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent$Factory;
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/abstraction/providers/ScopedContributionProviderKt {
@@ -138,9 +120,9 @@ public final class com/squareup/anvil/compiler/k2/fir/internal/MessageCollectorB
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/merging/AnnotationMergingGenerator : com/squareup/anvil/compiler/k2/fir/FlushingSupertypeProcessor {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext2;)V
+	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)V
 	public fun generateAnnotation (Lorg/jetbrains/kotlin/fir/declarations/FirClassLikeDeclaration;)Lorg/jetbrains/kotlin/fir/expressions/FirAnnotationCall;
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext2;
+	public fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 	public fun shouldProcess (Lorg/jetbrains/kotlin/fir/declarations/FirClassLikeDeclaration;)Z
 }
 
@@ -149,9 +131,9 @@ public final class com/squareup/anvil/compiler/k2/fir/merging/AnnotationMergingG
 }
 
 public final class com/squareup/anvil/compiler/k2/fir/merging/InterfaceMergingGenerator : com/squareup/anvil/compiler/k2/fir/SupertypeProcessor {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext2;)V
+	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)V
 	public fun addSupertypes (Lorg/jetbrains/kotlin/fir/declarations/FirClassLikeDeclaration;Ljava/util/List;Lorg/jetbrains/kotlin/fir/extensions/FirSupertypeGenerationExtension$TypeResolveService;)Ljava/util/List;
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext2;
+	public fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 	public fun shouldProcess (Lorg/jetbrains/kotlin/fir/declarations/FirClassLikeDeclaration;)Z
 }
 

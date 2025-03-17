@@ -342,7 +342,7 @@ public final class com/squareup/anvil/compiler/testing/compilation/Compile2Compi
 	public final fun getClassFilesDir ()Ljava/io/File;
 	public final fun getCompilationClasspath ()Ljava/util/List;
 	public final fun getCompilerPluginClasspath ()Ljava/util/List;
-	public final fun getFirExtensions ()Ljava/util/List;
+	public final fun getFirProcessors ()Ljava/util/List;
 	public final fun getJarOutputDir ()Ljava/io/File;
 	public final fun getJdkHome ()Ljava/io/File;
 	public final fun getKaptClassesDir ()Ljava/io/File;
@@ -364,10 +364,6 @@ public final class com/squareup/anvil/compiler/testing/compilation/Compile2Compi
 public final class com/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration$Companion {
 	public final fun default (Ljava/util/List;Ljava/util/List;Ljava/io/File;ZLcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
 	public static synthetic fun default$default (Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration$Companion;Ljava/util/List;Ljava/util/List;Ljava/io/File;ZLcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;ILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
-}
-
-public final class com/squareup/anvil/compiler/testing/compilation/Compile2FirExtensionRegistrar : org/jetbrains/kotlin/fir/extensions/FirExtensionRegistrar {
-	public fun <init> (Lorg/jetbrains/kotlin/cli/common/messages/MessageCollector;Ljava/util/List;)V
 }
 
 public final class com/squareup/anvil/compiler/testing/compilation/Compile2Result {
