@@ -2,7 +2,6 @@ package com.squareup.anvil.compiler.k2.fir.abstraction
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
@@ -16,9 +15,8 @@ import com.squareup.anvil.compiler.k2.utils.names.FqNames
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue
-import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
-import org.jetbrains.kotlin.fir.extensions.FirExtension
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.plugin.createConeType
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
@@ -33,9 +31,7 @@ import org.jetbrains.kotlin.name.Name
 public class BindingModuleGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::BindingModuleGenerator)
 
-internal class BindingModuleGenerator(
-  override val anvilContext: AnvilFirContext,
-) : TopLevelClassProcessor() {
+internal class BindingModuleGenerator(session: FirSession) : TopLevelClassProcessor(session) {
 
   @OptIn(RequiresTypesResolutionPhase::class)
   private val contributedBindingsByModuleId by lazyValue {
@@ -47,23 +43,19 @@ internal class BindingModuleGenerator(
       session.anvilFirSymbolProvider.contributesBindingSymbols.isNotEmpty()
   }
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun getTopLevelClassIds(): Set<ClassId> {
     return contributedBindingsByModuleId.keys
   }
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun generateTopLevelClassLikeDeclaration(
     classId: ClassId,
-    firExtension: FirExtension,
-  ): PendingTopLevelClass = contributedBindingsByModuleId.getValue(classId).let { binding ->
+  ): PendingTopLevelClass = contributedBindingsByModuleId.getValue(classId).let {
     PendingTopLevelClass(
       classId = classId,
       key = GeneratedBindingDeclarationKey,
       classKind = ClassKind.INTERFACE,
       visibility = Visibilities.Public,
       annotations = lazyValue { listOf(createFirAnnotation(ClassIds.daggerModule)) },
-      cachesFactory = cachesFactory,
       firExtension = firExtension,
     )
   }
@@ -80,7 +72,6 @@ internal class BindingModuleGenerator(
   override fun generateFunctions(
     callableId: CallableId,
     context: MemberGenerationContext?,
-    firExtension: FirExtension,
   ): List<FirNamedFunctionSymbol> {
 
     val binding = contributedBindingsByModuleId[callableId.classId!!] ?: return emptyList()

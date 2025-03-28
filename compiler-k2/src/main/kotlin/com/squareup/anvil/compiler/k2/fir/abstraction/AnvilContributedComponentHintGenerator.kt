@@ -2,7 +2,6 @@ package com.squareup.anvil.compiler.k2.fir.abstraction
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
@@ -17,14 +16,12 @@ import com.squareup.anvil.compiler.k2.utils.names.FqNames
 import com.squareup.anvil.compiler.k2.utils.names.Names
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Visibilities
-import org.jetbrains.kotlin.fir.caches.firCachesFactory
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.expressions.builder.buildArrayLiteral
 import org.jetbrains.kotlin.fir.expressions.builder.buildLiteralExpression
-import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
-import org.jetbrains.kotlin.fir.extensions.FirExtension
 import org.jetbrains.kotlin.fir.types.createArrayType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -35,8 +32,8 @@ public class AnvilContributedComponentHintGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::AnvilContributedComponentHintGenerator)
 
 internal class AnvilContributedComponentHintGenerator(
-  override val anvilContext: AnvilFirContext,
-) : TopLevelClassProcessor() {
+  session: FirSession,
+) : TopLevelClassProcessor(session) {
 
   @OptIn(RequiresTypesResolutionPhase::class)
   private val contributedSupertypes by lazyValue {
@@ -48,7 +45,6 @@ internal class AnvilContributedComponentHintGenerator(
       session.anvilFirSymbolProvider.contributesSupertypeSymbols.isNotEmpty()
   }
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun getTopLevelClassIds(): Set<ClassId> {
     return if (contributedSupertypes.isEmpty()) {
       emptySet()
@@ -57,10 +53,8 @@ internal class AnvilContributedComponentHintGenerator(
     }
   }
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun generateTopLevelClassLikeDeclaration(
     classId: ClassId,
-    firExtension: FirExtension,
   ): PendingTopLevelClass = PendingTopLevelClass(
     classId = classId,
     key = GeneratedBindingHintKey,
@@ -100,7 +94,6 @@ internal class AnvilContributedComponentHintGenerator(
         ),
       )
     },
-    cachesFactory = session.firCachesFactory,
     firExtension = firExtension,
   )
 }

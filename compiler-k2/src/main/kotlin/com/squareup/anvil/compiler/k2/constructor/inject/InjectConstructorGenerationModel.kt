@@ -3,25 +3,21 @@ package com.squareup.anvil.compiler.k2.constructor.inject
 import com.squareup.anvil.compiler.k2.constructor.inject.FirInjectConstructorFactoryGenerationExtension.Key
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
 import com.squareup.anvil.compiler.k2.utils.fir.requireClassLikeSymbol
+import com.squareup.anvil.compiler.k2.utils.fir.wrapInSyntheticFile
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
+import com.squareup.anvil.compiler.k2.utils.names.Names
 import com.squareup.anvil.compiler.k2.utils.names.factoryJoined
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.builder.buildPackageDirective
 import org.jetbrains.kotlin.fir.declarations.FirConstructor
-import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
-import org.jetbrains.kotlin.fir.declarations.builder.buildFile
 import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
 import org.jetbrains.kotlin.fir.extensions.FirExtension
-import org.jetbrains.kotlin.fir.moduleData
 import org.jetbrains.kotlin.fir.plugin.createCompanionObject
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createDefaultPrivateConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createTopLevelClass
-import org.jetbrains.kotlin.fir.resolve.providers.firProvider
-import org.jetbrains.kotlin.fir.resolve.providers.impl.FirProviderImpl
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
@@ -30,7 +26,6 @@ import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.Name
 
 @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
 internal class InjectConstructorGenerationModel(
@@ -42,7 +37,8 @@ internal class InjectConstructorGenerationModel(
 
   val generatedClassId: ClassId by lazy { matchedClassId.factoryJoined }
   val generatedClassSymbol: FirClassSymbol<*> by lazy {
-    val classSymbol = extension.createTopLevelClass(generatedClassId, Key) {
+
+    extension.createTopLevelClass(generatedClassId, Key) {
       superType(
         ClassIds.daggerFactory.requireClassLikeSymbol(session)
           .constructType(
@@ -50,18 +46,7 @@ internal class InjectConstructorGenerationModel(
           ),
       )
     }
-    buildFile {
-      origin = FirDeclarationOrigin.Synthetic.Builtins
-      moduleData = session.moduleData
-      packageDirective = buildPackageDirective {
-        this.packageFqName = matchedClassId.packageFqName
-      }
-      name = generatedClassId.asFqNameString()
-      declarations += classSymbol
-    }.also {
-      (session.firProvider as FirProviderImpl).recordFile(file = it)
-    }
-    classSymbol.symbol
+      .wrapInSyntheticFile(session).symbol
   }
 
   val generatedConstructor: FirConstructor by lazy {
@@ -99,11 +84,11 @@ internal class InjectConstructorGenerationModel(
     extension.createDefaultPrivateConstructor(generatedCompanionClass, Key)
   }
 
-  fun createFactoryGetFunction(): FirNamedFunctionSymbol {
-    return extension.createMemberFunction(
+  val factoryGetFunction: FirNamedFunctionSymbol by lazy {
+    extension.createMemberFunction(
       owner = generatedClassSymbol,
       key = Key,
-      name = factoryGetName,
+      name = Names.get,
       returnType = matchedConstructorSymbol.resolvedReturnType,
     ) {
       visibility = Visibilities.Public
@@ -111,46 +96,39 @@ internal class InjectConstructorGenerationModel(
     }.symbol
   }
 
-  fun createCompanionCreateFunction(): FirNamedFunctionSymbol {
-    val function = extension.createMemberFunction(
+  val companionCreateFunction: FirNamedFunctionSymbol by lazy {
+    extension.createMemberFunction(
       owner = generatedCompanionClass,
       key = Key,
-      name = createName,
-      returnType = generatedClassSymbol.constructType(emptyArray()),
+      name = Names.create,
+      returnType = generatedClassSymbol.constructType(),
     ) {
       generatedConstructor.symbol.valueParameterSymbols.forEach { symbol ->
-        this@createMemberFunction.valueParameter(
+        valueParameter(
           name = symbol.name,
           type = symbol.resolvedReturnType,
         )
       }
     }
-    function.replaceAnnotations(listOf(createFirAnnotation(ClassIds.kotlinJvmStatic)))
-    return function.symbol
+      .apply { replaceAnnotations(listOf(createFirAnnotation(ClassIds.kotlinJvmStatic))) }
+      .symbol
   }
 
-  fun createCompanionNewInstanceFunction(): FirNamedFunctionSymbol {
-    val function = extension.createMemberFunction(
+  val companionNewInstanceFunction: FirNamedFunctionSymbol by lazy {
+    extension.createMemberFunction(
       owner = generatedCompanionClass,
       key = Key,
-      name = newInstance,
+      name = Names.newInstance,
       returnType = matchedClassId.constructClassLikeType(),
     ) {
       matchedConstructorSymbol.valueParameterSymbols.forEach { symbol ->
-        this@createMemberFunction.valueParameter(
+        valueParameter(
           name = symbol.name,
           type = symbol.resolvedReturnType,
         )
       }
     }
-    function.replaceAnnotations(listOf(createFirAnnotation(ClassIds.kotlinJvmStatic)))
-    return function.symbol
-  }
-
-  companion object ConstructorInjectionNames {
-
-    val factoryGetName = Name.identifier("get")
-    val createName = Name.identifier("create")
-    val newInstance = Name.identifier("newInstance")
+      .apply { replaceAnnotations(listOf(createFirAnnotation(ClassIds.kotlinJvmStatic))) }
+      .symbol
   }
 }

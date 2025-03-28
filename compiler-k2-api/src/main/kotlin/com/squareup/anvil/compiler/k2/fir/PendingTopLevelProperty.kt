@@ -27,8 +27,7 @@ internal class PendingTopLevelProperty(
       callableId = callableId,
       returnType = firExtension.session.builtinTypes.unitType.coneType,
     ) {
-      val ctx = this@createTopLevelProperty
-      ctx.visibility = this@PendingTopLevelProperty.visibility
+      this@createTopLevelProperty.visibility = this@PendingTopLevelProperty.visibility
     }.apply {
       replaceAnnotations(this@PendingTopLevelProperty.annotations.getValue())
     }

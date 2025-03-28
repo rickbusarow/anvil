@@ -1,9 +1,10 @@
 package com.squareup.anvil.compiler.k2.fir.abstraction.extensions
 
-import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.SupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirProcessorProvider
+import com.squareup.anvil.compiler.k2.fir.abstraction.providers.daggerThingProvider
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedMergeProvider
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
@@ -22,7 +23,6 @@ public class SupertypeProcessorExtension(
 
   private val generatorsByClassId = mutableMapOf<ClassId, List<SupertypeProcessor>>()
 
-  @OptIn(RequiresTypesResolutionPhase::class)
   override fun needTransformSupertypes(declaration: FirClassLikeDeclaration): Boolean {
 
     val processors = session.anvilFirProcessorProvider.supertypeProcessors +
@@ -37,7 +37,6 @@ public class SupertypeProcessorExtension(
     return todo.isNotEmpty() || !session.scopedContributionProvider.isInitialized()
   }
 
-  @OptIn(RequiresTypesResolutionPhase::class)
   override fun computeAdditionalSupertypes(
     classLikeDeclaration: FirClassLikeDeclaration,
     resolvedSupertypes: List<FirResolvedTypeRef>,
@@ -45,6 +44,8 @@ public class SupertypeProcessorExtension(
   ): List<ConeKotlinType> {
 
     session.scopedContributionProvider.bindTypeResolveService(typeResolver)
+    session.scopedMergeProvider.bindTypeResolveService(typeResolver)
+    session.daggerThingProvider.bindTypeResolveService(typeResolver)
 
     return generatorsByClassId.remove(classLikeDeclaration.classId)
       ?.flatMap { it.addSupertypes(classLikeDeclaration, resolvedSupertypes, typeResolver) }

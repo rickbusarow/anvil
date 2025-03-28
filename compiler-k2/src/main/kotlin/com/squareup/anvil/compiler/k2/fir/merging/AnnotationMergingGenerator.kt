@@ -2,13 +2,13 @@ package com.squareup.anvil.compiler.k2.fir.merging
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.FlushingSupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirDependencyHintProvider
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedMergeProvider
 import com.squareup.anvil.compiler.k2.utils.fir.createClassListArgument
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotationCall
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
@@ -17,6 +17,7 @@ import com.squareup.anvil.compiler.k2.utils.psi.ktPsiFactory
 import com.squareup.anvil.compiler.k2.utils.stdlib.mapToSet
 import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.fakeElement
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
 import org.jetbrains.kotlin.fir.declarations.utils.classId
@@ -25,7 +26,7 @@ import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.psi
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.psi.KtCollectionLiteralExpression
+import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.toKtPsiSourceElement
 
 @AutoService(AnvilFirProcessor.Factory::class)
@@ -36,9 +37,7 @@ public class AnnotationMergingGeneratorFactory :
  * This generator merges all contributed Dagger modules on the classpath and includes them on the
  * component annotated with `@MergeComponent`.
  */
-public class AnnotationMergingGenerator(
-  override val anvilContext: AnvilFirContext,
-) : FlushingSupertypeProcessor() {
+public class AnnotationMergingGenerator(session: FirSession) : FlushingSupertypeProcessor(session) {
 
   private val mergedComponentIds by lazyValue {
     session.anvilFirSymbolProvider.mergeComponentSymbols.mapToSet { it.classId }
@@ -61,7 +60,7 @@ public class AnnotationMergingGenerator(
     classLikeDeclaration: FirClassLikeDeclaration,
   ): FirAnnotationCall {
     val mergedComponent =
-      session.scopedContributionProvider.mergedComponents
+      session.scopedMergeProvider.mergedComponents
         .single { it.containingDeclaration.getValue().classId == classLikeDeclaration.classId }
 
     val mergeScopeId = mergedComponent.scopeType.getValue()
@@ -79,7 +78,7 @@ public class AnnotationMergingGenerator(
 
     val newAnnotationCallPsi = mergeAnnotation.psi?.let { psiEntry ->
       buildNewAnnotationPsi(
-        oldAnnotationCall = psiEntry as KtAnnotationEntry,
+        ktPsiFactory = psiEntry.ktPsiFactory(),
         mergedModules = mergedModules,
       )
     }
@@ -110,76 +109,17 @@ public class AnnotationMergingGenerator(
   }
 
   private fun buildNewAnnotationPsi(
-    oldAnnotationCall: KtAnnotationEntry,
+    ktPsiFactory: KtPsiFactory,
     mergedModules: List<ClassId>,
   ): KtAnnotationEntry {
 
-    val oldAnnotationArguments = oldAnnotationCall.valueArgumentList
-      ?.arguments
-      .orEmpty()
-
-    // `modules = [SomeModule::class]`
-    val oldModulesArg = oldAnnotationArguments
-      // `Component` is a Java annotation with default argument values,
-      // so its arguments can be missing or in any order, but they must be named if they're present.
-      .firstOrNull { arg ->
-        val name = arg.getArgumentName()
-        name == null || name.text == "modules"
-      }
-
-    // `SomeModule::class, SomeOtherModule::class`
-    val existingModuleArgExpressions =
-      (oldModulesArg?.getArgumentExpression() as? KtCollectionLiteralExpression)
-        ?.innerExpressions
-        ?.map { it.text }
-        .orEmpty()
-
-    val imports = oldAnnotationCall.containingKtFile.importDirectives
-      .associate { imp ->
-        val fqName = imp.importedReference?.text
-          ?: error("import directive doesn't have a reference? $imp")
-
-        val name = imp.aliasName
-          ?: imp.importedReference?.text?.substringAfterLast('.')
-          ?: error("import directive doesn't have a reference or alias? ${imp.text}")
-
-        fqName to name
-      }
-
-    val newModulesMaybeImported = mergedModules.map { it.asFqNameString() }
-      .map { moduleFqName ->
-        imports[moduleFqName] ?: moduleFqName
-      }
-
-    val allClassArgs = existingModuleArgExpressions
-      .plus(newModulesMaybeImported.map { "$it::class" })
-      .distinct()
-
-    val factory = oldAnnotationCall.ktPsiFactory()
-
-    val classArgList = allClassArgs.joinToString(separator = ", ")
+    val classArgList = mergedModules
+      .joinToString(separator = ", ") { "${it.asFqNameString()}::class" }
 
     val newModulesText = "modules = [$classArgList]"
 
-    val componentCall = ClassIds.daggerComponent.asFqNameString().let { fqString ->
-      imports[fqString] ?: fqString
-    }
+    val componentCall = ClassIds.daggerComponent.asFqNameString()
 
-    val newAnnotationText = when {
-      oldAnnotationArguments.isEmpty() -> "@$componentCall($newModulesText)"
-      oldModulesArg != null -> oldAnnotationCall.text.replace(
-        oldValue = oldModulesArg.text,
-        newValue = newModulesText,
-      )
-      else -> oldAnnotationArguments.map { it.text }
-        .plus(newModulesText)
-        .joinToString(
-          separator = ",\n",
-          prefix = "@$componentCall(\n",
-          postfix = "\n)",
-        ) { "  $it" }
-    }
-
-    return factory.createAnnotationEntry(newAnnotationText)
+    return ktPsiFactory.createAnnotationEntry("@$componentCall($newModulesText)")
   }
 }

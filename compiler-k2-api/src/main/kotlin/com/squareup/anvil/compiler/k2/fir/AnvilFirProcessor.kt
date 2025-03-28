@@ -1,5 +1,6 @@
 package com.squareup.anvil.compiler.k2.fir
 
+import com.squareup.anvil.annotations.internal.InternalAnvilApi
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirCachesFactory
 import org.jetbrains.kotlin.fir.caches.FirLazyValue
@@ -7,15 +8,16 @@ import org.jetbrains.kotlin.fir.caches.firCachesFactory
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
-import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
-import org.jetbrains.kotlin.fir.extensions.FirExtension
+import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension.TypeResolveService
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
+import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
@@ -23,12 +25,11 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import kotlin.properties.Delegates
 
-public sealed class AnvilFirProcessor : HasAnvilFirContext {
-
-  protected val session: FirSession get() = anvilContext.session
-  protected val cachesFactory: FirCachesFactory get() = session.firCachesFactory
-
+public abstract class HasFirCachesFactory(
+  protected val cachesFactory: FirCachesFactory,
+) {
   protected inline fun <T, R> FirLazyValue<T>.map(
     crossinline transform: (T) -> R,
   ): FirLazyValue<R> = lazyValue { transform(this.getValue()) }
@@ -36,6 +37,17 @@ public sealed class AnvilFirProcessor : HasAnvilFirContext {
   protected inline fun <T> lazyValue(crossinline initializer: () -> T): FirLazyValue<T> {
     return cachesFactory.createLazyValue { initializer() }
   }
+}
+
+public sealed class AnvilFirProcessor(
+  session: FirSession,
+) : HasFirCachesFactory(session.firCachesFactory),
+  HasAnvilFirContext {
+
+  override val anvilContext: AnvilFirContext
+    get() = session.anvilContext
+
+  protected val session: FirSession get() = anvilContext.session
 
   protected fun lazySymbols(
     predicate: LookupPredicate,
@@ -48,28 +60,38 @@ public sealed class AnvilFirProcessor : HasAnvilFirContext {
   ): FirLazyValue<List<T>> = lazySymbols(predicate).map { it.filterIsInstance<T>() }
 
   public fun interface Factory {
-    public fun create(anvilFirContext: AnvilFirContext): AnvilFirProcessor
+    public fun create(session: FirSession): AnvilFirProcessor
   }
 }
 
 public abstract class AbstractAnvilFirProcessorFactory(
-  private val initializer: (AnvilFirContext) -> AnvilFirProcessor,
+  private val initializer: (FirSession) -> AnvilFirProcessor,
 ) : AnvilFirProcessor.Factory {
-  final override fun create(anvilFirContext: AnvilFirContext): AnvilFirProcessor =
-    initializer(anvilFirContext)
+  final override fun create(session: FirSession): AnvilFirProcessor =
+    initializer(session)
 }
 
-public abstract class TopLevelClassProcessor : AnvilFirProcessor() {
+public abstract class TopLevelClassProcessor(session: FirSession) :
+  AnvilFirProcessor(session) {
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
+  protected var firExtension: FirDeclarationGenerationExtension by Delegates.notNull()
+    private set
+
+  @InternalAnvilApi
+  public fun bindFirExtension(firExtension: FirDeclarationGenerationExtension) {
+    this.firExtension = firExtension
+  }
+
   public abstract fun getTopLevelClassIds(): Set<ClassId>
   public abstract fun hasPackage(packageFqName: FqName): Boolean
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
-  public abstract fun generateTopLevelClassLikeDeclaration(
-    classId: ClassId,
-    firExtension: FirExtension,
-  ): PendingTopLevelClass
+  public abstract fun generateTopLevelClassLikeDeclaration(classId: ClassId): PendingTopLevelClass
+
+  public open fun generateNestedClassLikeDeclaration(
+    owner: FirClassSymbol<*>,
+    name: Name,
+    context: NestedClassGenerationContext,
+  ): PendingNestedClassLikeDeclaration? = null
 
   public open fun getCallableNamesForClass(
     classSymbol: FirClassLikeSymbol<*>,
@@ -79,11 +101,10 @@ public abstract class TopLevelClassProcessor : AnvilFirProcessor() {
   public open fun generateFunctions(
     callableId: CallableId,
     context: MemberGenerationContext?,
-    firExtension: FirExtension,
   ): List<FirNamedFunctionSymbol> = emptyList()
 }
 
-public abstract class SupertypeProcessor : AnvilFirProcessor() {
+public abstract class SupertypeProcessor(session: FirSession) : AnvilFirProcessor(session) {
   public abstract fun shouldProcess(declaration: FirClassLikeDeclaration): Boolean
   public open fun addSupertypes(
     classLikeDeclaration: FirClassLikeDeclaration,
@@ -97,7 +118,9 @@ public abstract class SupertypeProcessor : AnvilFirProcessor() {
   ): List<FirResolvedTypeRef> = emptyList()
 }
 
-public abstract class FlushingSupertypeProcessor : SupertypeProcessor() {
+public abstract class FlushingSupertypeProcessor(
+  session: FirSession,
+) : SupertypeProcessor(session) {
 
   @OptIn(RequiresTypesResolutionPhase::class)
   public override fun addSupertypes(

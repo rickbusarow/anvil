@@ -4,6 +4,7 @@ import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.SpecialNames
 import java.security.MessageDigest
 
 /** Well-known class ids used by Anvil. */
@@ -170,7 +171,8 @@ public val ClassId.factorySibling: ClassId
 public val ClassId.factoryJoined: ClassId
   get() = joinSimpleNames(separator = "_", suffix = "_Factory")
 
-public val ClassId.companion: ClassId get() = child("Companion")
+public val ClassId.companion: ClassId
+  get() = createNestedClassId(SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT)
 
 /**
  * If the receiver ClassId is a top-level class, this function returns a new ClassId with the same

@@ -68,4 +68,9 @@ class FirInjectConstructorFactoryGenerationExtensionTest : CompilationModeTest(
       injectClassInstance.getDeclaredFieldValue("param1") shouldBe expectedInt
     }
   }
+    // TODO (rbusarow) delete me
+    .let {
+      check(System.getenv("CI") == null) { "delete me" }
+      it.limit(1)
+    }
 }

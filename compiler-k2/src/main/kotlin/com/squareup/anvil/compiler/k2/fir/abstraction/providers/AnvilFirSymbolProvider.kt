@@ -7,7 +7,7 @@ import com.squareup.anvil.compiler.k2.utils.names.ClassIds
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
-import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 
 public val FirSession.anvilFirSymbolProvider: AnvilFirSymbolProvider by FirSession.sessionComponentAccessor()
@@ -66,8 +66,8 @@ public class AnvilFirSymbolProvider(
   /*
    JSR-330 annotations
    */
-  internal val injectSymbols: List<FirBasedSymbol<*>>
-    by lazySymbols<FirRegularClassSymbol>(AnvilPredicates.hasInjectAnnotation)
+  internal val injectConstructorSymbols: List<FirConstructorSymbol>
+    by lazySymbols<FirConstructorSymbol>(AnvilPredicates.hasInjectAnnotation)
 
   override fun FirDeclarationPredicateRegistrar.registerPredicates() {
     register(AnvilPredicates.hasAnyAnvilContributes)

@@ -7,7 +7,6 @@ import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.FlushingSupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.SupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
-import com.squareup.anvil.compiler.k2.fir.anvilContext
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue
 import java.util.ServiceLoader
@@ -25,7 +24,7 @@ public class AnvilFirProcessorProvider(session: FirSession) :
     val threadLocal = AdditionalProcessorsHolder.additionalProcessors.get()
 
     loaded.plus(threadLocal)
-      .map { it.create(session.anvilContext) }
+      .map { it.create(session) }
       .sortedBy { it::class.qualifiedName }
       .groupBy {
         when (it) {

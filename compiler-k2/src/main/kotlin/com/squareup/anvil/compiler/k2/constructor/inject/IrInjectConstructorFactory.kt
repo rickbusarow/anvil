@@ -1,6 +1,7 @@
 package com.squareup.anvil.compiler.k2.constructor.inject
 
 import com.squareup.anvil.compiler.k2.ir.IrBodyGenerator
+import com.squareup.anvil.compiler.k2.utils.names.Names
 import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -39,7 +40,7 @@ internal class IrInjectConstructorFactory(
   private val context: IrPluginContext,
 ) : IrBodyGenerator() {
   override fun interestedIn(key: GeneratedDeclarationKey?): Boolean {
-    return key == FirInjectConstructorFactoryGenerationExtension.Key
+    return key == InjectConstructorFactoryGenerator.Key
   }
 
   override fun generateBodyForConstructor(
@@ -60,10 +61,10 @@ internal class IrInjectConstructorFactory(
     key: GeneratedDeclarationKey?,
   ): IrBody {
     return when (function.name) {
-      InjectConstructorGenerationModel.createName,
-      InjectConstructorGenerationModel.newInstance,
+      Names.create,
+      Names.newInstance,
       -> createCompanionFunctionBody(function)
-      InjectConstructorGenerationModel.factoryGetName -> createGetFunctionBody(function)
+      Names.get -> createGetFunctionBody(function)
       else -> error("Unexpected function: $function")
     }
   }
@@ -88,9 +89,10 @@ internal class IrInjectConstructorFactory(
 
   private fun createGetFunctionBody(declaration: IrSimpleFunction): IrBody {
     val parentClass = declaration.parentAsClass
-    val newInstance: IrSimpleFunction = parentClass.companionObject()!!
-      .functions.single { it.name == InjectConstructorGenerationModel.newInstance }
     val companionObjectIrClass: IrClass = declaration.parentAsClass.companionObject()!!
+    val funs = companionObjectIrClass.functions
+    val newInstance: IrSimpleFunction = funs
+      .single { it.name == Names.newInstance }
     return DeclarationIrBuilder(context, declaration.symbol).run {
       irBlockBody(declaration) {
         val companionReference = irGetObjectValue(

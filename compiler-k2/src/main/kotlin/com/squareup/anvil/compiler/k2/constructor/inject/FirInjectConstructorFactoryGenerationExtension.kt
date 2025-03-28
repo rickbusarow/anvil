@@ -1,6 +1,7 @@
 package com.squareup.anvil.compiler.k2.constructor.inject
 
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
+import com.squareup.anvil.compiler.k2.utils.names.Names
 import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
@@ -78,8 +79,8 @@ internal class FirInjectConstructorFactoryGenerationExtension(session: FirSessio
     if (context.owner.isCompanion && context.owner.classId.parentClassId in factoriesToGenerate.keys) {
       return setOf(
         SpecialNames.INIT,
-        InjectConstructorGenerationModel.createName,
-        InjectConstructorGenerationModel.newInstance,
+        Names.create,
+        Names.newInstance,
       )
     }
     if (context.owner.classId !in factoriesToGenerate.keys) return emptySet()
@@ -91,7 +92,7 @@ internal class FirInjectConstructorFactoryGenerationExtension(session: FirSessio
         .keys
         .map { it.callableName }
         .toTypedArray(),
-      InjectConstructorGenerationModel.factoryGetName,
+      Names.get,
     )
   }
 
@@ -154,14 +155,14 @@ internal class FirInjectConstructorFactoryGenerationExtension(session: FirSessio
     val owner = context?.owner ?: return emptyList()
 
     return when (callableId.callableName) {
-      InjectConstructorGenerationModel.createName -> {
-        factoriesToGenerate[owner.classId.parentClassId]!!.createCompanionCreateFunction()
+      Names.create -> {
+        factoriesToGenerate[owner.classId.parentClassId]!!.companionCreateFunction
       }
-      InjectConstructorGenerationModel.newInstance -> {
-        factoriesToGenerate[owner.classId.parentClassId]!!.createCompanionNewInstanceFunction()
+      Names.newInstance -> {
+        factoriesToGenerate[owner.classId.parentClassId]!!.companionNewInstanceFunction
       }
-      InjectConstructorGenerationModel.factoryGetName -> {
-        factoriesToGenerate[owner.classId]!!.createFactoryGetFunction()
+      Names.get -> {
+        factoriesToGenerate[owner.classId]!!.factoryGetFunction
       }
       else -> null
     }.let(::listOfNotNull)

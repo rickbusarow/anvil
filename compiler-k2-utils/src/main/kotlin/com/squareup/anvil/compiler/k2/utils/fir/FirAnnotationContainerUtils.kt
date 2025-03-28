@@ -6,6 +6,14 @@ import org.jetbrains.kotlin.fir.expressions.FirAnnotation
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
 import org.jetbrains.kotlin.name.ClassId
 
+public fun <T : FirAnnotationContainer> T.addAnnotations(annotations: List<FirAnnotation>): T {
+  return apply {
+    if (annotations.isNotEmpty()) {
+      replaceAnnotations(this@addAnnotations.annotations + annotations)
+    }
+  }
+}
+
 @Suppress("DeprecatedCallableAddReplaceWith")
 @Deprecated(
   "Resolve annotations from the container's symbol instead",

@@ -2,7 +2,6 @@ package com.squareup.anvil.compiler.k2.fir.abstraction
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
@@ -17,14 +16,13 @@ import com.squareup.anvil.compiler.k2.utils.names.FqNames
 import com.squareup.anvil.compiler.k2.utils.names.Names
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Visibilities
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.firCachesFactory
 import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.expressions.builder.buildArrayLiteral
 import org.jetbrains.kotlin.fir.expressions.builder.buildLiteralExpression
-import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
-import org.jetbrains.kotlin.fir.extensions.FirExtension
 import org.jetbrains.kotlin.fir.types.createArrayType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -34,9 +32,8 @@ import org.jetbrains.kotlin.types.ConstantValueKind
 public class AnvilContributedModuleHintGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::AnvilContributedModuleHintGenerator)
 
-internal class AnvilContributedModuleHintGenerator(
-  override val anvilContext: AnvilFirContext,
-) : TopLevelClassProcessor() {
+internal class AnvilContributedModuleHintGenerator(session: FirSession) :
+  TopLevelClassProcessor(session) {
 
   private val contributedModuleSymbols by lazyValue {
     session.anvilFirSymbolProvider.contributesModulesSymbols
@@ -61,13 +58,10 @@ internal class AnvilContributedModuleHintGenerator(
     return packageFqName == FqNames.anvilHintPackage && contributedModuleSymbols.isNotEmpty()
   }
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun getTopLevelClassIds(): Set<ClassId> = hintClassIdsToContributedModules.keys
 
-  @ExperimentalTopLevelDeclarationsGenerationApi
   override fun generateTopLevelClassLikeDeclaration(
     classId: ClassId,
-    firExtension: FirExtension,
   ): PendingTopLevelClass {
     return hintClassIdsToContributedModules.getValue(classId).let { modules ->
       PendingTopLevelClass(
@@ -110,7 +104,6 @@ internal class AnvilContributedModuleHintGenerator(
             ),
           )
         },
-        cachesFactory = session.firCachesFactory,
         firExtension = firExtension,
       )
     }
