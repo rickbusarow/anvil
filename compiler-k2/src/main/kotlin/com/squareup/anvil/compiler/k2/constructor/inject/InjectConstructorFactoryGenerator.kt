@@ -3,18 +3,20 @@ package com.squareup.anvil.compiler.k2.constructor.inject
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
-import com.squareup.anvil.compiler.k2.fir.PendingClassLikeDeclaration
-import com.squareup.anvil.compiler.k2.fir.PendingCompanionObject
-import com.squareup.anvil.compiler.k2.fir.PendingMemberFunction
-import com.squareup.anvil.compiler.k2.fir.PendingMemberProperty
-import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
+import com.squareup.anvil.compiler.k2.fir.GeneratedClassLikeDeclaration
+import com.squareup.anvil.compiler.k2.fir.GeneratedCompanionObject
+import com.squareup.anvil.compiler.k2.fir.GeneratedMemberFunction
+import com.squareup.anvil.compiler.k2.fir.GeneratedMemberProperty
+import com.squareup.anvil.compiler.k2.fir.GeneratedTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
+import com.squareup.anvil.compiler.k2.fir.ValueParameter
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.daggerThingProvider
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
 import com.squareup.anvil.compiler.k2.utils.fir.requireClassLikeSymbol
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
 import com.squareup.anvil.compiler.k2.utils.names.Names
 import com.squareup.anvil.compiler.k2.utils.names.factoryJoined
+import com.squareup.anvil.compiler.k2.utils.names.requireClassId
 import com.squareup.anvil.compiler.k2.utils.stdlib.mapToSet
 import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -35,7 +37,6 @@ import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 @AutoService(AnvilFirProcessor.Factory::class)
@@ -45,15 +46,17 @@ public class InjectConstructorFactoryGeneratorFactory :
 internal class InjectConstructorFactoryGenerator(session: FirSession) :
   TopLevelClassProcessor(session) {
 
-  private val injectConstructorsByClassId by lazyValue {
-    session.daggerThingProvider.injectConstructors
-      .associateBy { it.classId.getValue() }
-  }
+  private val injectConstructorsByClassId
+    by lazyValue {
+      session.daggerThingProvider.injectConstructors
+        .associateBy { it.classId.getValue() }
+    }
 
-  private val injectConstructorsByFactoryClassId by lazyValue {
-    session.daggerThingProvider.injectConstructors
-      .associateBy { it.classId.getValue().factoryJoined }
-  }
+  private val injectConstructorsByFactoryClassId
+    by lazyValue {
+      session.daggerThingProvider.injectConstructors
+        .associateBy { it.classId.getValue().factoryJoined }
+    }
 
   private val factoryClassIds by lazyValue { injectConstructorsByClassId.keys.mapToSet { it.factoryJoined } }
 
@@ -65,11 +68,14 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
 
     val constructorProperties = injectedClass.constructor.map { constructor ->
       constructor.valueParameterSymbols.map { paramSymbol ->
-        paramSymbol.name to providerSymbol.constructType(arrayOf(paramSymbol.resolvedReturnType))
+        ValueParameter(
+          name = paramSymbol.name,
+          type = providerSymbol.constructType(arrayOf(paramSymbol.resolvedReturnType)),
+        )
       }
     }
 
-    PendingTopLevelClass(
+    GeneratedTopLevelClass(
       classId = factoryId,
       key = Key,
       classKind = ClassKind.CLASS,
@@ -98,14 +104,14 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
         )
       },
       members = { ownerSymbol ->
-        val primaryConstructor = ownerSymbol.primaryConstructorSymbol(session)!!
 
-        val constructorParamsByName =
-          primaryConstructor.valueParameterSymbols.associateBy { it.name }
+        val constructorParamsByName = lazyValue {
+          ownerSymbol.primaryConstructorSymbol(session)!!.valueParameterSymbols.associateBy { it.name }
+        }
 
         listOf(
           *constructorProperties.getValue().map { (name, type) ->
-            PendingMemberProperty(
+            GeneratedMemberProperty(
               name = name,
               returnType = lazyValue { type },
               ownerSymbol = lazyValue { ownerSymbol },
@@ -114,21 +120,19 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
               visibility = Visibilities.Public,
               cachesFactory = cachesFactory,
               firExtension = firExtension,
-              initializer = constructorParamsByName[name]?.let { symbol ->
-                lazyValue {
-                  // Assigns property values from the constructor arguments
-                  buildPropertyAccessExpression {
-                    coneTypeOrNull = type
-                    calleeReference = buildPropertyFromParameterResolvedNamedReference ref@{
-                      this@ref.name = name
-                      resolvedSymbol = symbol
-                    }
+              initializer = lazyValue {
+                // Assigns property values from the constructor arguments
+                buildPropertyAccessExpression {
+                  coneTypeOrNull = type
+                  calleeReference = buildPropertyFromParameterResolvedNamedReference ref@{
+                    this@ref.name = name
+                    resolvedSymbol = constructorParamsByName.getValue().getValue(name)
                   }
                 }
               },
             )
           }.toTypedArray(),
-          PendingMemberFunction(
+          GeneratedMemberFunction(
             name = Names.get,
             returnType = injectedClass.constructor.map { it.resolvedReturnType },
             ownerSymbol = lazyValue { ownerSymbol },
@@ -141,7 +145,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
       },
       nestedClasses = { outerOwnerSymbol ->
         listOf(
-          PendingCompanionObject(
+          GeneratedCompanionObject(
             ownerSymbol = lazyValue { outerOwnerSymbol },
             key = Key,
             visibility = Visibilities.Public,
@@ -149,23 +153,18 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
             firExtension = firExtension,
             members = { ownerSymbol ->
               listOf(
-                PendingMemberFunction(
+                GeneratedMemberFunction(
                   name = Names.create,
                   returnType = lazyValue { factoryId.constructClassLikeType() },
                   ownerSymbol = lazyValue { ownerSymbol },
                   key = Key,
                   visibility = Visibilities.Public,
                   cachesFactory = cachesFactory,
-                  valueParameters = lazyValue {
-                    val providerSymbol = ClassIds.javaxProvider.requireClassLikeSymbol(session)
-                    injectedClass.constructor.getValue().valueParameterSymbols.map { paramSymbol ->
-                      paramSymbol.name to providerSymbol.constructType(arrayOf(paramSymbol.resolvedReturnType))
-                    }
-                  },
+                  valueParameters = constructorProperties,
                   annotations = lazyValue { listOf(createFirAnnotation(ClassIds.kotlinJvmStatic)) },
                   firExtension = firExtension,
                 ),
-                PendingMemberFunction(
+                GeneratedMemberFunction(
                   name = Names.newInstance,
                   returnType = injectedClass.classId.map { it.constructClassLikeType() },
                   ownerSymbol = lazyValue { ownerSymbol },
@@ -174,7 +173,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
                   cachesFactory = cachesFactory,
                   valueParameters = injectedClass.constructor.map { constructor ->
                     constructor.valueParameterSymbols.map { symbol ->
-                      symbol.name to symbol.resolvedReturnType
+                      ValueParameter(name = symbol.name, type = symbol.resolvedReturnType)
                     }
                   },
                   annotations = lazyValue { listOf(createFirAnnotation(ClassIds.kotlinJvmStatic)) },
@@ -188,17 +187,13 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
     )
   }
 
-  private val companionsByCompanionClassId =
-    cachesFactory.createCache { companionClassId: ClassId ->
-    }
-
   override fun getTopLevelClassIds(): Set<ClassId> = factoryClassIds
 
-  override fun hasPackage(packageFqName: FqName): Boolean {
-    return factoryClassIds.any { it.packageFqName == packageFqName }
-  }
+  // override fun hasPackage(packageFqName: FqName): Boolean {
+  //   return factoryClassIds.any { it.packageFqName == packageFqName }
+  // }
 
-  override fun generateTopLevelClassLikeDeclaration(classId: ClassId): PendingTopLevelClass {
+  override fun generateTopLevelClassLikeDeclaration(classId: ClassId): GeneratedTopLevelClass {
     return factoriesByFactoryClassId.getValue(classId)
   }
 
@@ -209,7 +204,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
     return getGeneratedTopOrNested(classSymbol.classId).members.mapToSet { it.name }
   }
 
-  private fun getGeneratedTopOrNested(classId: ClassId): PendingClassLikeDeclaration {
+  private fun getGeneratedTopOrNested(classId: ClassId): GeneratedClassLikeDeclaration {
     return factoriesByFactoryClassId.getValueIfComputed(classId)
       ?: factoriesByFactoryClassId.getValue(classId.outermostClassId)
         .nestedClasses.single { it.name == classId.shortClassName }
@@ -218,18 +213,19 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
   override fun generateFunctions(
     callableId: CallableId,
     context: MemberGenerationContext?,
-  ): List<FirNamedFunctionSymbol> = getGeneratedTopOrNested(callableId.classId!!).members
-    .filterIsInstance<PendingMemberFunction>()
+  ): List<FirNamedFunctionSymbol> = getGeneratedTopOrNested(callableId.requireClassId()).members
+    .filterIsInstance<GeneratedMemberFunction>()
+    .filter { it.name == callableId.callableName }
     .map { it.generatedFunction.getValue().symbol }
 
   override fun generateNestedClassLikeDeclaration(
     owner: FirClassSymbol<*>,
     name: Name,
     context: NestedClassGenerationContext,
-  ): PendingCompanionObject = factoriesByFactoryClassId.getValue(owner.classId)
+  ): GeneratedCompanionObject = factoriesByFactoryClassId.getValue(owner.classId)
     .let { factoryClass ->
 
-      factoryClass.nestedClasses.single { it.name == name } as PendingCompanionObject
+      factoryClass.nestedClasses.single { it.name == name } as GeneratedCompanionObject
     }
 
   companion object Key : GeneratedDeclarationKey()

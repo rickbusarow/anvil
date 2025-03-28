@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.ir.types.getClass
 import org.jetbrains.kotlin.ir.util.companionObject
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.properties
@@ -110,7 +111,7 @@ internal class IrInjectConstructorFactory(
             val backingField = property.backingField!!
             val propertyType = backingField.type
             val providerGetFunction: IrSimpleFunction =
-              propertyType.getClass()!!.functions.first { it.name.asString() == "get" }
+              propertyType.getClass()!!.getSimpleFunction("get")!!.owner
 
             irCallOp(
               callee = providerGetFunction.symbol,

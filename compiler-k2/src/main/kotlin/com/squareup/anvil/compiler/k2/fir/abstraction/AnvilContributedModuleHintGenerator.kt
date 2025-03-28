@@ -3,7 +3,7 @@ package com.squareup.anvil.compiler.k2.fir.abstraction
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
-import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
+import com.squareup.anvil.compiler.k2.fir.GeneratedTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
@@ -55,16 +55,16 @@ internal class AnvilContributedModuleHintGenerator(session: FirSession) :
   }
 
   override fun hasPackage(packageFqName: FqName): Boolean {
-    return packageFqName == FqNames.anvilHintPackage && contributedModuleSymbols.isNotEmpty()
+    return packageFqName == FqNames.anvilHintPackage
   }
 
   override fun getTopLevelClassIds(): Set<ClassId> = hintClassIdsToContributedModules.keys
 
   override fun generateTopLevelClassLikeDeclaration(
     classId: ClassId,
-  ): PendingTopLevelClass {
+  ): GeneratedTopLevelClass {
     return hintClassIdsToContributedModules.getValue(classId).let { modules ->
-      PendingTopLevelClass(
+      GeneratedTopLevelClass(
         classId = classId,
         key = GeneratedBindingHintKey,
         classKind = ClassKind.INTERFACE,

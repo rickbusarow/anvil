@@ -1,11 +1,13 @@
 package com.squareup.anvil.compiler.k2.fir.abstraction.extensions
 
 import com.squareup.anvil.annotations.internal.InternalAnvilApi
-import com.squareup.anvil.compiler.k2.fir.PendingMemberFunction
+import com.squareup.anvil.compiler.k2.fir.GeneratedMemberFunction
+import com.squareup.anvil.compiler.k2.fir.GeneratedMemberProperty
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirProcessorProvider
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.utils.fir.wrapInSyntheticFile
+import com.squareup.anvil.compiler.k2.utils.names.requireClassId
 import com.squareup.anvil.compiler.k2.utils.stdlib.mapToSet
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.createCache
@@ -32,7 +34,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
 
   private val topLevelByClassId = mutableMapOf<ClassId, TopLevelClassProcessor>()
 
-  private val pendingTopLevelClassByClassId =
+  private val generatedTopLevelClassByClassId =
     session.firCachesFactory.createCache { classId: ClassId ->
       topLevelByClassId[classId]?.generateTopLevelClassLikeDeclaration(classId)
     }
@@ -40,7 +42,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
   private val nestedByClassId = session.firCachesFactory.createCache { classId: ClassId ->
 
     classId.parentClassId?.let { parent ->
-      pendingTopLevelClassByClassId.getValue(parent)?.let { top ->
+      generatedTopLevelClassByClassId.getValue(parent)?.let { top ->
         top.nestedClasses.firstOrNull { it.name == classId.shortClassName }
       }
     }
@@ -75,7 +77,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
 
   @ExperimentalTopLevelDeclarationsGenerationApi
   override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
-    return pendingTopLevelClassByClassId.getValue(classId)
+    return generatedTopLevelClassByClassId.getValue(classId)
       ?.generatedClass
       ?.getValue()
       ?.wrapInSyntheticFile(session)
@@ -87,7 +89,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: MemberGenerationContext,
   ): Set<Name> {
 
-    val type = pendingTopLevelClassByClassId.getValue(classSymbol.classId)
+    val type = generatedTopLevelClassByClassId.getValue(classSymbol.classId)
       ?: nestedByClassId.getValue(classSymbol.classId)
 
     if (type == null) return emptySet()
@@ -102,15 +104,14 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: MemberGenerationContext?,
   ): List<FirNamedFunctionSymbol> {
 
-    val type = pendingTopLevelClassByClassId.getValue(callableId.classId!!)
-      ?: nestedByClassId.getValue(callableId.classId!!)
+    val type = generatedTopLevelClassByClassId.getValue(callableId.requireClassId())
+      ?: nestedByClassId.getValue(callableId.requireClassId())
+      ?: return emptyList()
 
-    val all = type!!.members
-      .filterIsInstance<PendingMemberFunction>()
+    return type.members
+      .filterIsInstance<GeneratedMemberFunction>()
       .filter { it.name == callableId.callableName }
       .map { it.generatedFunction.getValue().symbol }
-
-    return all
   }
 
   override fun generateProperties(
@@ -118,15 +119,19 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: MemberGenerationContext?,
   ): List<FirPropertySymbol> {
 
-    val type = pendingTopLevelClassByClassId.getValue(callableId.classId!!)
-      ?: nestedByClassId.getValue(callableId.classId!!)
+    val type = generatedTopLevelClassByClassId.getValue(callableId.requireClassId())
+      ?: nestedByClassId.getValue(callableId.requireClassId())
+      ?: return emptyList()
 
-    return super.generateProperties(callableId, context)
+    return type.members
+      .filterIsInstance<GeneratedMemberProperty>()
+      .filter { it.name == callableId.callableName }
+      .map { it.generatedProperty.getValue().symbol }
   }
 
   override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
 
-    val topLevel = pendingTopLevelClassByClassId.getValue(context.owner.classId)
+    val topLevel = generatedTopLevelClassByClassId.getValue(context.owner.classId)
 
     if (topLevel != null) {
       return topLevel.constructors.invoke(context).map { it.symbol }
@@ -144,7 +149,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: NestedClassGenerationContext,
   ): Set<Name> {
 
-    val topLevel = pendingTopLevelClassByClassId.getValue(classSymbol.classId)
+    val topLevel = generatedTopLevelClassByClassId.getValue(classSymbol.classId)
       ?: return emptySet()
 
     return topLevel.nestedClasses.mapToSet { it.name }
@@ -155,7 +160,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     name: Name,
     context: NestedClassGenerationContext,
   ): FirClassLikeSymbol<*>? {
-    val topLevel = pendingTopLevelClassByClassId.getValue(owner.classId)
+    val topLevel = generatedTopLevelClassByClassId.getValue(owner.classId)
       ?: return null
 
     val nested = topLevel.nestedClasses.firstOrNull { it.name == name }

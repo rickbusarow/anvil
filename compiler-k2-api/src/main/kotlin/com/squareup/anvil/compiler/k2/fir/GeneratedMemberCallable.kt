@@ -1,6 +1,7 @@
 package com.squareup.anvil.compiler.k2.fir
 
 import org.jetbrains.kotlin.GeneratedDeclarationKey
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.fir.caches.FirCachesFactory
 import org.jetbrains.kotlin.fir.caches.FirLazyValue
@@ -15,16 +16,17 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.name.Name
 
-public sealed interface PendingMemberCallable {
+public sealed interface GeneratedMemberCallable {
   public val name: Name
   public val returnType: FirLazyValue<ConeKotlinType>
   public val ownerSymbol: FirLazyValue<FirClassSymbol<*>>
   public val key: GeneratedDeclarationKey
   public val visibility: Visibility
+  public val modality: Modality
   public val annotations: FirLazyValue<List<FirAnnotation>>
 }
 
-public class PendingMemberProperty(
+public class GeneratedMemberProperty(
   override val name: Name,
   override val returnType: FirLazyValue<ConeKotlinType>,
   override val ownerSymbol: FirLazyValue<FirClassSymbol<*>>,
@@ -33,9 +35,10 @@ public class PendingMemberProperty(
   override val visibility: Visibility,
   cachesFactory: FirCachesFactory,
   firExtension: FirExtension,
+  override val modality: Modality = Modality.FINAL,
   public val initializer: FirLazyValue<FirExpression>? = null,
   override val annotations: FirLazyValue<List<FirAnnotation>> = cachesFactory.createLazyValue { emptyList() },
-) : PendingMemberCallable {
+) : GeneratedMemberCallable {
 
   public val generatedProperty: FirLazyValue<FirProperty> = cachesFactory.createLazyValue {
     firExtension.createMemberProperty(
@@ -45,17 +48,18 @@ public class PendingMemberProperty(
       returnType = returnType.getValue(),
       isVal = isVal,
     ) {
-      this@createMemberProperty.visibility = this@PendingMemberProperty.visibility
+      this@createMemberProperty.visibility = this@GeneratedMemberProperty.visibility
+      this@createMemberProperty.modality = this@GeneratedMemberProperty.modality
     }.apply {
-      if (this@PendingMemberProperty.initializer != null) {
-        replaceInitializer(this@PendingMemberProperty.initializer.getValue())
+      if (this@GeneratedMemberProperty.initializer != null) {
+        replaceInitializer(this@GeneratedMemberProperty.initializer.getValue())
       }
-      replaceAnnotations(this@PendingMemberProperty.annotations.getValue())
+      replaceAnnotations(this@GeneratedMemberProperty.annotations.getValue())
     }
   }
 }
 
-public class PendingMemberFunction(
+public class GeneratedMemberFunction(
   override val name: Name,
   override val returnType: FirLazyValue<ConeKotlinType>,
   override val ownerSymbol: FirLazyValue<FirClassSymbol<*>>,
@@ -63,9 +67,10 @@ public class PendingMemberFunction(
   override val visibility: Visibility,
   cachesFactory: FirCachesFactory,
   firExtension: FirExtension,
-  public val valueParameters: FirLazyValue<List<Pair<Name, ConeKotlinType>>> = cachesFactory.createLazyValue { emptyList() },
+  override val modality: Modality = Modality.FINAL,
+  public val valueParameters: FirLazyValue<List<ValueParameter>> = cachesFactory.createLazyValue { emptyList() },
   override val annotations: FirLazyValue<List<FirAnnotation>> = cachesFactory.createLazyValue { emptyList() },
-) : PendingMemberCallable {
+) : GeneratedMemberCallable {
 
   public val generatedFunction: FirLazyValue<FirSimpleFunction> = cachesFactory.createLazyValue {
     firExtension.createMemberFunction(
@@ -74,12 +79,27 @@ public class PendingMemberFunction(
       name = name,
       returnType = returnType.getValue(),
     ) {
-      this@createMemberFunction.visibility = this@PendingMemberFunction.visibility
+      this@createMemberFunction.visibility = this@GeneratedMemberFunction.visibility
+      this@createMemberFunction.modality = this@GeneratedMemberFunction.modality
       for ((name, type) in valueParameters.getValue()) {
         valueParameter(name = name, type = type)
       }
     }.apply {
-      replaceAnnotations(this@PendingMemberFunction.annotations.getValue())
+      replaceAnnotations(this@GeneratedMemberFunction.annotations.getValue())
+
+      // replaceBody(
+      //   buildSingleExpressionBlock(
+      //     buildReturnExpression {
+      //       target = FirFunctionTarget(null, isLambda = false)
+      //       result = buildFunctionCall {
+      //         calleeReference = buildResolvedNamedReference {
+      //           name = returnType.getValue().classId!!.shortClassName
+      //           resolvedSymbol = ownerSymbol.getValue()
+      //         }
+      //       }
+      //     },
+      //   ),
+      // )
     }
   }
 }

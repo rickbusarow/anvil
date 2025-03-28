@@ -31,8 +31,6 @@ public class AnvilFirExtensionRegistrar(
     +::ScopedMergeProvider
     +::DaggerThingProvider
 
-    // +::FirInjectConstructorFactoryGenerationExtension
-
     val factories = ServiceLoader.load(FirExtensionSessionComponent.Factory::class.java)
 
     for (factory in factories) {

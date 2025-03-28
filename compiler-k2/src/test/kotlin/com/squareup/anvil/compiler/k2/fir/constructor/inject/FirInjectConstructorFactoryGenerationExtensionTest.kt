@@ -68,9 +68,41 @@ class FirInjectConstructorFactoryGenerationExtensionTest : CompilationModeTest(
       injectClassInstance.getDeclaredFieldValue("param1") shouldBe expectedInt
     }
   }
-    // TODO (rbusarow) delete me
-    .let {
-      check(System.getenv("CI") == null) { "delete me" }
-      it.limit(1)
+
+  @TestFactory
+  fun `a factory is generated when there are imports`() = testFactory {
+
+    // Imports cause `CodeGenerationExtension.hasPackage()` to be called earlier,
+    // which could cause problems if lazy predicate-based values are computed before
+    // those annotations can be resolved.
+    compile2(
+      """
+      package com.squareup.test
+
+      // Any import will do, even if it isn't used and the relevant annotation is fully qualified.
+      import kotlin.Unit
+
+      class InjectClass @javax.inject.Inject constructor(
+        val param0: String,
+        val param1: Int,
+      )
+      """.trimIndent(),
+    ) {
+      val expectedString = "ExpectedString"
+      val expectedInt = 77
+      val factoryClass = classLoader.injectClass_Factory
+
+      val factoryInstance = factoryClass.getMethod(
+        "create",
+        Provider::class.java,
+        Provider::class.java,
+      )
+        .invoke(factoryClass, Provider { expectedString }, Provider { expectedInt })
+
+      val injectClassInstance = factoryInstance.invokeGet()
+
+      injectClassInstance.getDeclaredFieldValue("param0") shouldBe expectedString
+      injectClassInstance.getDeclaredFieldValue("param1") shouldBe expectedInt
     }
+  }
 }

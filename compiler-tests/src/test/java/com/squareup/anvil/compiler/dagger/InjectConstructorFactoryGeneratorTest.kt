@@ -2274,13 +2274,13 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
 
       compile2(
         """
-      package com.squareup.test
-
-      import javax.inject.Inject
-      import javax.inject.Provider
-
-      class InjectClass<T : CharSequence> @Inject constructor(element: Provider<T>)
-      """,
+        package com.squareup.test
+        
+        import javax.inject.Inject
+        import javax.inject.Provider
+        
+        class InjectClass<T : CharSequence> @Inject constructor(element: Provider<T>)
+        """,
       ) {
         val constructor = classLoader.loadClass("com.squareup.test.InjectClass")
           .factoryClass().declaredConstructors.single()

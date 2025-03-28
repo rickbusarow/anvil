@@ -25,7 +25,7 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 
 @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
-public class PendingTopLevelClass(
+public class GeneratedTopLevelClass(
   public val classId: ClassId,
   override val key: GeneratedDeclarationKey,
   override val classKind: ClassKind,
@@ -36,7 +36,7 @@ public class PendingTopLevelClass(
   override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
   nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
   members: MemberCallableDeclarationFactory = MemberCallableDeclarationFactory { emptyList() },
-) : PendingClassLikeDeclaration(firExtension.session) {
+) : GeneratedClassLikeDeclaration(firExtension.session) {
 
   public val generatedClass: FirLazyValue<FirRegularClass> = cachesFactory.createLazyValue {
     firExtension.createTopLevelClass(
@@ -44,21 +44,21 @@ public class PendingTopLevelClass(
       key = key,
       classKind = classKind,
     ) {
-      visibility = this@PendingTopLevelClass.visibility
+      visibility = this@GeneratedTopLevelClass.visibility
       supertypes.getValue().forEach { superType(it) }
     }.apply {
-      replaceAnnotations(this@PendingTopLevelClass.annotations.getValue())
+      replaceAnnotations(this@GeneratedTopLevelClass.annotations.getValue())
     }
   }
-  override val members: List<PendingMemberCallable> by cachesFactory.createLazyValue {
+  override val members: List<GeneratedMemberCallable> by cachesFactory.createLazyValue {
     members.create(generatedClass.getValue().symbol)
   }
-  override val nestedClasses: List<PendingNestedClassLikeDeclaration> by cachesFactory.createLazyValue {
+  override val nestedClasses: List<GeneratedNestedClassLikeDeclaration> by cachesFactory.createLazyValue {
     nestedClasses.create(generatedClass.getValue().symbol)
   }
 }
 
-public sealed class PendingClassLikeDeclaration(
+public sealed class GeneratedClassLikeDeclaration(
   session: FirSession,
 ) : HasFirCachesFactory(session.firCachesFactory) {
   public abstract val key: GeneratedDeclarationKey
@@ -66,19 +66,19 @@ public sealed class PendingClassLikeDeclaration(
   public abstract val visibility: Visibility
   public abstract val supertypes: FirLazyValue<List<ConeKotlinType>>
   public abstract val annotations: FirLazyValue<List<FirAnnotation>>
-  public abstract val members: List<PendingMemberCallable>
+  public abstract val members: List<GeneratedMemberCallable>
   public abstract val constructors: (context: MemberGenerationContext) -> List<FirConstructor>
-  public abstract val nestedClasses: List<PendingNestedClassLikeDeclaration>
+  public abstract val nestedClasses: List<GeneratedNestedClassLikeDeclaration>
 }
 
-public sealed class PendingNestedClassLikeDeclaration(session: FirSession) :
-  PendingClassLikeDeclaration(session) {
+public sealed class GeneratedNestedClassLikeDeclaration(session: FirSession) :
+  GeneratedClassLikeDeclaration(session) {
   public abstract val ownerSymbol: FirLazyValue<FirClassSymbol<*>>
   public abstract val name: Name
   public abstract val generatedClass: FirLazyValue<FirRegularClass>
 }
 
-public class PendingNestedClass(
+public class GeneratedNestedClass(
   override val name: Name,
   override val ownerSymbol: FirLazyValue<FirClassSymbol<*>>,
   override val key: GeneratedDeclarationKey,
@@ -90,27 +90,27 @@ public class PendingNestedClass(
   override val constructors: (context: MemberGenerationContext) -> List<FirConstructor> = { emptyList() },
   override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
   nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
-) : PendingNestedClassLikeDeclaration(firExtension.session) {
+) : GeneratedNestedClassLikeDeclaration(firExtension.session) {
 
   override val generatedClass: FirLazyValue<FirRegularClass> =
     cachesFactory.createLazyValue {
       firExtension.createNestedClass(owner = ownerSymbol.getValue(), name, key = key, classKind) {
-        this@createNestedClass.visibility = this@PendingNestedClass.visibility
+        this@createNestedClass.visibility = this@GeneratedNestedClass.visibility
       }
         .apply {
-          replaceAnnotations(this@PendingNestedClass.annotations.getValue())
+          replaceAnnotations(this@GeneratedNestedClass.annotations.getValue())
         }
     }
 
-  override val members: List<PendingMemberCallable> by cachesFactory.createLazyValue {
+  override val members: List<GeneratedMemberCallable> by cachesFactory.createLazyValue {
     members.create(generatedClass.getValue().symbol)
   }
-  override val nestedClasses: List<PendingNestedClassLikeDeclaration> by cachesFactory.createLazyValue {
+  override val nestedClasses: List<GeneratedNestedClassLikeDeclaration> by cachesFactory.createLazyValue {
     nestedClasses.create(generatedClass.getValue().symbol)
   }
 }
 
-public class PendingCompanionObject(
+public class GeneratedCompanionObject(
   override val ownerSymbol: FirLazyValue<FirClassSymbol<*>>,
   override val key: GeneratedDeclarationKey,
   override val visibility: Visibility,
@@ -119,7 +119,7 @@ public class PendingCompanionObject(
   members: MemberCallableDeclarationFactory = MemberCallableDeclarationFactory { emptyList() },
   override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
   nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
-) : PendingNestedClassLikeDeclaration(firExtension.session) {
+) : GeneratedNestedClassLikeDeclaration(firExtension.session) {
 
   override val constructors: (MemberGenerationContext) -> List<FirConstructor> = { ctx ->
     listOf(firExtension.createDefaultPrivateConstructor(owner = ctx.owner, key = key))
@@ -131,24 +131,24 @@ public class PendingCompanionObject(
   override val generatedClass: FirLazyValue<FirRegularClass> = ownerSymbol.map { ownerSymbol ->
 
     firExtension.createCompanionObject(owner = ownerSymbol, key = key) {
-      this@createCompanionObject.visibility = this@PendingCompanionObject.visibility
+      this@createCompanionObject.visibility = this@GeneratedCompanionObject.visibility
     }
       .apply {
-        replaceAnnotations(this@PendingCompanionObject.annotations.getValue())
+        replaceAnnotations(this@GeneratedCompanionObject.annotations.getValue())
       }
   }
 
-  override val members: List<PendingMemberCallable> by generatedClass.map { members.create(it.symbol) }
+  override val members: List<GeneratedMemberCallable> by generatedClass.map { members.create(it.symbol) }
 
-  override val nestedClasses: List<PendingNestedClassLikeDeclaration>
+  override val nestedClasses: List<GeneratedNestedClassLikeDeclaration>
     by generatedClass.map { nestedClasses.create(it.symbol) }
 }
 
-public typealias NestedClassLikeDeclarationFactory = OwnedPendingDeclarationFactory<FirClassSymbol<*>, PendingNestedClassLikeDeclaration>
-public typealias MemberCallableDeclarationFactory = OwnedPendingDeclarationFactory<FirClassSymbol<*>, PendingMemberCallable>
+public typealias NestedClassLikeDeclarationFactory = OwnedGeneratedDeclarationFactory<FirClassSymbol<*>, GeneratedNestedClassLikeDeclaration>
+public typealias MemberCallableDeclarationFactory = OwnedGeneratedDeclarationFactory<FirClassSymbol<*>, GeneratedMemberCallable>
 
 @NestedOwnerDSL
-public fun interface OwnedPendingDeclarationFactory<OWNER : FirBasedSymbol<*>, R> {
+public fun interface OwnedGeneratedDeclarationFactory<OWNER : FirBasedSymbol<*>, R> {
   public fun create(owner: OWNER): List<R>
 }
 

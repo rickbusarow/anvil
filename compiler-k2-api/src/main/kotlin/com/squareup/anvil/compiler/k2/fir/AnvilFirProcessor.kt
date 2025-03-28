@@ -40,14 +40,12 @@ public abstract class HasFirCachesFactory(
 }
 
 public sealed class AnvilFirProcessor(
-  session: FirSession,
+  protected val session: FirSession,
 ) : HasFirCachesFactory(session.firCachesFactory),
   HasAnvilFirContext {
 
   override val anvilContext: AnvilFirContext
     get() = session.anvilContext
-
-  protected val session: FirSession get() = anvilContext.session
 
   protected fun lazySymbols(
     predicate: LookupPredicate,
@@ -83,15 +81,15 @@ public abstract class TopLevelClassProcessor(session: FirSession) :
   }
 
   public abstract fun getTopLevelClassIds(): Set<ClassId>
-  public abstract fun hasPackage(packageFqName: FqName): Boolean
+  public open fun hasPackage(packageFqName: FqName): Boolean = false
 
-  public abstract fun generateTopLevelClassLikeDeclaration(classId: ClassId): PendingTopLevelClass
+  public abstract fun generateTopLevelClassLikeDeclaration(classId: ClassId): GeneratedTopLevelClass
 
   public open fun generateNestedClassLikeDeclaration(
     owner: FirClassSymbol<*>,
     name: Name,
     context: NestedClassGenerationContext,
-  ): PendingNestedClassLikeDeclaration? = null
+  ): GeneratedNestedClassLikeDeclaration? = null
 
   public open fun getCallableNamesForClass(
     classSymbol: FirClassLikeSymbol<*>,

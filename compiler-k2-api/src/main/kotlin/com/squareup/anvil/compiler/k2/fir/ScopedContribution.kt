@@ -2,7 +2,11 @@ package com.squareup.anvil.compiler.k2.fir
 
 import org.jetbrains.kotlin.fir.caches.FirLazyValue
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
+import org.jetbrains.kotlin.fir.expressions.FirAnnotation
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 
@@ -103,6 +107,20 @@ public class BindingKey(
   public val scopeType: FirLazyValue<ClassId>,
   public val contributedType: ClassId,
   public val qualifier: Qualifier?,
+)
+
+public class InjectedConstructor(
+  public val classId: FirLazyValue<ClassId>,
+  public val qualifier: Qualifier?,
+  public val containingDeclaration: FirLazyValue<FirRegularClassSymbol>,
+  public val constructor: FirLazyValue<FirConstructorSymbol>,
+)
+
+public data class ValueParameter(
+  val name: Name,
+  val type: ConeKotlinType,
+  val annotations: List<FirAnnotation> = emptyList(),
+  val qualifier: Qualifier? = null,
 )
 
 public class Qualifier(

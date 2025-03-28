@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.fir.plugin.createTopLevelProperty
 import org.jetbrains.kotlin.name.CallableId
 
 @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
-internal class PendingTopLevelProperty(
+internal class GeneratedTopLevelProperty(
   val callableId: CallableId,
   val key: GeneratedDeclarationKey,
   val visibility: Visibility,
@@ -27,9 +27,9 @@ internal class PendingTopLevelProperty(
       callableId = callableId,
       returnType = firExtension.session.builtinTypes.unitType.coneType,
     ) {
-      this@createTopLevelProperty.visibility = this@PendingTopLevelProperty.visibility
+      this@createTopLevelProperty.visibility = this@GeneratedTopLevelProperty.visibility
     }.apply {
-      replaceAnnotations(this@PendingTopLevelProperty.annotations.getValue())
+      replaceAnnotations(this@GeneratedTopLevelProperty.annotations.getValue())
     }
   }
 }

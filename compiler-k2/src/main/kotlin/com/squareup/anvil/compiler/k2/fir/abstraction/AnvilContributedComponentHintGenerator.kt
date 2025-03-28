@@ -3,10 +3,9 @@ package com.squareup.anvil.compiler.k2.fir.abstraction
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
-import com.squareup.anvil.compiler.k2.fir.PendingTopLevelClass
+import com.squareup.anvil.compiler.k2.fir.GeneratedTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
 import com.squareup.anvil.compiler.k2.fir.contributions.GeneratedBindingHintKey
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
@@ -41,8 +40,7 @@ internal class AnvilContributedComponentHintGenerator(
   }
 
   override fun hasPackage(packageFqName: FqName): Boolean {
-    return packageFqName == FqNames.anvilHintPackage &&
-      session.anvilFirSymbolProvider.contributesSupertypeSymbols.isNotEmpty()
+    return packageFqName == FqNames.anvilHintPackage
   }
 
   override fun getTopLevelClassIds(): Set<ClassId> {
@@ -55,7 +53,7 @@ internal class AnvilContributedComponentHintGenerator(
 
   override fun generateTopLevelClassLikeDeclaration(
     classId: ClassId,
-  ): PendingTopLevelClass = PendingTopLevelClass(
+  ): GeneratedTopLevelClass = GeneratedTopLevelClass(
     classId = classId,
     key = GeneratedBindingHintKey,
     classKind = ClassKind.INTERFACE,

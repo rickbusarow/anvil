@@ -14,8 +14,10 @@ buildConfig {
 dependencies {
 
   testImplementation(libs.dagger2)
+  testImplementation(libs.dagger2)
   testImplementation(libs.dagger2.compiler)
   testImplementation(libs.guava)
+  testImplementation(libs.inject)
   testImplementation(libs.jsr250)
   testImplementation(libs.kase)
   testImplementation(libs.kotest.assertions.core.jvm)
