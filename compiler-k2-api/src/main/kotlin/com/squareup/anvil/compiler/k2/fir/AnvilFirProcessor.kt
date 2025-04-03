@@ -39,8 +39,17 @@ public abstract class HasFirCachesFactory(
   }
 }
 
+@RequiresOptIn("Is this actually necessary?", level = RequiresOptIn.Level.WARNING)
+public annotation class ProcessorFlushingCheck
+
+/**
+ * @param session
+ * @property isFlushing If true, this processor will be invoked only after all non-isFlushing processors of the same type
+ */
 public sealed class AnvilFirProcessor(
   protected val session: FirSession,
+  @property:ProcessorFlushingCheck
+  public val isFlushing: Boolean,
 ) : HasFirCachesFactory(session.firCachesFactory),
   HasAnvilFirContext {
 
@@ -70,7 +79,7 @@ public abstract class AbstractAnvilFirProcessorFactory(
 }
 
 public abstract class TopLevelClassProcessor(session: FirSession) :
-  AnvilFirProcessor(session) {
+  AnvilFirProcessor(session, isFlushing = false) {
 
   protected var firExtension: FirDeclarationGenerationExtension by Delegates.notNull()
     private set
@@ -102,7 +111,11 @@ public abstract class TopLevelClassProcessor(session: FirSession) :
   ): List<FirNamedFunctionSymbol> = emptyList()
 }
 
-public abstract class SupertypeProcessor(session: FirSession) : AnvilFirProcessor(session) {
+public abstract class SupertypeProcessor(
+  session: FirSession,
+  isFlushing: Boolean,
+) : AnvilFirProcessor(session, isFlushing) {
+
   public abstract fun shouldProcess(declaration: FirClassLikeDeclaration): Boolean
   public open fun addSupertypes(
     classLikeDeclaration: FirClassLikeDeclaration,
@@ -116,12 +129,11 @@ public abstract class SupertypeProcessor(session: FirSession) : AnvilFirProcesso
   ): List<FirResolvedTypeRef> = emptyList()
 }
 
-public abstract class FlushingSupertypeProcessor(
-  session: FirSession,
-) : SupertypeProcessor(session) {
+public abstract class AnnotatingSupertypeProcessor(session: FirSession) :
+  SupertypeProcessor(session, isFlushing = true) {
 
   @OptIn(RequiresTypesResolutionPhase::class)
-  public override fun addSupertypes(
+  public final override fun addSupertypes(
     classLikeDeclaration: FirClassLikeDeclaration,
     resolvedSupertypes: List<FirResolvedTypeRef>,
     typeResolver: TypeResolveService,
