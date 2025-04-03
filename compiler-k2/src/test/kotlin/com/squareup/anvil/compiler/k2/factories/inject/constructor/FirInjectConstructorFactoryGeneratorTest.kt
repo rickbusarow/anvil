@@ -1,4 +1,4 @@
-package com.squareup.anvil.compiler.k2.fir.constructor.inject
+package com.squareup.anvil.compiler.k2.factories.inject.constructor
 
 import com.squareup.anvil.compiler.testing.CompilationModeTest
 import com.squareup.anvil.compiler.testing.TestNames
@@ -9,7 +9,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 import javax.inject.Provider
 
-class FirInjectConstructorFactoryGenerationExtensionTest : CompilationModeTest(
+class FirInjectConstructorFactoryGeneratorTest : CompilationModeTest(
   MODE_DEFAULTS.filter { it.isK2 && !it.useKapt },
 ) {
   @TestFactory

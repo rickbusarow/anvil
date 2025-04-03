@@ -1,4 +1,4 @@
-package com.squareup.anvil.compiler.k2.constructor.inject
+package com.squareup.anvil.compiler.k2.factories.inject.constructor
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
@@ -18,7 +18,6 @@ import com.squareup.anvil.compiler.k2.utils.names.Names
 import com.squareup.anvil.compiler.k2.utils.names.factoryJoined
 import com.squareup.anvil.compiler.k2.utils.names.requireClassId
 import com.squareup.anvil.compiler.k2.utils.stdlib.mapToSet
-import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
@@ -40,10 +39,33 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 
 @AutoService(AnvilFirProcessor.Factory::class)
-public class InjectConstructorFactoryGeneratorFactory :
-  AbstractAnvilFirProcessorFactory(initializer = ::InjectConstructorFactoryGenerator)
+internal class FirInjectConstructorFactoryGeneratorFactory :
+  AbstractAnvilFirProcessorFactory(initializer = ::FirInjectConstructorFactoryGenerator)
 
-internal class InjectConstructorFactoryGenerator(session: FirSession) :
+/**
+ * Given this kotlin source:
+ * class InjectClass @Inject constructor(private val param0: String)
+ *
+ *
+ * Using a FirDeclarationGenerationExtension in kotlin k2 fir plugin generate a class file
+ * representing the following:
+ *
+ * public class InjectClass_Factory(
+ *   private val param0: Provider<String>
+ * ) : com.internal.Dagger.Factory<InjectClass> {
+ *   public override fun `get`(): InjectClass = newInstance(param0.get())
+ *
+ *   public companion object {
+ *     @JvmStatic
+ *     public fun create(param0: dagger.Provider<String>): InjectClass_Factory =
+ *         InjectClass_Factory(param0)
+ *
+ *     @JvmStatic
+ *     public fun newInstance(param0: String): InjectClass = InjectClass(param0)
+ *   }
+ * }
+ */
+internal class FirInjectConstructorFactoryGenerator(session: FirSession) :
   TopLevelClassProcessor(session) {
 
   private val injectConstructorsByClassId
@@ -58,7 +80,9 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
         .associateBy { it.classId.getValue().factoryJoined }
     }
 
-  private val factoryClassIds by lazyValue { injectConstructorsByClassId.keys.mapToSet { it.factoryJoined } }
+  private val factoryClassIds by lazyValue {
+    injectConstructorsByClassId.keys.mapToSet { it.factoryJoined }
+  }
 
   private val factoriesByFactoryClassId = cachesFactory.createCache { factoryId: ClassId ->
 
@@ -77,7 +101,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
 
     GeneratedTopLevelClass(
       classId = factoryId,
-      key = Key,
+      key = InjectConstructorFactoryGeneratorKey,
       classKind = ClassKind.CLASS,
       visibility = Visibilities.Public,
       annotations = lazyValue { emptyList() },
@@ -93,7 +117,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
         listOf(
           firExtension.createConstructor(
             owner = ctx.owner,
-            key = Key,
+            key = InjectConstructorFactoryGeneratorKey,
             isPrimary = true,
             generateDelegatedNoArgConstructorCall = true,
           ) {
@@ -106,7 +130,9 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
       members = { ownerSymbol ->
 
         val constructorParamsByName = lazyValue {
-          ownerSymbol.primaryConstructorSymbol(session)!!.valueParameterSymbols.associateBy { it.name }
+          ownerSymbol.primaryConstructorSymbol(
+            session,
+          )!!.valueParameterSymbols.associateBy { it.name }
         }
 
         listOf(
@@ -115,7 +141,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
               name = name,
               returnType = lazyValue { type },
               ownerSymbol = lazyValue { ownerSymbol },
-              key = Key,
+              key = InjectConstructorFactoryGeneratorKey,
               isVal = false,
               visibility = Visibilities.Public,
               cachesFactory = cachesFactory,
@@ -136,7 +162,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
             name = Names.get,
             returnType = injectedClass.constructor.map { it.resolvedReturnType },
             ownerSymbol = lazyValue { ownerSymbol },
-            key = Key,
+            key = InjectConstructorFactoryGeneratorKey,
             visibility = Visibilities.Public,
             cachesFactory = cachesFactory,
             firExtension = firExtension,
@@ -147,7 +173,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
         listOf(
           GeneratedCompanionObject(
             ownerSymbol = lazyValue { outerOwnerSymbol },
-            key = Key,
+            key = InjectConstructorFactoryGeneratorKey,
             visibility = Visibilities.Public,
             annotations = lazyValue { emptyList() },
             firExtension = firExtension,
@@ -157,7 +183,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
                   name = Names.create,
                   returnType = lazyValue { factoryId.constructClassLikeType() },
                   ownerSymbol = lazyValue { ownerSymbol },
-                  key = Key,
+                  key = InjectConstructorFactoryGeneratorKey,
                   visibility = Visibilities.Public,
                   cachesFactory = cachesFactory,
                   valueParameters = constructorProperties,
@@ -168,7 +194,7 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
                   name = Names.newInstance,
                   returnType = injectedClass.classId.map { it.constructClassLikeType() },
                   ownerSymbol = lazyValue { ownerSymbol },
-                  key = Key,
+                  key = InjectConstructorFactoryGeneratorKey,
                   visibility = Visibilities.Public,
                   cachesFactory = cachesFactory,
                   valueParameters = injectedClass.constructor.map { constructor ->
@@ -227,6 +253,4 @@ internal class InjectConstructorFactoryGenerator(session: FirSession) :
 
       factoryClass.nestedClasses.single { it.name == name } as GeneratedCompanionObject
     }
-
-  companion object Key : GeneratedDeclarationKey()
 }

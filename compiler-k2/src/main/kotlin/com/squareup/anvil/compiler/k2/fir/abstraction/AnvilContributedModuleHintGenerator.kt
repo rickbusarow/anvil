@@ -29,7 +29,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.types.ConstantValueKind
 
 @AutoService(AnvilFirProcessor.Factory::class)
-public class AnvilContributedModuleHintGeneratorFactory :
+internal class AnvilContributedModuleHintGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::AnvilContributedModuleHintGenerator)
 
 internal class AnvilContributedModuleHintGenerator(session: FirSession) :

@@ -21,17 +21,16 @@ public class SupertypeProcessorExtension(
   session: FirSession,
 ) : FirSupertypeGenerationExtension(session) {
 
-  private val generatorsByClassId = mutableMapOf<ClassId, List<SupertypeProcessor>>()
+  private val processorsByClassId = mutableMapOf<ClassId, List<SupertypeProcessor>>()
 
   override fun needTransformSupertypes(declaration: FirClassLikeDeclaration): Boolean {
 
-    val processors = session.anvilFirProcessorProvider.supertypeProcessors +
-      session.anvilFirProcessorProvider.flushingSupertypeProcessors
+    val processors = session.anvilFirProcessorProvider.supertypeProcessors
 
     val todo = processors.filter { it.shouldProcess(declaration) }
 
     if (todo.isNotEmpty()) {
-      generatorsByClassId[declaration.classId] = todo
+      processorsByClassId[declaration.classId] = todo
     }
 
     return todo.isNotEmpty() || !session.scopedContributionProvider.isInitialized()
@@ -47,7 +46,7 @@ public class SupertypeProcessorExtension(
     session.scopedMergeProvider.bindTypeResolveService(typeResolver)
     session.daggerThingProvider.bindTypeResolveService(typeResolver)
 
-    return generatorsByClassId.remove(classLikeDeclaration.classId)
+    return processorsByClassId.remove(classLikeDeclaration.classId)
       ?.flatMap { it.addSupertypes(classLikeDeclaration, resolvedSupertypes, typeResolver) }
       ?: emptyList()
   }
@@ -57,7 +56,7 @@ public class SupertypeProcessorExtension(
     klass: FirRegularClass,
     typeResolver: TypeResolveService,
   ): List<FirResolvedTypeRef> {
-    return generatorsByClassId.remove(klass.classId)
+    return processorsByClassId.remove(klass.classId)
       ?.flatMap { it.computeAdditionalSupertypesForGeneratedNestedClass(klass, typeResolver) }
       ?: emptyList()
   }

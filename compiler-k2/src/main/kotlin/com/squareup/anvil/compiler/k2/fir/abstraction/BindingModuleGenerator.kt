@@ -31,7 +31,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 @AutoService(AnvilFirProcessor.Factory::class)
-public class BindingModuleGeneratorFactory :
+internal class BindingModuleGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::BindingModuleGenerator)
 
 internal class BindingModuleGenerator(session: FirSession) : TopLevelClassProcessor(session) {

@@ -21,14 +21,15 @@ import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 
 @AutoService(AnvilFirProcessor.Factory::class)
-public class InterfaceMergingGeneratorFactory :
+internal class InterfaceMergingGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::InterfaceMergingGenerator)
 
 /**
  * This extension finds all contributed component interfaces and adds them as super types to Dagger
  * components annotated with `@MergeComponent`
  */
-public class InterfaceMergingGenerator(session: FirSession) : SupertypeProcessor(session) {
+public class InterfaceMergingGenerator(session: FirSession) :
+  SupertypeProcessor(session, isFlushing = true) {
 
   private val mergedComponentIds by lazyValue {
     session.anvilFirSymbolProvider.mergeComponentSymbols.mapToSet { it.classId }

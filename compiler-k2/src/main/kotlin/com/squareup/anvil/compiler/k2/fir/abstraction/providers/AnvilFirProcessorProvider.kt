@@ -4,7 +4,7 @@ import com.squareup.anvil.annotations.internal.InternalAnvilApi
 import com.squareup.anvil.compiler.k2.fir.AdditionalProcessorsHolder
 import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionSessionComponent
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
-import com.squareup.anvil.compiler.k2.fir.FlushingSupertypeProcessor
+import com.squareup.anvil.compiler.k2.fir.ProcessorFlushingCheck
 import com.squareup.anvil.compiler.k2.fir.SupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
 import org.jetbrains.kotlin.fir.FirSession
@@ -25,10 +25,17 @@ public class AnvilFirProcessorProvider(session: FirSession) :
 
     loaded.plus(threadLocal)
       .map { it.create(session) }
-      .sortedBy { it::class.qualifiedName }
+      .sortedWith(
+        compareBy(
+          {
+            @OptIn(ProcessorFlushingCheck::class)
+            it.isFlushing
+          },
+          { it::class.qualifiedName },
+        ),
+      )
       .groupBy {
         when (it) {
-          is FlushingSupertypeProcessor -> FlushingSupertypeProcessor::class
           is SupertypeProcessor -> SupertypeProcessor::class
           is TopLevelClassProcessor -> TopLevelClassProcessor::class
         }
@@ -43,10 +50,5 @@ public class AnvilFirProcessorProvider(session: FirSession) :
   public val supertypeProcessors: List<SupertypeProcessor> by lazyValue {
     @Suppress("UNCHECKED_CAST")
     processors[SupertypeProcessor::class].orEmpty() as List<SupertypeProcessor>
-  }
-
-  public val flushingSupertypeProcessors: List<FlushingSupertypeProcessor> by lazyValue {
-    @Suppress("UNCHECKED_CAST")
-    processors[FlushingSupertypeProcessor::class].orEmpty() as List<FlushingSupertypeProcessor>
   }
 }

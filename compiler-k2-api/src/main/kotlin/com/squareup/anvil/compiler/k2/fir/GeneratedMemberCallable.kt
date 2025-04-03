@@ -37,7 +37,8 @@ public class GeneratedMemberProperty(
   firExtension: FirExtension,
   override val modality: Modality = Modality.FINAL,
   public val initializer: FirLazyValue<FirExpression>? = null,
-  override val annotations: FirLazyValue<List<FirAnnotation>> = cachesFactory.createLazyValue { emptyList() },
+  override val annotations: FirLazyValue<List<FirAnnotation>> =
+    cachesFactory.createLazyValue { emptyList() },
 ) : GeneratedMemberCallable {
 
   public val generatedProperty: FirLazyValue<FirProperty> = cachesFactory.createLazyValue {
@@ -68,8 +69,10 @@ public class GeneratedMemberFunction(
   cachesFactory: FirCachesFactory,
   firExtension: FirExtension,
   override val modality: Modality = Modality.FINAL,
-  public val valueParameters: FirLazyValue<List<ValueParameter>> = cachesFactory.createLazyValue { emptyList() },
-  override val annotations: FirLazyValue<List<FirAnnotation>> = cachesFactory.createLazyValue { emptyList() },
+  public val valueParameters: FirLazyValue<List<ValueParameter>> =
+    cachesFactory.createLazyValue { emptyList() },
+  override val annotations: FirLazyValue<List<FirAnnotation>> =
+    cachesFactory.createLazyValue { emptyList() },
 ) : GeneratedMemberCallable {
 
   public val generatedFunction: FirLazyValue<FirSimpleFunction> = cachesFactory.createLazyValue {

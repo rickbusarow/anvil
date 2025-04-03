@@ -1,4 +1,4 @@
-package com.squareup.anvil.compiler.k2.constructor.inject
+package com.squareup.anvil.compiler.k2.factories.inject.constructor
 
 import com.squareup.anvil.compiler.k2.ir.IrBodyGenerator
 import com.squareup.anvil.compiler.k2.utils.names.Names
@@ -37,11 +37,11 @@ import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.properties
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
-internal class IrInjectConstructorFactory(
+internal class IrInjectConstructorFactoryGenerator(
   private val context: IrPluginContext,
 ) : IrBodyGenerator() {
   override fun interestedIn(key: GeneratedDeclarationKey?): Boolean {
-    return key == InjectConstructorFactoryGenerator.Key
+    return key == InjectConstructorFactoryGeneratorKey
   }
 
   override fun generateBodyForConstructor(

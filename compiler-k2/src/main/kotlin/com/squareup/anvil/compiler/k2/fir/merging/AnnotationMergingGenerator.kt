@@ -2,8 +2,8 @@ package com.squareup.anvil.compiler.k2.fir.merging
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
+import com.squareup.anvil.compiler.k2.fir.AnnotatingSupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
-import com.squareup.anvil.compiler.k2.fir.FlushingSupertypeProcessor
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirDependencyHintProvider
 import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
@@ -30,14 +30,16 @@ import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.toKtPsiSourceElement
 
 @AutoService(AnvilFirProcessor.Factory::class)
-public class AnnotationMergingGeneratorFactory :
+internal class AnnotationMergingGeneratorFactory :
   AbstractAnvilFirProcessorFactory(::AnnotationMergingGenerator)
 
 /**
  * This generator merges all contributed Dagger modules on the classpath and includes them on the
  * component annotated with `@MergeComponent`.
  */
-public class AnnotationMergingGenerator(session: FirSession) : FlushingSupertypeProcessor(session) {
+public class AnnotationMergingGenerator(
+  session: FirSession,
+) : AnnotatingSupertypeProcessor(session) {
 
   private val mergedComponentIds by lazyValue {
     session.anvilFirSymbolProvider.mergeComponentSymbols.mapToSet { it.classId }

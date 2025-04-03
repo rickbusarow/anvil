@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirLazyValue
 import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
-import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 
@@ -71,9 +70,10 @@ public class AnvilFirSymbolProvider(
   internal val injectConstructorSymbolsLazy: FirLazyValue<List<FirConstructorSymbol>> =
     lazySymbols<FirConstructorSymbol>(AnvilPredicates.hasInjectAnnotation)
   internal val injectConstructorSymbols: List<FirConstructorSymbol>
-    // by lazySymbols<FirConstructorSymbol>(AnvilPredicates.hasInjectAnnotation)
-    get() = session.predicateBasedProvider.getSymbolsByPredicate(AnvilPredicates.hasInjectAnnotation)
-      .filterIsInstance<FirConstructorSymbol>()
+    by lazySymbols<FirConstructorSymbol>(AnvilPredicates.hasInjectAnnotation)
+  // get() = session.predicateBasedProvider
+  //   .getSymbolsByPredicate(AnvilPredicates.hasInjectAnnotation)
+  //   .filterIsInstance<FirConstructorSymbol>()
 
   override fun FirDeclarationPredicateRegistrar.registerPredicates() {
     register(AnvilPredicates.hasAnyAnvilContributes)

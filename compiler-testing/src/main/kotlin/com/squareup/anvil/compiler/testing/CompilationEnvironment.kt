@@ -131,7 +131,6 @@ public interface CompilationEnvironment : TestEnvironment {
    * @param exec invoked with the [Compile2Result] after compilation
    * @return a [Compile2Result] referencing all compilation outputs
    * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.compile_source_strings
-   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.pass_a_custom_generator
    * @see com.squareup.anvil.compiler.testing.CompilationEnvironment.compile2
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2CompilationConfiguration
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2Compilation

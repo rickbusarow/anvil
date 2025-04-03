@@ -53,7 +53,7 @@ public sealed class AnvilFirProcessor(
 ) : HasFirCachesFactory(session.firCachesFactory),
   HasAnvilFirContext {
 
-  override val anvilContext: AnvilFirContext
+  final override val anvilContext: AnvilFirContext
     get() = session.anvilContext
 
   protected fun lazySymbols(

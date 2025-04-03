@@ -89,24 +89,20 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: MemberGenerationContext,
   ): Set<Name> {
 
-    val type = generatedTopLevelClassByClassId.getValue(classSymbol.classId)
-      ?: nestedByClassId.getValue(classSymbol.classId)
+    val type = getGeneratedType(classSymbol.classId) ?: return emptySet()
 
-    if (type == null) return emptySet()
-
-    val all = setOf(SpecialNames.INIT, *type.members.mapToSet { it.name }.toTypedArray())
-
-    return all
+    return setOf(SpecialNames.INIT, *type.members.mapToSet { it.name }.toTypedArray<Name>())
   }
+
+  private fun getGeneratedType(classId: ClassId) =
+    generatedTopLevelClassByClassId.getValue(classId) ?: nestedByClassId.getValue(classId)
 
   override fun generateFunctions(
     callableId: CallableId,
     context: MemberGenerationContext?,
   ): List<FirNamedFunctionSymbol> {
 
-    val type = generatedTopLevelClassByClassId.getValue(callableId.requireClassId())
-      ?: nestedByClassId.getValue(callableId.requireClassId())
-      ?: return emptyList()
+    val type = getGeneratedType(callableId.requireClassId()) ?: return emptyList()
 
     return type.members
       .filterIsInstance<GeneratedMemberFunction>()
@@ -119,9 +115,7 @@ public class TopLevelClassProcessorExtension(session: FirSession) :
     context: MemberGenerationContext?,
   ): List<FirPropertySymbol> {
 
-    val type = generatedTopLevelClassByClassId.getValue(callableId.requireClassId())
-      ?: nestedByClassId.getValue(callableId.requireClassId())
-      ?: return emptyList()
+    val type = getGeneratedType(callableId.requireClassId()) ?: return emptyList()
 
     return type.members
       .filterIsInstance<GeneratedMemberProperty>()

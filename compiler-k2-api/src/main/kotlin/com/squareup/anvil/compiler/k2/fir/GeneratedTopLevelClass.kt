@@ -32,9 +32,12 @@ public class GeneratedTopLevelClass(
   override val visibility: Visibility,
   firExtension: FirExtension,
   override val constructors: (context: MemberGenerationContext) -> List<FirConstructor> = { emptyList() },
-  override val annotations: FirLazyValue<List<FirAnnotation>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
-  override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
-  nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
+  override val annotations: FirLazyValue<List<FirAnnotation>> =
+    firExtension.session.firCachesFactory.createLazyValue { emptyList() },
+  override val supertypes: FirLazyValue<List<ConeKotlinType>> =
+    firExtension.session.firCachesFactory.createLazyValue { emptyList() },
+  nestedClasses: NestedClassLikeDeclarationFactory =
+    NestedClassLikeDeclarationFactory { emptyList() },
   members: MemberCallableDeclarationFactory = MemberCallableDeclarationFactory { emptyList() },
 ) : GeneratedClassLikeDeclaration(firExtension.session) {
 
@@ -87,9 +90,12 @@ public class GeneratedNestedClass(
   override val annotations: FirLazyValue<List<FirAnnotation>>,
   firExtension: FirExtension,
   members: MemberCallableDeclarationFactory = MemberCallableDeclarationFactory { emptyList() },
-  override val constructors: (context: MemberGenerationContext) -> List<FirConstructor> = { emptyList() },
-  override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
-  nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
+  override val constructors: (context: MemberGenerationContext) -> List<FirConstructor> =
+    { emptyList() },
+  override val supertypes: FirLazyValue<List<ConeKotlinType>> =
+    firExtension.session.firCachesFactory.createLazyValue { emptyList() },
+  nestedClasses: NestedClassLikeDeclarationFactory =
+    NestedClassLikeDeclarationFactory { emptyList() },
 ) : GeneratedNestedClassLikeDeclaration(firExtension.session) {
 
   override val generatedClass: FirLazyValue<FirRegularClass> =
@@ -117,8 +123,10 @@ public class GeneratedCompanionObject(
   override val annotations: FirLazyValue<List<FirAnnotation>>,
   firExtension: FirExtension,
   members: MemberCallableDeclarationFactory = MemberCallableDeclarationFactory { emptyList() },
-  override val supertypes: FirLazyValue<List<ConeKotlinType>> = firExtension.session.firCachesFactory.createLazyValue { emptyList() },
-  nestedClasses: NestedClassLikeDeclarationFactory = NestedClassLikeDeclarationFactory { emptyList() },
+  override val supertypes: FirLazyValue<List<ConeKotlinType>> =
+    firExtension.session.firCachesFactory.createLazyValue { emptyList() },
+  nestedClasses: NestedClassLikeDeclarationFactory =
+    NestedClassLikeDeclarationFactory { emptyList() },
 ) : GeneratedNestedClassLikeDeclaration(firExtension.session) {
 
   override val constructors: (MemberGenerationContext) -> List<FirConstructor> = { ctx ->
@@ -138,7 +146,9 @@ public class GeneratedCompanionObject(
       }
   }
 
-  override val members: List<GeneratedMemberCallable> by generatedClass.map { members.create(it.symbol) }
+  override val members: List<GeneratedMemberCallable> by generatedClass.map {
+    members.create(it.symbol)
+  }
 
   override val nestedClasses: List<GeneratedNestedClassLikeDeclaration>
     by generatedClass.map { nestedClasses.create(it.symbol) }
