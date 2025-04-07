@@ -19,7 +19,10 @@ public class AnvilFirProcessorProvider(session: FirSession) :
   @OptIn(InternalAnvilApi::class)
   private val processors by lazyValue {
 
-    val loaded = ServiceLoader.load(AnvilFirProcessor.Factory::class.java)
+    val loaded = ServiceLoader.load(
+      AnvilFirProcessor.Factory::class.java,
+      AnvilFirProcessor.Factory::class.java.classLoader,
+    )
 
     val threadLocal = AdditionalProcessorsHolder.additionalProcessors.get()
 
