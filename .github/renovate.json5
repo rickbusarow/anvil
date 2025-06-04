@@ -1,0 +1,57 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:best-practices',
+    'default:disableRateLimiting'
+  ],
+  rebaseWhen: 'auto',
+  rebaseLabel: 'rebase',
+  stopUpdatingLabel: 'renovate-ignore',
+  labels: [
+    'dependencies',
+    'automerge'
+  ],
+  packageRules: [
+    {
+      groupName: 'GitHub Actions dependencies',
+      matchManagers: [
+        'github-actions'
+      ]
+    },
+    {
+      groupName: 'Kotlin and compiler plugins',
+      separateMultipleMajor: false,
+      matchPackageNames: [
+        'org.jetbrains.kotlin:{/,}**',
+        'com.google.devtools.ksp:{/,}**',
+        'com.square.anvil:{/,}**',
+        'dev.drewhamilton.poko:{/,}**',
+      ],
+    },
+    {
+      groupName: 'JUnit5 libs',
+      matchPackageNames: [
+        'org.junit.jupiter:{/,}**',
+        'org.junit.platform:{/,}**',
+        'org.junit.vintage:{/,}**'
+      ]
+    },
+    {
+      groupName: 'KtLint libs',
+      matchPackageNames: [
+        'com.pinterest.ktlint:{/,}**',
+        'com.rickbusarow.ktlint:{/,}**',
+        'com.rickbusarow.ktrules:{/,}**'
+      ]
+    },
+    {
+      groupName : 'androidx.test and friends',
+      matchPackagePrefixes : [
+        'androidx.test:',
+        'androidx.test.ext:',
+        'com.google.truth:',
+        'junit:junit:'
+      ]
+    }
+  ]
+}
