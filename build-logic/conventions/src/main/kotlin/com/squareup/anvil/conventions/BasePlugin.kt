@@ -1,17 +1,17 @@
 package com.squareup.anvil.conventions
 
 import com.rickbusarow.kgx.fromInt
-import com.rickbusarow.kgx.getValue
 import com.rickbusarow.kgx.javaExtension
-import com.rickbusarow.kgx.provideDelegate
 import com.squareup.anvil.conventions.utils.libs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.testing.base.TestingExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
@@ -154,6 +154,27 @@ abstract class BasePlugin : Plugin<Project> {
   }
 
   private fun configureTests(target: Project) {
+    target.plugins.withId("test-suite-base") {
+      @Suppress("UnstableApiUsage")
+      target.extensions.getByType(TestingExtension::class.java)
+        .suites
+        .withType(JvmTestSuite::class.java)
+        .configureEach { suite ->
+
+          suite.useJUnitJupiter(target.libs.versions.jUnit5)
+          suite.dependencies {
+
+            // https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle-bom
+            // https://github.com/junit-team/junit5/issues/4374#issuecomment-2704880447
+            it.implementation.add(target.libs.junit.jupiter.asProvider())
+            it.runtimeOnly.add(target.libs.junit.platform.launcher)
+
+            it.runtimeOnly.add(target.libs.junit.jupiter.engine)
+            it.runtimeOnly.add(target.libs.junit.vintage.engine)
+          }
+        }
+    }
+
     target.tasks.withType(Test::class.java).configureEach { task ->
 
       task.maxParallelForks = Runtime.getRuntime().availableProcessors()
@@ -161,11 +182,6 @@ abstract class BasePlugin : Plugin<Project> {
       task.useJUnitPlatform {
         it.includeEngines("junit-jupiter", "junit-vintage")
       }
-
-      val testImplementation by target.configurations
-
-      testImplementation.dependencies.addLater(target.libs.junit.jupiter.engine)
-      testImplementation.dependencies.addLater(target.libs.junit.vintage.engine)
 
       task.systemProperties.putAll(
         mapOf(
