@@ -167,9 +167,6 @@ class DaggerFactoryGenerationDetectionTest : BaseGradleTest() {
       }
 
   private fun PluginsSpec.pluginsExtras(factoryGen: FactoryGen) {
-    if (factoryGen.addKsp) {
-      id("com.google.devtools.ksp")
-    }
     if (factoryGen.addKapt) {
       kotlin("kapt")
     }
@@ -178,10 +175,6 @@ class DaggerFactoryGenerationDetectionTest : BaseGradleTest() {
   private fun BuildFileSpec.anvilBlock(factoryGen: FactoryGen) {
     anvil {
       generateDaggerFactories.set(factoryGen.genFactories)
-
-      if (factoryGen.addKsp) {
-        useKsp(contributesAndFactoryGeneration = true)
-      }
     }
   }
 
@@ -191,10 +184,13 @@ class DaggerFactoryGenerationDetectionTest : BaseGradleTest() {
       compileOnly(libs.inject)
 
       if (factoryGen.daggerCompiler) {
-        if (factoryGen.addKsp) {
-          ksp(libs.dagger2.compiler)
-        } else {
-          kapt(libs.dagger2.compiler)
+        when {
+          factoryGen.addKapt -> {
+            kapt(libs.dagger2.compiler)
+          }
+          else -> {
+            error("No compiler plugin added")
+          }
         }
       }
     }
@@ -202,15 +198,12 @@ class DaggerFactoryGenerationDetectionTest : BaseGradleTest() {
 
   data class FactoryGen(
     val genFactories: Boolean,
-    val addKsp: Boolean,
     val addKapt: Boolean,
     val daggerCompiler: Boolean,
   ) {
     override fun toString(): String = buildString {
-      when {
-        addKsp -> append("KSP plugin ")
-        addKapt -> append("KAPT plugin ")
-        else -> append("Anvil only ")
+      if (addKapt) {
+        append("KAPT plugin | ")
       }
       if (daggerCompiler) {
         append("with Dagger compiler | ")
@@ -231,22 +224,18 @@ class DaggerFactoryGenerationDetectionTest : BaseGradleTest() {
       listOf(true, false),
       listOf(true, false),
       listOf(true, false),
-      listOf(true, false),
     )
-      .map { (genFactories, addKsp, addKapt, daggerCompiler) ->
+      .map { (genFactories, addKapt, daggerCompiler) ->
         FactoryGen(
           genFactories = genFactories,
-          addKsp = addKsp,
           addKapt = addKapt,
           daggerCompiler = daggerCompiler,
         )
       }
       .filter {
         when {
-          // Pick one!
-          it.addKsp && it.addKapt -> false
           // We can't add a Dagger compiler dependency without a plugin to add it to
-          it.daggerCompiler -> (it.addKsp || it.addKapt) && !it.genFactories
+          it.daggerCompiler -> it.addKapt && !it.genFactories
           else -> true
         }
       }

@@ -14,6 +14,8 @@ import com.squareup.anvil.compiler.internal.reference.ReferencesTestEnvironment.
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode
 import com.squareup.anvil.compiler.internal.testing.compileAnvil
 import com.squareup.anvil.compiler.internal.testing.simpleCodeGenerator
+import com.tschuchort.compiletesting.JvmCompilationResult
+import com.tschuchort.compiletesting.KotlinCompilation
 import io.kotest.assertions.ErrorCollectionMode
 import io.kotest.assertions.ErrorCollector
 import io.kotest.assertions.collectiveError
@@ -40,15 +42,22 @@ class ReferencesTestEnvironment(
 ) : DefaultTestEnvironment(hasWorkingDir = hasWorkingDir),
   LanguageInjection<File> by LanguageInjection(JavaFileFileInjection()) {
 
-  operator fun <E : FunctionReference> List<E>.getValue(
-    thisRef: Any?,
-    property: KProperty<*>,
-  ): E = single { it.name == property.name }
-
   operator fun <E> Map<String, E>.getValue(
     thisRef: Any?,
     property: KProperty<*>,
   ): E = getValue(property.name)
+
+  operator fun <E : PropertyReference> Iterable<E>.getValue(
+    thisRef: Any?,
+    property: KProperty<*>,
+  ): E = singleOrNull { it.name == property.name }
+    ?: error("PropertyReference not found: ${property.name}")
+
+  operator fun <E : FunctionReference> Iterable<E>.getValue(
+    thisRef: Any?,
+    property: KProperty<*>,
+  ): E = singleOrNull { it.name == property.name }
+    ?: error("FunctionReference not found: ${property.name}")
 
   class ReferencesTestCodeGenerationResult(
     val typeReferences: Map<String, TypeReference>,
@@ -61,7 +70,9 @@ class ReferencesTestEnvironment(
     @Language("kotlin") content: String,
     @Language("kotlin") vararg additionalContent: String,
     allWarningsAsErrors: Boolean = false,
+    previousCompilationResult: JvmCompilationResult? = null,
     codeGenerators: List<CodeGenerator> = emptyList(),
+    expectExitCode: KotlinCompilation.ExitCode? = null,
     testAction: ReferencesTestCodeGenerationResult.() -> Unit,
   ) {
 
@@ -79,13 +90,13 @@ class ReferencesTestEnvironment(
           ?.let { refsContainer ->
 
             val refsFun = when (referenceType) {
-              ReferenceType.Psi -> refsContainer.functions
-              ReferenceType.Descriptor -> refsContainer.toDescriptorReference().functions
+              ReferenceType.Psi -> refsContainer.declaredMemberFunctions
+              ReferenceType.Descriptor -> refsContainer.toDescriptorReference().declaredMemberFunctions
             }
               .singleOrNull { it.name == "refs" }
               ?: error {
                 "RefsContainer.refs not found.  " +
-                  "Existing functions: ${refsContainer.functions.map { it.name }}"
+                  "Existing functions: ${refsContainer.declaredMemberFunctions.map { it.name }}"
               }
 
             when (referenceType) {
@@ -114,7 +125,9 @@ class ReferencesTestEnvironment(
       *additionalContent,
       allWarningsAsErrors = allWarningsAsErrors,
       workingDir = workingDir,
+      previousCompilationResult = previousCompilationResult,
       mode = AnvilCompilationMode.Embedded(codeGenerators + referenceGenerator),
+      expectExitCode = expectExitCode,
     ) {
       errorCollector.throwCollectedErrors()
 
@@ -179,3 +192,9 @@ inline fun ErrorCollector.collectErrors(assertions: () -> Unit) {
     errorCollector.setCollectionMode(ErrorCollectionMode.Hard)
   }
 }
+
+val MemberFunctionReference.text: String
+  get() = when (this) {
+    is MemberFunctionReference.Descriptor -> function.toString()
+    is MemberFunctionReference.Psi -> function.text
+  }

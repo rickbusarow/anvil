@@ -1,6 +1,5 @@
 package com.squareup.anvil.plugin
 
-import com.rickbusarow.kase.gradle.GradleKotlinTestVersions
 import com.rickbusarow.kase.gradle.dsl.BuildFileSpec
 import com.rickbusarow.kase.gradle.dsl.buildFile
 import com.rickbusarow.kase.gradle.rootProject
@@ -16,9 +15,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldInclude
 import io.kotest.matchers.string.shouldNotInclude
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.TestFactory
-import java.util.stream.Stream
 
 class LifecycleTest : BaseGradleTest() {
 
@@ -26,21 +23,52 @@ class LifecycleTest : BaseGradleTest() {
   fun `tasks are compatible with configuration caching when targeting kotlin-jvm`() =
     params
       .distinctBy { it.gradleVersion }
-      .withKspToggle { _, useKsp ->
+      .asTests {
 
         rootProject {
           buildFile {
 
-            pluginsBlock(useKsp)
-            anvilBlock(useKsp)
+            pluginsBlock()
+            anvilBlock()
             dependencies {
               api(libs.dagger2.annotations)
               compileOnly(libs.inject)
             }
           }
 
+          gradlePropertiesFile(
+            """
+            com.squareup.anvil.trackSourceFiles=true
+            """.trimIndent(),
+          )
+
           dir("src/main/java") {
-            injectClass()
+            kotlinFile(
+              "com/squareup/test/AppComponent.kt",
+              """
+              package com.squareup.test
+    
+              import com.squareup.anvil.annotations.MergeComponent
+              import javax.inject.Singleton
+    
+              @MergeComponent(Any::class)
+              interface AppComponent
+              """.trimIndent(),
+            )
+            kotlinFile(
+              "com/squareup/test/BoundClass.kt",
+              """
+              package com.squareup.test
+
+              import com.squareup.anvil.annotations.ContributesBinding
+              import javax.inject.Inject
+
+              interface SomeInterface
+
+              @ContributesBinding(Any::class)
+              class BoundClass @Inject constructor() : SomeInterface
+              """.trimIndent(),
+            )
           }
         }
 
@@ -73,15 +101,77 @@ class LifecycleTest : BaseGradleTest() {
       }
 
   @TestFactory
-  fun `compileKotlin is up to date when no changes are made`() = params.withKspToggle { _, useKsp ->
+  fun `Kotlin tasks are not configured eagerly`() = params.asContainers { versions ->
+
+    // tests for https://github.com/square/anvil/issues/1053
+
+    listOf(true, false).asTests(
+      testEnvironmentFactory = AnvilGradleTestEnvironment.Factory().wrap(versions),
+      testName = { "with kapt: $it" },
+    ) { useKapt ->
+
+      val logPrefix = "configuring task"
+
+      rootProject {
+
+        buildFile {
+
+          pluginsBlock(addKapt = useKapt)
+
+          anvilBlock()
+
+          dependencies {
+            api(libs.dagger2.annotations)
+            compileOnly(libs.inject)
+            if (useKapt) {
+              kapt(libs.dagger2.compiler)
+            }
+          }
+
+          raw(
+            """
+            tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+              println("$logPrefix: ${'$'}name")
+            }
+            """.trimIndent(),
+          )
+        }
+
+        dir("src/main/java") {
+          injectClass()
+        }
+      }
+
+      shouldSucceed("help") {
+        output.lines()
+          .filter { logPrefix in it } shouldBe emptyList()
+      }
+
+      // Ensure that the task would fail by forcing configuration
+      shouldSucceed("compileKotlin", "--dry-run") {
+
+        val expected = buildList {
+          add("configuring task: compileKotlin")
+          if (useKapt) {
+            add("configuring task: kaptGenerateStubsKotlin")
+          }
+        }
+
+        output.lines().filter { logPrefix in it } shouldBe expected
+      }
+    }
+  }
+
+  @TestFactory
+  fun `compileKotlin is up to date when no changes are made`() = testFactory {
 
     rootProject {
 
       buildFile {
 
-        pluginsBlock(useKsp)
+        pluginsBlock()
 
-        anvilBlock(useKsp)
+        anvilBlock()
 
         dependencies {
           api(libs.dagger2.annotations)
@@ -101,55 +191,54 @@ class LifecycleTest : BaseGradleTest() {
   }
 
   @TestFactory
-  fun `compileKotlin is FROM-CACHE after the project build directory is deleted`() =
-    params.withKspToggle { _, useKsp ->
+  fun `compileKotlin is FROM-CACHE after the project build directory is deleted`() = testFactory {
 
-      rootProject {
+    rootProject {
 
-        buildFile {
-          pluginsBlock(useKsp)
+      buildFile {
+        pluginsBlock()
 
-          anvilBlock(useKsp)
+        anvilBlock()
 
-          dependencies {
-            compileOnly(libs.inject)
-            api(libs.dagger2.annotations)
-          }
+        dependencies {
+          compileOnly(libs.inject)
+          api(libs.dagger2.annotations)
         }
+      }
 
-        dir("src/main/java") {
-          injectClass()
-        }
-        gradlePropertiesFile(
-          """
+      dir("src/main/java") {
+        injectClass()
+      }
+      gradlePropertiesFile(
+        """
           org.gradle.caching=true
           com.squareup.anvil.trackSourceFiles=true
-          """.trimIndent(),
-        )
-      }
-
-      shouldSucceed("compileJava", withHermeticTestKit = true)
-
-      rootProject.generatedDir(useKsp).injectClassFactory.shouldExist()
-
-      workingDir.resolve("build").deleteRecursivelyOrFail()
-
-      // `compileJava` depends upon `compileKotlin`.
-      // Compile Java just to ensure that everything that needed to be restored was restored.
-      shouldSucceed("jar", withHermeticTestKit = true) {
-        task(":compileKotlin")?.outcome shouldBe TaskOutcome.FROM_CACHE
-      }
-
-      rootProject.classGraphResult() shouldContainClass "com.squareup.test.InjectClass_Factory"
-
-      rootProject.generatedDir(useKsp).injectClassFactory.shouldExist()
+        """.trimIndent(),
+      )
     }
+
+    shouldSucceed("compileJava", withHermeticTestKit = true)
+
+    rootProject.generatedDir().injectClassFactory.shouldExist()
+
+    workingDir.resolve("build").deleteRecursivelyOrFail()
+
+    // `compileJava` depends upon `compileKotlin`.
+    // Compile Java just to ensure that everything that needed to be restored was restored.
+    shouldSucceed("jar", withHermeticTestKit = true) {
+      task(":compileKotlin")?.outcome shouldBe TaskOutcome.FROM_CACHE
+    }
+
+    rootProject.classGraphResult() shouldContainClass "com.squareup.test.InjectClass_Factory"
+
+    rootProject.generatedDir().injectClassFactory.shouldExist()
+  }
 
   @TestFactory
   fun `build cache works across different project directories`() = params
     // This test exercises enough of the compiler that it runs into version compatibility issues.
     .filter { it.kotlinVersion == kotlinVersion }
-    .withKspToggle { _, useKsp ->
+    .asTests {
 
       // The testKit directory has the daemon and build cache.
       // We'll use the same testKit directory for both projects
@@ -169,7 +258,6 @@ class LifecycleTest : BaseGradleTest() {
             plugins {
               kotlin("jvm", apply = false)
               id("com.squareup.anvil", apply = false)
-              id("com.google.devtools.ksp", apply = false)
             }
           }
           settingsFile(
@@ -190,10 +278,8 @@ class LifecycleTest : BaseGradleTest() {
 
           project("lib-1") {
             buildFile {
-              pluginsBlock(useKsp)
-
-              anvilBlock(useKsp)
-
+              pluginsBlock()
+              anvilBlock()
               dependencies {
                 api(libs.dagger2.annotations)
                 compileOnly(libs.inject)
@@ -207,8 +293,8 @@ class LifecycleTest : BaseGradleTest() {
 
           project("lib-2") {
             buildFile {
-              pluginsBlock(useKsp)
-              anvilBlock(useKsp)
+              pluginsBlock()
+              anvilBlock()
               dependencies {
                 api(libs.dagger2.annotations)
                 api(project(":lib-1"))
@@ -235,17 +321,13 @@ class LifecycleTest : BaseGradleTest() {
 
           project("app") {
             buildFile {
-              pluginsBlock(useKsp = useKsp, addKapt = !useKsp)
+              pluginsBlock(addKapt = true)
 
               dependencies {
                 api(project(":lib-1"))
                 api(project(":lib-2"))
                 api(libs.dagger2.annotations)
-                if (useKsp) {
-                  ksp(libs.dagger2.compiler)
-                } else {
-                  kapt(libs.dagger2.compiler)
-                }
+                kapt(libs.dagger2.compiler)
               }
             }
 
@@ -286,43 +368,19 @@ class LifecycleTest : BaseGradleTest() {
       }
     }
 
-  private fun BuildFileSpec.anvilBlock(useKsp: Boolean) {
+  private fun BuildFileSpec.anvilBlock() {
     anvil {
       generateDaggerFactories.set(true)
-
-      if (useKsp) {
-        useKsp(
-          contributesAndFactoryGeneration = true,
-          componentMerging = true,
-        )
-      }
     }
   }
 
-  private fun BuildFileSpec.pluginsBlock(useKsp: Boolean, addKapt: Boolean = false) {
+  private fun BuildFileSpec.pluginsBlock(addKapt: Boolean = false) {
     plugins {
       kotlin("jvm")
       id("com.squareup.anvil")
-      if (useKsp) {
-        id("com.google.devtools.ksp")
-      }
       if (addKapt) {
         kotlin("kapt")
       }
     }
-  }
-
-  private inline fun <K : GradleKotlinTestVersions> List<K>.withKspToggle(
-    crossinline testAction: suspend AnvilGradleTestEnvironment.(
-      versions: K,
-      useKsp: Boolean,
-    ) -> Unit,
-  ): Stream<out DynamicNode> = asContainers { versions ->
-    listOf(true, false)
-      .asTests(
-        testEnvironmentFactory = AnvilGradleTestEnvironment.Factory().wrap(versions),
-        testName = { useKsp -> if (useKsp) "KSP" else "Embedded" },
-        testAction = { useKsp -> testAction(versions, useKsp) },
-      )
   }
 }

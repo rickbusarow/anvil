@@ -323,17 +323,17 @@ Anvil will automatically set `correctErrorTypes` to false to avoid this issue.
 #### Incremental Kotlin compilation breaks Anvil's feature to merge contributions
 
 > [!TIP]
-> Anvil now experimentally supports incremental compilation and Gradle's build caching,
+> Anvil now supports incremental compilation and Gradle's build caching,
 > as of [v2.5.0](https://github.com/square/anvil/releases/tag/v2.5.0-beta01).
 >
-> This feature is disabled by default.
-> It can be enabled via a Gradle property or the Gradle DSL:
+> This feature is enabled by default.
+> It can be disabled via a Gradle property or the Gradle DSL:
 > <details open>
 > <summary>Gradle Properties</summary>
 > 
 > ```properties
 > # gradle.properties
-> com.squareup.anvil.trackSourceFiles=true # default is false
+> com.squareup.anvil.trackSourceFiles=false # default is true
 > ```
 > 
 > </details>
@@ -343,7 +343,7 @@ Anvil will automatically set `correctErrorTypes` to false to avoid this issue.
 > ```groovy
 > // build.gradle
 > anvil {
->   trackSourceFiles = true // default is false
+>   trackSourceFiles = false // default is true
 > }
 > ```
 > </details>
@@ -382,6 +382,9 @@ usage of the Dagger annotation processor to only [specific modules](https://spea
 for performance reasons. With Hilt we wouldn't be able to enforce this requirement anymore for
 component interfaces. The development of Anvil started long before Hilt was announced and the
 internal version is being used in production for a while.
+
+## Roadmap
+See [here](https://github.com/square/anvil/blob/main/docs/ROADMAP.md)
 
 ## License
 

@@ -64,19 +64,15 @@ internal val daggerDoubleCheckFqNameString = DoubleCheck::class.java.canonicalNa
 
 internal val isWordPrefixRegex = "^is([^a-z].*)".toRegex()
 
-internal const val HINT_CONTRIBUTES_PACKAGE_PREFIX = "anvil.hint.merge"
-
-internal const val HINT_SUBCOMPONENTS_PACKAGE_PREFIX = "anvil.hint.subcomponent"
-internal const val COMPONENT_PACKAGE_PREFIX = "anvil.component"
+internal const val HINT_PACKAGE = "anvil.hint"
 
 internal const val BINDING_MODULE_SUFFIX = "BindingModule"
 internal const val MULTIBINDING_MODULE_SUFFIX = "MultiBindingModule"
 
-// The suffix is a letter by design. Class names for subcomponents must be kept short.
-internal const val ANVIL_SUBCOMPONENT_SUFFIX = "A"
 internal const val PARENT_COMPONENT = "ParentComponent"
 internal const val SUBCOMPONENT_FACTORY = "SubcomponentFactory"
 internal const val SUBCOMPONENT_MODULE = "SubcomponentModule"
+internal const val COMPONENT_PACKAGE_PREFIX = "anvil.component"
 
 internal const val REFERENCE_SUFFIX = "_reference"
 internal const val SCOPE_SUFFIX = "_scope"
@@ -129,9 +125,21 @@ internal fun File.requireDelete() {
 internal inline fun <C : Collection<T>, T, R> C.mapToSet(
   destination: MutableSet<R> = mutableSetOf(),
   transform: (T) -> R,
-): Set<R> {
-  return mapTo(destination, transform)
-}
+): Set<R> = mapTo(destination, transform)
+
+/**
+ * Transforms the elements of the receiver collection and adds the results to a set.
+ *
+ * @param destination The destination set where the transformed
+ *   elements are placed. By default, it is an empty mutable set.
+ * @param transform A function that maps elements of the receiver collection to the output set.
+ * @receiver The collection to be transformed.
+ * @return A set containing the transformed elements from the receiver collection.
+ */
+public inline fun <C : Collection<T>, T, R : Any> C.mapNotNullToSet(
+  destination: MutableSet<R> = mutableSetOf(),
+  transform: (T) -> R?,
+): Set<R> = mapNotNullTo(destination, transform)
 
 /**
  * Transforms the elements of the receiver array and adds the results to a set.

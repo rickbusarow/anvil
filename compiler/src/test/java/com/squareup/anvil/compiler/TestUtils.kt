@@ -12,14 +12,12 @@ import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.anvil.annotations.compat.MergeModules
 import com.squareup.anvil.annotations.internal.InternalBindingMarker
 import com.squareup.anvil.compiler.api.CodeGenerator
+import com.squareup.anvil.compiler.codegen.Contribution
 import com.squareup.anvil.compiler.internal.capitalize
-import com.squareup.anvil.compiler.internal.reference.generateClassNameString
+import com.squareup.anvil.compiler.internal.generateHintFileName
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode.Embedded
-import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode.Ksp
 import com.squareup.anvil.compiler.internal.testing.compileAnvil
-import com.squareup.anvil.compiler.internal.testing.generatedClassesString
-import com.squareup.anvil.compiler.internal.testing.packageName
 import com.squareup.anvil.compiler.internal.testing.use
 import com.squareup.kotlinpoet.asClassName
 import com.tschuchort.compiletesting.CompilationResult
@@ -35,6 +33,9 @@ import org.intellij.lang.annotations.Language
 import org.junit.Assume.assumeTrue
 import java.io.File
 import kotlin.reflect.KClass
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.memberProperties
 import kotlin.test.fail
 
 internal fun compile(
@@ -128,13 +129,13 @@ internal val JvmCompilationResult.bindingKey: Class<out Annotation>
   get() = classLoader.loadClass("com.squareup.test.BindingKey") as Class<out Annotation>
 
 internal val Class<*>.hintContributes: KClass<*>?
-  get() = getHint(HINT_CONTRIBUTES_PACKAGE_PREFIX)
+  get() = getHint()
 
 internal val Class<*>.hintContributesScope: KClass<*>?
   get() = hintContributesScopes.takeIf { it.isNotEmpty() }?.single()
 
 internal val Class<*>.hintContributesScopes: List<KClass<*>>
-  get() = getHintScopes(HINT_CONTRIBUTES_PACKAGE_PREFIX)
+  get() = getHintScopes()
 
 internal val Class<*>.generatedBindingModule: Class<*>
   get() = generatedBindingModules(
@@ -173,7 +174,8 @@ private fun Class<*>.generatedBindingModules(
 ): List<Class<*>> {
   return getAnnotationsByType(annotationClass.java)
     .map { bindingAnnotation ->
-      val scope = bindingAnnotation.scope.asClassName().generateClassNameString().capitalize()
+      val scope = bindingAnnotation.scope.asClassName()
+
       val boundType = bindingAnnotation.boundType
         .let {
           if (it == Unit::class) {
@@ -182,15 +184,57 @@ private fun Class<*>.generatedBindingModules(
             it
           }
         }
-        .asClassName().generateClassNameString().capitalize()
+        .asClassName()
+
       val suffix = when (annotationClass) {
         ContributesBinding::class -> BINDING_MODULE_SUFFIX
         ContributesMultibinding::class -> MULTIBINDING_MODULE_SUFFIX
         else -> error("Unknown annotation class: $annotationClass")
       }
-      val className = "${generatedClassesString()}As${boundType}To${scope}$suffix"
-      classLoader.loadClass(className)
+
+      val typeName = Contribution.uniqueTypeName(
+        originType = kotlin.asClassName(),
+        boundType = boundType,
+        scopeType = scope,
+        qualifierKeyOrNull = qualifierKey(bindingAnnotation),
+        suffix = suffix,
+      )
+
+      classLoader.loadClass(typeName.toString())
     }
+}
+
+private fun Class<*>.qualifierKey(bindingAnnotation: Annotation): String? {
+
+  val ignoreQualifier = bindingAnnotation::class.memberProperties
+    .firstOrNull { it.name == "ignoreQualifier" }
+    ?.call(bindingAnnotation)
+
+  if (ignoreQualifier == true) return null
+
+  // For each annotation on the receiver class, check its class declaration
+  // to see if it has the `@Qualifier` annotation.
+  val qualifierAnnotation = annotations
+    .firstOrNull { it.annotationClass.hasAnnotation<javax.inject.Qualifier>() }
+    // If there is no qualifier annotation, there's no key
+    ?: return null
+
+  val qualifierFqName = qualifierAnnotation.annotationClass.qualifiedName!!
+
+  val joinedArgs = qualifierAnnotation.annotationClass
+    .declaredMemberProperties
+    .joinToString("") { property ->
+
+      val valueString = when (val argument = property.call(qualifierAnnotation)) {
+        is Enum<*> -> "${argument::class.qualifiedName}.${argument.name}"
+        is Class<*> -> argument.kotlin.qualifiedName
+        is KClass<*> -> argument.qualifiedName
+        else -> argument.toString()
+      }
+      property.name + valueString
+    }
+
+  return qualifierFqName + joinedArgs
 }
 
 internal val Class<*>.bindingOriginKClass: KClass<*>?
@@ -263,36 +307,45 @@ internal fun Class<*>.mergedModules(mergeAnnotation: KClass<out Annotation>): Ar
 }
 
 internal val Class<*>.hintSubcomponent: KClass<*>?
-  get() = getHint(HINT_SUBCOMPONENTS_PACKAGE_PREFIX)
+  get() = getHint()
 
 internal val Class<*>.hintSubcomponentParentScope: KClass<*>?
   get() = hintSubcomponentParentScopes.takeIf { it.isNotEmpty() }?.single()
 
 internal val Class<*>.hintSubcomponentParentScopes: List<KClass<*>>
-  get() = getHintScopes(HINT_SUBCOMPONENTS_PACKAGE_PREFIX)
+  get() = getHintScopes()
 
-private fun Class<*>.getHint(prefix: String): KClass<*>? = contributedProperties(prefix)
+private fun Class<*>.getHint(): KClass<*>? = contributedProperties()
   ?.filter { it.java == this }
   ?.also { assertThat(it.size).isEqualTo(1) }
   ?.first()
 
-private fun Class<*>.getHintScopes(prefix: String): List<KClass<*>> =
-  contributedProperties(prefix)
+private fun Class<*>.getHintScopes(): List<KClass<*>> =
+  contributedProperties()
     ?.also { assertThat(it.size).isAtLeast(2) }
     ?.filter { it.java != this }
     ?: emptyList()
 
-private fun Class<*>.contributedProperties(packagePrefix: String): List<KClass<*>>? {
-  // The capitalize() doesn't make sense, I don't know where this is coming from. Maybe it's a
-  // bug in the compile testing library?
-  val className = generateSequence(this) { it.enclosingClass }
-    .toList()
-    .reversed()
-    .joinToString(separator = "_") { it.simpleName }
-    .capitalize() + "Kt"
+fun Class<*>.contributedProperties(): List<KClass<*>>? {
+  // The capitalize() comes from kotlinc's implicit handling of file names -> class names. It will
+  // always, unless otherwise instructed via `@file:JvmName`, capitalize its facade class.
+
+  val className = if (getAnnotation(InternalBindingMarker::class.java) != null) {
+    generateSequence(this) { it.enclosingClass }
+      .toList()
+      .reversed()
+      .joinToString(separator = "_") { it.simpleName }
+      .capitalize()
+      .plus("Kt")
+  } else {
+
+    kotlin.asClassName()
+      .generateHintFileName(separator = "_", suffix = "", capitalizePackage = true)
+      .plus("Kt")
+  }
 
   val clazz = try {
-    classLoader.loadClass("$packagePrefix.${packageName()}$className")
+    classLoader.loadClass("$HINT_PACKAGE.$className")
   } catch (e: ClassNotFoundException) {
     return null
   }
@@ -321,14 +374,11 @@ internal fun JvmCompilationResult.assertCompilationSucceeded() {
 
 internal fun isFullTestRun(): Boolean = FULL_TEST_RUN
 internal fun checkFullTestRun() = assumeTrue(isFullTestRun())
-internal fun includeKspTests(): Boolean = INCLUDE_KSP_TESTS
 
 internal fun JvmCompilationResult.walkGeneratedFiles(mode: AnvilCompilationMode): Sequence<File> {
   val dirToSearch = when (mode) {
     is Embedded ->
       outputDirectory.parentFile.resolve("build${File.separator}anvil")
-
-    is Ksp -> outputDirectory.parentFile.resolve("ksp${File.separator}sources")
   }
   return dirToSearch.walkTopDown()
     .filter { it.isFile && it.extension == "kt" }
@@ -366,9 +416,8 @@ internal fun JvmCompilationResult.generatedFileOrNull(
 /**
  * Parameters for configuring [AnvilCompilationMode] and whether to run a full test run or not.
  */
-internal fun useDaggerAndKspParams(
+internal fun testParams(
   embeddedCreator: () -> Embedded? = { Embedded() },
-  kspCreator: () -> Ksp? = { Ksp() },
 ): Collection<Any> {
   return cartesianProduct(
     listOf(
@@ -377,25 +426,15 @@ internal fun useDaggerAndKspParams(
     ),
     listOfNotNull(
       embeddedCreator(),
-      kspCreator(),
     ),
   ).mapNotNull { (useDagger, mode) ->
-    if (useDagger == true && mode is Ksp) {
-      // TODO Dagger is not supported with KSP in Anvil's tests yet
-      null
-    } else {
-      arrayOf(useDagger, mode)
-    }
+    arrayOf(useDagger, mode)
   }.distinct()
 }
 
-/** In any failing compilation in KSP, it always prints this error line first. */
-private const val KSP_ERROR_HEADER = "e: Error occurred in KSP, check log for detail"
-
 internal fun CompilationResult.compilationErrorLine(): String {
-  return messages
-    .lineSequence()
-    .first { it.startsWith("e:") && KSP_ERROR_HEADER !in it }
+  return messages.lineSequence()
+    .first { it.startsWith("e:") }
 }
 
 internal inline fun <T, R> Array<out T>.flatMapArray(transform: (T) -> Array<R>) =

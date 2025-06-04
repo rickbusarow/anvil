@@ -1,11 +1,6 @@
 package com.squareup.anvil.compiler
 
-import com.google.devtools.ksp.symbol.KSAnnotation
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSType
 import com.squareup.anvil.compiler.api.AnvilCompilationException
-import com.squareup.anvil.compiler.codegen.ksp.KspAnvilException
-import com.squareup.anvil.compiler.codegen.ksp.resolveKSClassDeclaration
 import com.squareup.anvil.compiler.codegen.reference.AnvilCompilationExceptionClassReferenceIr
 import com.squareup.anvil.compiler.codegen.reference.ClassReferenceIr
 import com.squareup.anvil.compiler.codegen.reference.find
@@ -201,36 +196,5 @@ internal fun AnnotationReference.qualifierKey(): String {
       }
 
       argument.resolvedName + valueString
-    }
-}
-
-internal fun KSClassDeclaration.checkNotGeneric(
-  contributedClass: KSClassDeclaration,
-) {
-  if (typeParameters.isNotEmpty()) {
-    val typeString = typeParameters
-      .joinToString(prefix = "<", postfix = ">") { it.name.asString() }
-
-    throw KspAnvilException(
-      message = genericExceptionText(
-        contributedClass.qualifiedName!!.asString(),
-        qualifiedName!!.asString(),
-        typeString,
-      ),
-      node = contributedClass,
-    )
-  }
-}
-
-internal fun KSAnnotation.qualifierKey(): String {
-  return shortName.asString() +
-    arguments.joinToString(separator = "") { argument ->
-      val valueString = when (val value = argument.value) {
-        is KSType -> value.resolveKSClassDeclaration()!!.qualifiedName!!.asString()
-        // TODO what if it's another annotation?
-        else -> value.toString()
-      }
-
-      argument.name!!.asString() + valueString
     }
 }

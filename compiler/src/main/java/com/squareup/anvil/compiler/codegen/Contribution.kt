@@ -7,8 +7,7 @@ import com.squareup.anvil.compiler.MULTIBINDING_MODULE_SUFFIX
 import com.squareup.anvil.compiler.codegen.dagger.ProvidesMethodFactoryCodeGen
 import com.squareup.anvil.compiler.internal.capitalize
 import com.squareup.anvil.compiler.internal.createAnvilSpec
-import com.squareup.anvil.compiler.internal.reference.generateClassName
-import com.squareup.anvil.compiler.internal.reference.generateClassNameString
+import com.squareup.anvil.compiler.internal.joinSimpleNamesAndTruncate
 import com.squareup.anvil.compiler.internal.safePackageString
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -34,16 +33,20 @@ internal sealed class Contribution {
   abstract val qualifier: QualifierData?
   abstract val bindingModuleNameSuffix: String
 
-  val contributionName: String by lazy(LazyThreadSafetyMode.NONE) {
-    // Combination name of origin, scope, and boundType
-    val suffix = "As" +
-      boundType.generateClassNameString().capitalize() +
-      "To" +
-      scope.generateClassNameString().capitalize() +
-      bindingModuleNameSuffix
-
-    origin.generateClassName(suffix = suffix).simpleName
+  /**
+   * ex: `MyClassImpl_MyClass_AppScope_BindingModule_a1b2c3d4e5f6g7h8`
+   */
+  val className by lazy(LazyThreadSafetyMode.NONE) {
+    uniqueTypeName(
+      originType = origin,
+      boundType = boundType,
+      scopeType = scope,
+      qualifierKeyOrNull = qualifier?.key,
+      suffix = bindingModuleNameSuffix,
+    )
   }
+
+  val simpleName: String by lazy(LazyThreadSafetyMode.NONE) { className.simpleName }
 
   val functionName: String by lazy(LazyThreadSafetyMode.NONE) {
     val functionNameSuffix = boundType.simpleName.capitalize()
@@ -59,9 +62,9 @@ internal sealed class Contribution {
     val contribution = this
 
     val builder = if (contribution.isObject) {
-      TypeSpec.objectBuilder(contributionName)
+      TypeSpec.objectBuilder(simpleName)
     } else {
-      TypeSpec.interfaceBuilder(contributionName)
+      TypeSpec.interfaceBuilder(simpleName)
     }
     return builder.apply {
       addAnnotation(Module::class)
@@ -185,7 +188,7 @@ internal sealed class Contribution {
         isMangled = false,
         // In this case, the suffix doesn't matter since the provider will never be mangled.
         mangledNameSuffix = "",
-        moduleClass = ClassName(generatedPackage, contribution.contributionName),
+        moduleClass = ClassName(generatedPackage, contribution.simpleName),
         isInObject = true,
         declaration = declaration,
       )
@@ -197,6 +200,31 @@ internal sealed class Contribution {
       .thenComparing(compareBy { it.boundType.canonicalName })
       .thenComparing(compareBy { if (it is Binding) it.rank else 0 })
       .thenComparing(compareBy { it.replaces.joinToString(transform = ClassName::canonicalName) })
+
+    internal fun uniqueTypeName(
+      originType: ClassName,
+      boundType: ClassName,
+      scopeType: ClassName,
+      qualifierKeyOrNull: String?,
+      suffix: String,
+    ): ClassName {
+      val types = listOf(originType, boundType, scopeType)
+
+      return ClassName(
+        packageName = originType.packageName,
+        simpleNames = types.map { it.simpleName } + suffix,
+      )
+        .joinSimpleNamesAndTruncate(
+          hashParams = listOfNotNull(
+            originType,
+            boundType,
+            scopeType,
+            qualifierKeyOrNull,
+            suffix,
+          ),
+          separator = "_",
+        )
+    }
   }
 
   data class QualifierData(

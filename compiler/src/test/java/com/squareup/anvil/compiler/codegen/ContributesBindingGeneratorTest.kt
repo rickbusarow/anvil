@@ -14,11 +14,11 @@ import com.squareup.anvil.compiler.contributingInterface
 import com.squareup.anvil.compiler.contributingObject
 import com.squareup.anvil.compiler.generatedBindingModule
 import com.squareup.anvil.compiler.generatedBindingModules
-import com.squareup.anvil.compiler.generatedFileOrNull
 import com.squareup.anvil.compiler.injectClass
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode
 import com.squareup.anvil.compiler.internal.testing.moduleFactoryClass
 import com.squareup.anvil.compiler.parentInterface
+import com.squareup.anvil.compiler.secondContributingInterface
 import com.squareup.anvil.compiler.testing.AnvilCompilationModeTest
 import com.squareup.anvil.compiler.testing.AnvilCompilationModeTestEnvironment
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
@@ -29,10 +29,7 @@ import org.junit.jupiter.api.TestFactory
 import java.util.stream.Stream
 import javax.inject.Named
 
-class ContributesBindingGeneratorTest : AnvilCompilationModeTest(
-  AnvilCompilationMode.Embedded(),
-  AnvilCompilationMode.Ksp(),
-) {
+class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilationMode.Embedded()) {
 
   @TestFactory fun `there is a binding module for a contributed binding for interfaces`() =
     testFactory {
@@ -53,7 +50,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(
 
         assertFileGenerated(
           mode,
-          "ContributingInterfaceAsComSquareupTestParentInterfaceToKotlinAnyBindingModule.kt",
+          "ContributingInterface_ParentInterface_Any_BindingModule_68088f18.kt",
         )
       }
     }
@@ -282,7 +279,40 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(
 
         assertFileGenerated(
           mode,
-          "Abc_ContributingClassAsComSquareupTestParentInterfaceToKotlinAnyBindingModule.kt",
+          "ContributingClass_ParentInterface_Any_BindingModule_91037c91.kt",
+        )
+      }
+    }
+
+  @TestFactory fun `there is a binding module for a contributed binding for very long class names`() =
+    testFactory {
+
+      val longClassName = "A".repeat(240)
+
+      compile(
+        """
+        package com.squareup.test
+  
+        import com.squareup.anvil.annotations.ContributesBinding
+  
+        interface ParentInterface
+        
+        @ContributesBinding(Any::class, ParentInterface::class)
+        class $longClassName : ParentInterface
+        """,
+      ) {
+        val contributingClass =
+          classLoader.loadClass("com.squareup.test.$longClassName")
+        assertThat(contributingClass.bindingOriginKClass?.java).isEqualTo(contributingClass)
+        assertThat(contributingClass.bindingModuleScope).isEqualTo(Any::class)
+
+        val hash = "66db371b"
+        val truncatedLength = 240 - "com.squareup.test".length
+        val truncatedName = "${longClassName.take(truncatedLength)}_$hash"
+
+        assertFileGenerated(
+          mode,
+          "$truncatedName.kt",
         )
       }
     }
@@ -493,39 +523,38 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       class ContributingInterface : ParentInterface
-      """,
-    ) {
-      assertThat(contributingInterface.bindingOriginKClass?.java).isEqualTo(contributingInterface)
-      assertThat(contributingInterface.bindingModuleScopes).containsExactly(Any::class, Unit::class)
-    }
-  }
-
-  @TestFactory fun `the scopes for multiple contributions have a stable sort`() = testFactory {
-    compile(
-      """
-      package com.squareup.test
-
-      import com.squareup.anvil.annotations.ContributesBinding
-
-      interface ParentInterface
-
-      @ContributesBinding(Any::class)
-      @ContributesBinding(Unit::class)
-      class ContributingInterface : ParentInterface
       
       @ContributesBinding(Unit::class)
       @ContributesBinding(Any::class)
       class SecondContributingInterface : ParentInterface
       """,
     ) {
-      generatedFileOrNull(
+      assertThat(contributingInterface.bindingOriginKClass?.java).isEqualTo(contributingInterface)
+      assertThat(contributingInterface.bindingModuleScopes).containsExactly(Any::class, Unit::class)
+
+      assertFileGenerated(
         mode,
-        "ContributingInterfaceAsComSquareupTestParentInterfaceToKotlinAnyBindingModule.kt",
-      )!!
-      generatedFileOrNull(
+        "ContributingInterface_ParentInterface_Any_BindingModule_68088f18.kt",
+      )
+      assertFileGenerated(
         mode,
-        "SecondContributingInterfaceAsComSquareupTestParentInterfaceToKotlinUnitBindingModule.kt",
-      )!!
+        "ContributingInterface_ParentInterface_Unit_BindingModule_0c1e79f9.kt",
+      )
+
+      assertThat(
+        secondContributingInterface.bindingOriginKClass?.java,
+      ).isEqualTo(secondContributingInterface)
+      assertThat(
+        secondContributingInterface.bindingModuleScopes,
+      ).containsExactly(Any::class, Unit::class)
+      assertFileGenerated(
+        mode,
+        "SecondContributingInterface_ParentInterface_Any_BindingModule_bbbec9d2.kt",
+      )
+      assertFileGenerated(
+        mode,
+        "SecondContributingInterface_ParentInterface_Unit_BindingModule_75c5914b.kt",
+      )
     }
   }
 
@@ -629,50 +658,51 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(
           clazz.simpleName to bindingMarker.rank
         }
       assertThat(
-        bindingModules["ContributingInterfaceAsComSquareupTestParentInterface1ToKotlinAnyBindingModule"],
+        bindingModules["ContributingInterface_ParentInterface1_Any_BindingModule_141ba678"],
       ).isEqualTo(ContributesBinding.RANK_NORMAL)
       assertThat(
-        bindingModules["ContributingInterfaceAsComSquareupTestParentInterface2ToKotlinAnyBindingModule"],
+        bindingModules["ContributingInterface_ParentInterface2_Any_BindingModule_384535e9"],
       ).isEqualTo(ContributesBinding.RANK_NORMAL)
       assertThat(
-        bindingModules["ContributingInterfaceAsComSquareupTestParentInterface1ToKotlinUnitBindingModule"],
+        bindingModules["ContributingInterface_ParentInterface1_Unit_BindingModule_0474bc27"],
       ).isEqualTo(ContributesBinding.RANK_HIGH)
       assertThat(
-        bindingModules["ContributingInterfaceAsComSquareupTestParentInterface2ToKotlinUnitBindingModule"],
+        bindingModules["ContributingInterface_ParentInterface2_Unit_BindingModule_0abbde43"],
       ).isEqualTo(ContributesBinding.RANK_HIGHEST)
     }
   }
 
   @TestFactory
-  fun `a provider factory is still generated IFF no normal Dagger factory generation is enabled`() = params.withFactorySource { _, source ->
+  fun `a provider factory is still generated IFF no normal Dagger factory generation is enabled`() =
+    params.withFactorySource { _, source ->
 
-    // https://github.com/square/anvil/issues/948
+      // https://github.com/square/anvil/issues/948
 
-    compile(
-      """
-      package com.squareup.test
+      compile(
+        """
+        package com.squareup.test
+  
+        import com.squareup.anvil.annotations.ContributesBinding
+        import com.squareup.anvil.annotations.ContributesTo
+        import com.squareup.anvil.annotations.MergeSubcomponent
+        import javax.inject.Inject
+  
+        interface ParentInterface
+  
+        @ContributesBinding(Unit::class)
+        object ContributingObject : ParentInterface
+        """,
+        enableDaggerAnnotationProcessor = source == DaggerFactorySource.DAGGER,
+        generateDaggerFactories = source == DaggerFactorySource.ANVIL,
+      ) {
+        assertCompilationSucceeded()
 
-      import com.squareup.anvil.annotations.ContributesBinding
-      import com.squareup.anvil.annotations.ContributesTo
-      import com.squareup.anvil.annotations.MergeSubcomponent
-      import javax.inject.Inject
-
-      interface ParentInterface
-
-      @ContributesBinding(Unit::class)
-      object ContributingObject : ParentInterface
-      """,
-      enableDaggerAnnotationProcessor = source == DaggerFactorySource.DAGGER,
-      generateDaggerFactories = source == DaggerFactorySource.ANVIL,
-    ) {
-      assertCompilationSucceeded()
-
-      contributingObject.generatedBindingModule
-        .moduleFactoryClass()
-        .getDeclaredMethod("get")
-        .returnType shouldBe parentInterface
+        contributingObject.generatedBindingModule
+          .moduleFactoryClass()
+          .getDeclaredMethod("get")
+          .returnType shouldBe parentInterface
+      }
     }
-  }
 
   enum class DaggerFactorySource {
     DAGGER,

@@ -1,3 +1,14 @@
+public final class com/squareup/anvil/compiler/internal/ClassNameUtilsKt {
+	public static final fun generateHintFileName (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+	public static synthetic fun generateHintFileName$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun joinSimpleNames (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;)Lcom/squareup/kotlinpoet/ClassName;
+	public static synthetic fun joinSimpleNames$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/squareup/kotlinpoet/ClassName;
+	public static final fun joinSimpleNamesAndTruncate (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;I)Lcom/squareup/kotlinpoet/ClassName;
+	public static synthetic fun joinSimpleNamesAndTruncate$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lcom/squareup/kotlinpoet/ClassName;
+	public static final fun truncate (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Ljava/lang/String;I)Lcom/squareup/kotlinpoet/ClassName;
+	public static synthetic fun truncate$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Lcom/squareup/kotlinpoet/ClassName;
+}
+
 public final class com/squareup/anvil/compiler/internal/DescriptorUtilsKt {
 	public static final fun argumentType (Lorg/jetbrains/kotlin/resolve/constants/ConstantValue;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/types/KotlinType;
 	public static final fun argumentType (Lorg/jetbrains/kotlin/types/KotlinType;)Lorg/jetbrains/kotlin/types/KotlinType;
@@ -181,9 +192,13 @@ public abstract class com/squareup/anvil/compiler/internal/reference/ClassRefere
 	public abstract fun getClassId ()Lorg/jetbrains/kotlin/name/ClassId;
 	public abstract fun getConstructors ()Ljava/util/List;
 	public abstract fun getContainingFileAsJavaFile ()Ljava/io/File;
+	public abstract fun getDeclaredMemberFunctions ()Ljava/util/List;
+	public abstract fun getDeclaredMemberProperties ()Ljava/util/List;
 	public abstract fun getFqName ()Lorg/jetbrains/kotlin/name/FqName;
 	public abstract fun getFunctions ()Ljava/util/List;
 	protected abstract fun getInnerClassesAndObjects ()Ljava/util/List;
+	public final fun getMemberFunctions ()Ljava/util/List;
+	public final fun getMemberProperties ()Ljava/util/List;
 	public abstract fun getModule ()Lcom/squareup/anvil/compiler/internal/reference/AnvilModuleDescriptor;
 	public final fun getPackageFqName ()Lorg/jetbrains/kotlin/name/FqName;
 	public abstract fun getProperties ()Ljava/util/List;
@@ -212,6 +227,8 @@ public final class com/squareup/anvil/compiler/internal/reference/ClassReference
 	public final fun getClazz ()Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;
 	public fun getConstructors ()Ljava/util/List;
 	public fun getContainingFileAsJavaFile ()Ljava/io/File;
+	public fun getDeclaredMemberFunctions ()Ljava/util/List;
+	public fun getDeclaredMemberProperties ()Ljava/util/List;
 	public fun getFqName ()Lorg/jetbrains/kotlin/name/FqName;
 	public fun getFunctions ()Ljava/util/List;
 	public fun getModule ()Lcom/squareup/anvil/compiler/internal/reference/AnvilModuleDescriptor;
@@ -237,6 +254,8 @@ public final class com/squareup/anvil/compiler/internal/reference/ClassReference
 	public final fun getClazz ()Lorg/jetbrains/kotlin/psi/KtClassOrObject;
 	public fun getConstructors ()Ljava/util/List;
 	public fun getContainingFileAsJavaFile ()Ljava/io/File;
+	public fun getDeclaredMemberFunctions ()Ljava/util/List;
+	public fun getDeclaredMemberProperties ()Ljava/util/List;
 	public fun getFqName ()Lorg/jetbrains/kotlin/name/FqName;
 	public fun getFunctions ()Ljava/util/List;
 	public fun getModule ()Lcom/squareup/anvil/compiler/internal/reference/AnvilModuleDescriptor;
@@ -265,8 +284,10 @@ public final class com/squareup/anvil/compiler/internal/reference/ClassReference
 	public static final fun generateClassName (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;)Lcom/squareup/kotlinpoet/ClassName;
 	public static synthetic fun generateClassName$default (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlin/name/ClassId;
 	public static synthetic fun generateClassName$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/squareup/kotlinpoet/ClassName;
-	public static final fun generateClassNameString (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-	public static synthetic fun generateClassNameString$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun generateClassNameString (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+	public static synthetic fun generateClassNameString$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun joinSimpleNames (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static synthetic fun joinSimpleNames$default (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlin/name/ClassId;
 	public static final fun toClassReference (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lcom/squareup/anvil/compiler/internal/reference/ClassReference$Descriptor;
 	public static final fun toClassReference (Lorg/jetbrains/kotlin/name/FqName;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lcom/squareup/anvil/compiler/internal/reference/ClassReference;
 	public static final fun toClassReference (Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lcom/squareup/anvil/compiler/internal/reference/ClassReference$Psi;
@@ -355,6 +376,8 @@ public final class com/squareup/anvil/compiler/internal/reference/MemberFunction
 }
 
 public final class com/squareup/anvil/compiler/internal/reference/MemberFunctionReferenceKt {
+	public static final fun returnTypeWithGenericSubstitution (Lcom/squareup/anvil/compiler/internal/reference/FunctionReference;Lcom/squareup/anvil/compiler/internal/reference/ClassReference;)Lcom/squareup/anvil/compiler/internal/reference/TypeReference;
+	public static final fun returnTypeWithGenericSubstitutionOrNull (Lcom/squareup/anvil/compiler/internal/reference/FunctionReference;Lcom/squareup/anvil/compiler/internal/reference/ClassReference;)Lcom/squareup/anvil/compiler/internal/reference/TypeReference;
 	public static final fun toFunctionReference (Lorg/jetbrains/kotlin/descriptors/FunctionDescriptor;Lcom/squareup/anvil/compiler/internal/reference/ClassReference$Descriptor;)Lcom/squareup/anvil/compiler/internal/reference/MemberFunctionReference$Descriptor;
 	public static final fun toFunctionReference (Lorg/jetbrains/kotlin/psi/KtFunction;Lcom/squareup/anvil/compiler/internal/reference/ClassReference$Psi;)Lcom/squareup/anvil/compiler/internal/reference/MemberFunctionReference$Psi;
 }
@@ -609,6 +632,7 @@ public abstract class com/squareup/anvil/compiler/internal/reference/TypeReferen
 	public abstract fun isNullable ()Z
 	public final fun resolveGenericTypeNameOrNull (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;)Lcom/squareup/kotlinpoet/TypeName;
 	public abstract fun resolveGenericTypeOrNull (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;)Lcom/squareup/anvil/compiler/internal/reference/TypeReference;
+	public final fun resolveGenericTypeOrSelf (Lcom/squareup/anvil/compiler/internal/reference/ClassReference;)Lcom/squareup/anvil/compiler/internal/reference/TypeReference;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -646,6 +670,7 @@ public final class com/squareup/anvil/compiler/internal/reference/Visibility : j
 	public static final field PROTECTED Lcom/squareup/anvil/compiler/internal/reference/Visibility;
 	public static final field PUBLIC Lcom/squareup/anvil/compiler/internal/reference/Visibility;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun isProtectedOrPublic ()Z
 	public static fun valueOf (Ljava/lang/String;)Lcom/squareup/anvil/compiler/internal/reference/Visibility;
 	public static fun values ()[Lcom/squareup/anvil/compiler/internal/reference/Visibility;
 }

@@ -3,10 +3,8 @@ package com.squareup.anvil.compiler.codegen
 import com.google.common.truth.Truth.assertThat
 import com.rickbusarow.kase.Kase1
 import com.rickbusarow.kase.wrap
-import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.compiler.assertCompilationSucceeded
 import com.squareup.anvil.compiler.assertFileGenerated
-import com.squareup.anvil.compiler.codegen.ksp.simpleSymbolProcessor
 import com.squareup.anvil.compiler.contributingInterface
 import com.squareup.anvil.compiler.contributingObject
 import com.squareup.anvil.compiler.generatedMultiBindingModule
@@ -32,7 +30,6 @@ import java.util.stream.Stream
 @Suppress("RemoveRedundantQualifierName", "RedundantSuppression")
 class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
   AnvilCompilationMode.Embedded(),
-  AnvilCompilationMode.Ksp(),
 ) {
 
   @TestFactory fun `there is a binding module for a contributed multibinding for interfaces`() =
@@ -57,7 +54,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
 
         assertFileGenerated(
           mode,
-          "ContributingInterfaceAsComSquareupTestParentInterfaceToKotlinAnyMultiBindingModule.kt",
+          "ContributingInterface_ParentInterface_Any_MultiBindingModule_612ae703.kt",
         )
       }
     }
@@ -174,7 +171,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
 
         assertFileGenerated(
           mode,
-          "Abc_ContributingClassAsComSquareupTestParentInterfaceToKotlinAnyMultiBindingModule.kt",
+          "ContributingClass_ParentInterface_Any_MultiBindingModule_16a2d7f6.kt",
         )
       }
     }
@@ -442,6 +439,43 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       }
     }
 
+  @TestFactory fun `duplicate binding checks consider ignoreQualifier`() = testFactory {
+    compile(
+      """
+      package com.squareup.test
+
+      import com.squareup.anvil.annotations.ContributesMultibinding
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Inject
+      import javax.inject.Named
+
+      interface ParentInterface
+
+      @Named("test")
+      @ContributesMultibinding(Int::class, ParentInterface::class)
+      @ContributesMultibinding(Int::class, ParentInterface::class, ignoreQualifier = true)
+      class ContributingInterface @Inject constructor() : ParentInterface
+
+      @MergeComponent(Int::class)
+      interface ComponentInterface {
+        fun injectClass(): InjectClass
+      }
+
+      class InjectClass @Inject constructor(
+        @Named("test") val qualified : Set<@JvmSuppressWildcards ParentInterface>,
+        val unqualified : Set<@JvmSuppressWildcards ParentInterface>
+      )
+      """,
+      mode = mode,
+    ) {
+      assertThat(contributingInterface.multibindingOriginClass?.java)
+        .isEqualTo(contributingInterface)
+
+      assertThat(contributingInterface.multibindingModuleScopes)
+        .containsExactly(Int::class, Int::class)
+    }
+  }
+
   @TestFactory fun `the bound type is not implied when explicitly defined`() = testFactory {
     compile(
       """
@@ -533,15 +567,6 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
         }
         AnvilCompilationMode.Embedded(listOf(codeGenerator))
       }
-
-      is AnvilCompilationMode.Ksp -> {
-        val processor = simpleSymbolProcessor { resolver ->
-          resolver.getSymbolsWithAnnotation(MergeComponent::class.qualifiedName!!)
-            .map { stubContentToGenerate }
-            .toList()
-        }
-        AnvilCompilationMode.Ksp(listOf(processor))
-      }
     }
 
     compile(
@@ -598,15 +623,6 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
               }
           }
           AnvilCompilationMode.Embedded(listOf(codeGenerator))
-        }
-
-        is AnvilCompilationMode.Ksp -> {
-          val processor = simpleSymbolProcessor { resolver ->
-            resolver.getSymbolsWithAnnotation(MergeComponent::class.qualifiedName!!)
-              .map { stubContentToGenerate }
-              .toList()
-          }
-          AnvilCompilationMode.Ksp(listOf(processor))
         }
       }
 

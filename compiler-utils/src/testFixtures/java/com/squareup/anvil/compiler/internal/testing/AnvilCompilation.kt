@@ -2,29 +2,22 @@ package com.squareup.anvil.compiler.internal.testing
 
 import com.google.auto.value.processor.AutoAnnotationProcessor
 import com.google.common.truth.Truth.assertWithMessage
-import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.AnvilCommandLineProcessor
 import com.squareup.anvil.compiler.AnvilComponentRegistrar
 import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode.Embedded
-import com.squareup.anvil.compiler.internal.testing.AnvilCompilationMode.Ksp
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.PluginOption
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.addPreviousResultToClasspath
-import com.tschuchort.compiletesting.kspArgs
-import com.tschuchort.compiletesting.kspWithCompilation
-import com.tschuchort.compiletesting.symbolProcessorProviders
 import dagger.internal.codegen.ComponentProcessor
-import dagger.internal.codegen.KspComponentProcessor
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.config.JvmTarget
+import org.jetbrains.kotlin.config.LanguageVersion
 import java.io.File
 import java.io.OutputStream
 import java.nio.file.Files
-import java.util.Locale
-import java.util.ServiceLoader
 
 /**
  * A simple API over a [KotlinCompilation] with extra configuration support for Anvil.
@@ -46,7 +39,7 @@ public class AnvilCompilation internal constructor(
     disableComponentMerging: Boolean = false,
     enableExperimentalAnvilApis: Boolean = true,
     trackSourceFiles: Boolean = true,
-    mode: AnvilCompilationMode = Embedded(emptyList()),
+    mode: AnvilCompilationMode = Embedded(),
     enableAnvil: Boolean = true,
   ): AnvilCompilation = apply {
     checkNotCompiled()
@@ -68,6 +61,9 @@ public class AnvilCompilation internal constructor(
       val anvilCommandLineProcessor = AnvilCommandLineProcessor()
       commandLineProcessors = listOf(anvilCommandLineProcessor)
 
+      val buildDir = workingDir.resolve("build")
+      val anvilCacheDir = buildDir.resolve("anvil-cache")
+
       pluginOptions = mutableListOf(
         PluginOption(
           pluginId = anvilCommandLineProcessor.pluginId,
@@ -76,8 +72,13 @@ public class AnvilCompilation internal constructor(
         ),
         PluginOption(
           pluginId = anvilCommandLineProcessor.pluginId,
-          optionName = "analysis-backend",
-          optionValue = mode.analysisBackend.name.lowercase(Locale.US),
+          optionName = "ir-merges-file",
+          optionValue = anvilCacheDir.resolve("merges/ir-merges.txt").absolutePath,
+        ),
+        PluginOption(
+          pluginId = anvilCommandLineProcessor.pluginId,
+          optionName = "track-source-files",
+          optionValue = (trackSourceFiles && mode is Embedded).toString(),
         ),
       )
 
@@ -93,13 +94,18 @@ public class AnvilCompilation internal constructor(
               ),
               PluginOption(
                 pluginId = anvilCommandLineProcessor.pluginId,
+                optionName = "gradle-build-dir",
+                optionValue = buildDir.absolutePath,
+              ),
+              PluginOption(
+                pluginId = anvilCommandLineProcessor.pluginId,
                 optionName = "src-gen-dir",
-                optionValue = File(workingDir, "build/anvil").absolutePath,
+                optionValue = buildDir.resolve("anvil").absolutePath,
               ),
               PluginOption(
                 pluginId = anvilCommandLineProcessor.pluginId,
                 optionName = "anvil-cache-dir",
-                optionValue = File(workingDir, "build/anvil-cache").absolutePath,
+                optionValue = anvilCacheDir.absolutePath,
               ),
               PluginOption(
                 pluginId = anvilCommandLineProcessor.pluginId,
@@ -116,34 +122,7 @@ public class AnvilCompilation internal constructor(
                 optionName = "will-have-dagger-factories",
                 optionValue = (generateDaggerFactories || enableDaggerAnnotationProcessor).toString(),
               ),
-              PluginOption(
-                pluginId = anvilCommandLineProcessor.pluginId,
-                optionName = "track-source-files",
-                optionValue = trackSourceFiles.toString(),
-              ),
             )
-        }
-
-        is Ksp -> {
-          symbolProcessorProviders += buildList {
-            addAll(
-              ServiceLoader.load(
-                SymbolProcessorProvider::class.java,
-                SymbolProcessorProvider::class.java.classLoader,
-              )
-                // TODO for now, we don't want to run the dagger KSP processor while we're testing
-                //  KSP. This will change when we start supporting dagger-KSP, at which point we can
-                //  change this filter to be based on https://github.com/square/anvil/pull/713
-                .filterNot { it is KspComponentProcessor.Provider },
-            )
-            addAll(mode.symbolProcessorProviders)
-          }
-          // Run KSP embedded directly within this kotlinc invocation
-          kspWithCompilation = true
-          kspArgs["will-have-dagger-factories"] = generateDaggerFactories.toString()
-          kspArgs["generate-dagger-factories"] = generateDaggerFactories.toString()
-          kspArgs["generate-dagger-factories-only"] = generateDaggerFactoriesOnly.toString()
-          kspArgs["disable-component-merging"] = disableComponentMerging.toString()
         }
       }
 
@@ -293,15 +272,18 @@ public fun compileAnvil(
   enableExperimentalAnvilApis: Boolean = true,
   trackSourceFiles: Boolean = true,
   previousCompilationResult: JvmCompilationResult? = null,
-  mode: AnvilCompilationMode = Embedded(emptyList()),
+  mode: AnvilCompilationMode = Embedded(),
   moduleName: String? = null,
   jvmTarget: JvmTarget? = null,
+  kotlinLanguageVersion: String = LanguageVersion.KOTLIN_1_9.versionString,
   expectExitCode: KotlinCompilation.ExitCode? = null,
   block: JvmCompilationResult.() -> Unit = { },
 ): JvmCompilationResult {
   return AnvilCompilation()
     .apply {
       kotlinCompilation.apply {
+        languageVersion = kotlinLanguageVersion
+        apiVersion = kotlinLanguageVersion
         this.allWarningsAsErrors = allWarningsAsErrors
         this.messageOutputStream = messageOutputStream
         if (workingDir != null) {

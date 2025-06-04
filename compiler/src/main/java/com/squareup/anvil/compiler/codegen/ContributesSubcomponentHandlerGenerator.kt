@@ -1,7 +1,6 @@
 package com.squareup.anvil.compiler.codegen
 
 import com.squareup.anvil.annotations.MergeSubcomponent
-import com.squareup.anvil.compiler.ANVIL_SUBCOMPONENT_SUFFIX
 import com.squareup.anvil.compiler.COMPONENT_PACKAGE_PREFIX
 import com.squareup.anvil.compiler.ClassScanner
 import com.squareup.anvil.compiler.PARENT_COMPONENT
@@ -15,13 +14,17 @@ import com.squareup.anvil.compiler.contributesSubcomponentFqName
 import com.squareup.anvil.compiler.contributesToFqName
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.buildFile
+import com.squareup.anvil.compiler.internal.joinSimpleNamesAndTruncate
 import com.squareup.anvil.compiler.internal.reference.AnnotationReference
 import com.squareup.anvil.compiler.internal.reference.AnvilCompilationExceptionClassReference
 import com.squareup.anvil.compiler.internal.reference.ClassReference
 import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
 import com.squareup.anvil.compiler.internal.reference.Visibility.PUBLIC
+import com.squareup.anvil.compiler.internal.reference.asClassId
 import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
+import com.squareup.anvil.compiler.internal.reference.returnTypeWithGenericSubstitution
+import com.squareup.anvil.compiler.internal.reference.returnTypeWithGenericSubstitutionOrNull
 import com.squareup.anvil.compiler.internal.safePackageString
 import com.squareup.anvil.compiler.mergeComponentFqName
 import com.squareup.anvil.compiler.mergeInterfacesFqName
@@ -38,7 +41,6 @@ import dagger.Module
 import dagger.Subcomponent
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtFile
 import java.io.File
@@ -298,10 +300,11 @@ internal class ContributesSubcomponentHandlerGenerator(
       )
     }
 
-    val functions = componentInterface.functions
+    val functions = componentInterface.memberFunctions
       .filter { it.isAbstract() && it.visibility() == PUBLIC }
       .filter {
-        val returnType = it.returnType().asClassReference()
+        val returnType = it.returnTypeWithGenericSubstitution(componentInterface)
+          .asClassReference()
         returnType == contribution.clazz || (factoryClass != null && returnType == factoryClass)
       }
 
@@ -337,9 +340,17 @@ internal class ContributesSubcomponentHandlerGenerator(
           )
         }
 
-        val createComponentFunctions = factory.functions
+        val createComponentFunctions = factory.memberFunctions
+          // filter by `isAbstract` even for interfaces,
+          // otherwise we get `toString()`, `equals()`, and `hashCode()`.
           .filter { it.isAbstract() }
-          .filter { it.returnType().asClassReference().fqName == contributionFqName }
+          .filter { function ->
+            val returnType = function.returnTypeWithGenericSubstitutionOrNull(factory)
+              ?.asClassReference()
+              ?: return@filter false
+
+            returnType.fqName == contributionFqName
+          }
 
         if (createComponentFunctions.size != 1) {
           throw AnvilCompilationExceptionClassReference(
@@ -493,7 +504,7 @@ internal class ContributesSubcomponentHandlerGenerator(
     val contribution: Contribution,
   ) {
     val generatedAnvilSubcomponent = contribution.clazz.classId
-      .generatedAnvilSubcomponent(trigger.clazz.classId)
+      .generatedAnvilSubcomponentClassId(trigger.clazz.classId)
   }
 
   private class ParentComponentInterfaceHolder(
@@ -514,7 +525,7 @@ internal class ContributesSubcomponentHandlerGenerator(
  * Returns the Anvil subcomponent that will be generated for a class annotated with
  * `ContributesSubcomponent`.
  */
-internal fun ClassId.generatedAnvilSubcomponent(parentClass: ClassId): ClassId {
+internal fun ClassId.generatedAnvilSubcomponentClassId(parentClass: ClassId): ClassId {
   // Encode the parent class name in the package rather than the class name itself. This avoids
   // issues with too long class names. Dagger will generate subcomponents as inner classes and
   // deep hierarchies will be a problem. See https://github.com/google/dagger/issues/421
@@ -539,8 +550,15 @@ internal fun ClassId.generatedAnvilSubcomponent(parentClass: ClassId): ClassId {
     "$COMPONENT_PACKAGE_PREFIX.$parentPackageName"
   }
 
-  val relativeClassName = relativeClassName.pathSegments()
-    .joinToString(separator = "_", postfix = ANVIL_SUBCOMPONENT_SUFFIX)
-
-  return ClassId(FqName(packageFqName), FqName(relativeClassName), false)
+  val segments = relativeClassName.pathSegments()
+  return ClassName(
+    packageName = packageFqName,
+    simpleNames = segments.map { it.asString() },
+  )
+    .joinSimpleNamesAndTruncate(
+      hashParams = listOf(parentClass),
+      separator = "_",
+      innerClassLength = PARENT_COMPONENT.length,
+    )
+    .asClassId(local = false)
 }

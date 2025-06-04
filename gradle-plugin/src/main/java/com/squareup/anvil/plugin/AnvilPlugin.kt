@@ -12,7 +12,6 @@ import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.UnknownTaskException
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskContainer
@@ -26,13 +25,15 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.androidJvm
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
-import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation
+import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("DEPRECATION")
@@ -50,7 +51,7 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
   private val variantCache = ConcurrentHashMap<String, Variant>()
 
   override fun apply(target: Project) {
-    target.extensions.create("anvil", AnvilExtension::class.java, target)
+    target.extensions.create("anvil", AnvilExtension::class.java)
 
     // TODO consider only lazily setting up these `anvil()` configurations in embedded mode?
     // Create a configuration for collecting CodeGenerator dependencies. We need to create all
@@ -67,27 +68,11 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
     }
 
     //  Wire up embedded plugins
-    agpPlugins.forEach { agpPlugin ->
-      target.pluginManager.withPlugin(agpPlugin) {
-        // This is the common android test variant, similar to anvilTest above.
-        val androidTestVariant = getConfiguration(target, buildType = "androidTest").apply {
-          extendsFrom(commonConfiguration)
-        }
-
-        target.androidVariantsConfigure { variant ->
-          // E.g. "anvilDebug", "anvilTestRelease", ...
-          val configuration = getConfiguration(target, buildType = variant.name)
-
-          @Suppress("TYPEALIAS_EXPANSION_DEPRECATION")
-          when (variant) {
-            is UnitTestVariantDeprecated -> configuration.extendsFrom(testConfiguration)
-            is TestVariantDeprecated -> configuration.extendsFrom(androidTestVariant)
-            // non-test variants like "debug" extend the main config
-            else -> configuration.extendsFrom(commonConfiguration)
-          }
-        }
-      }
-    }
+    extendAndroidConfigurations(
+      target = target,
+      commonConfiguration = commonConfiguration,
+      testConfiguration = testConfiguration,
+    )
 
     jvmPlugins.forEach { javaPlugin ->
       target.pluginManager.withPlugin(javaPlugin) {
@@ -95,6 +80,65 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
         // for JVM modules. We already do this for the test configuration above, which is shared
         // between JVM and Android. The main configuration is specific to the JVM.
         getConfiguration(target, "main").extendsFrom(commonConfiguration)
+      }
+    }
+  }
+
+  @Suppress("TYPEALIAS_EXPANSION_DEPRECATION")
+  private fun extendAndroidConfigurations(
+    target: Project,
+    commonConfiguration: Configuration,
+    testConfiguration: Configuration,
+  ) {
+    /*
+       Are you seeing an error like this from Gradle when configuring non-AGP projects?
+
+         An exception occurred applying plugin request [id: 'com.squareup.anvil']
+         > Failed to apply plugin 'com.squareup.anvil'.
+            > Could not create plugin of type 'AnvilPlugin'.
+               > Could not generate a decorated class for type AnvilPlugin.
+                  > com/android/build/gradle/api/BaseVariant
+
+       This happens because there's something in the AnvilPlugin bytecode that has an AGP type
+       in its signature, and those types aren't in the build classpath.  If there aren't any
+       references to those types in the actual Kotlin code, then there's probably a lambda somewhere
+       that's getting turned into a private method.  Try using an Action<T> instead of `(T) -> Unit`.
+     */
+
+    agpPlugins.forEach { agpPlugin ->
+      target.plugins.withId(agpPlugin) {
+        // This is the common android test variant, similar to anvilTest above.
+        val androidTestVariant = getConfiguration(target, buildType = "androidTest").apply {
+          extendsFrom(commonConfiguration)
+        }
+        val androidExtension = target.extensions.findByName("android")
+
+        val variantSets = buildList {
+          when (androidExtension) {
+            is AppExtension -> add(androidExtension.applicationVariants)
+            is LibraryExtension -> add(androidExtension.libraryVariants)
+            is TestExtension -> add(androidExtension.applicationVariants)
+          }
+          if (androidExtension is TestedExtension) {
+            add(androidExtension.unitTestVariants)
+            add(androidExtension.testVariants)
+          }
+        }
+        for (variants in variantSets) {
+          // Don't let this `configureEach { ... }` block become a Kotlin lambda,
+          // or the compiler will turn it into its own method with a BaseVariant in its signature.
+          // Essentially, an `Action<BaseVariant>` is okay but `(BaseVariant) -> Unit` is not.
+          // If any types from AGP are in a signature,
+          // then `AnvilPlugin` can only be applied to projects with AGP in their build classpath.
+          variants.configureEach { variant ->
+            val configuration = getConfiguration(target, buildType = variant.name)
+            when (variant) {
+              is UnitTestVariantDeprecated -> configuration.extendsFrom(testConfiguration)
+              is TestVariantDeprecated -> configuration.extendsFrom(androidTestVariant)
+              else -> configuration.extendsFrom(commonConfiguration)
+            }
+          }
+        }
       }
     }
   }
@@ -110,15 +154,20 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
   override fun applyToCompilation(
     kotlinCompilation: KotlinCompilation<*>,
   ): Provider<List<SubpluginOption>> {
-    kotlinCompilation.compilerOptions.options.let {
-      @Suppress("DEPRECATION")
-      val useK2 = it.useK2.get()
-      if (useK2 || it.languageVersion.getOrElse(KOTLIN_1_9) >= KOTLIN_2_0) {
-        kotlinCompilation.project.logger
-          .error(
-            "NOTE: Anvil is currently incompatible with the K2 compiler. Related GH issue:" +
-              "https://github.com/square/anvil/issues/733",
-          )
+    kotlinCompilation.compileTaskProvider.configure { action ->
+      action.compilerOptions.let {
+        @Suppress("DEPRECATION")
+        if (it.languageVersion.getOrElse(KOTLIN_1_9) >= KOTLIN_2_0) {
+          kotlinCompilation.project.logger
+            .warn(
+              "NOTE: Anvil is currently incompatible with the K2 compiler and the language " +
+                "version will be overridden to 1.9. Related GH issue:" +
+                "https://github.com/square/anvil/issues/733",
+            )
+        }
+
+        it.languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        it.apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
       }
     }
 
@@ -139,8 +188,6 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
     project.configurations.getByName(variant.compilerPluginClasspathName)
       .extendsFrom(getConfiguration(project, variant.name))
 
-    disableIncrementalKotlinCompilation(variant)
-
     if (!variant.variantFilter.generateDaggerFactoriesOnly) {
       disableCorrectErrorTypes(variant)
 
@@ -157,13 +204,21 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
     // Notice that we use the name of the variant as a directory name. Generated code
     // for this specific compile task will be included in the task output. The output of different
     // compile tasks shouldn't be mixed.
-    val srcGenDir = project.layout.buildDirectory.map {
-      it.asFile.resolve("anvil/${variant.name}/generated")
-    }
+    val variantDir = project.layout.buildDirectory
+      .dir("anvil/${variant.name}")
 
-    val anvilCacheDir = project.layout.buildDirectory.map {
-      it.asFile.resolve("anvil/${variant.name}/caches")
-    }
+    val srcGenDir = variantDir.map { it.dir("generated") }
+
+    val anvilCacheDir = variantDir.map { it.dir("caches") }
+
+    val irMergesFile = anvilCacheDir
+      .map { it.asFile.resolve("ir-merges.txt") }
+
+    disableIncrementalKotlinCompilation(
+      variant = variant,
+      compileTaskProvider = kotlinCompilation.compileTaskProvider,
+      irMergesFile = irMergesFile,
+    )
 
     kotlinCompilation.compileTaskProvider.configure { task ->
 
@@ -213,12 +268,20 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
           files = listOf(project.projectDir),
         ),
         FilesSubpluginOption(
+          key = "gradle-build-dir",
+          files = listOf(project.layout.buildDirectory.get().asFile),
+        ),
+        FilesSubpluginOption(
           key = "src-gen-dir",
-          files = listOf(srcGenDir.get()),
+          files = listOf(srcGenDir.get().asFile),
         ),
         FilesSubpluginOption(
           key = "anvil-cache-dir",
-          files = listOf(anvilCacheDir.get()),
+          files = listOf(anvilCacheDir.get().asFile),
+        ),
+        FilesSubpluginOption(
+          key = "ir-merges-file",
+          listOf(irMergesFile.get()),
         ),
         SubpluginOption(
           key = "generate-dagger-factories",
@@ -239,14 +302,6 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
         SubpluginOption(
           key = "will-have-dagger-factories",
           lazy { variant.willHaveDaggerFactories().toString() },
-        ),
-        SubpluginOption(
-          key = "analysis-backend",
-          lazy { if (variant.variantFilter.useKspBackend) "KSP" else "EMBEDDED" },
-        ),
-        SubpluginOption(
-          key = "merging-backend",
-          lazy { if (variant.variantFilter.useKspComponentMergingBackend) "KSP" else "IR" },
         ),
       )
     }
@@ -275,25 +330,51 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
     }
   }
 
-  private fun disableIncrementalKotlinCompilation(variant: Variant) {
+  private fun disableIncrementalKotlinCompilation(
+    variant: Variant,
+    compileTaskProvider: TaskProvider<out KotlinCompilationTask<*>>,
+    irMergesFile: Provider<File>,
+  ) {
+
+    fun mergingIsDisabled(): Boolean {
+      return variant.variantFilter.generateDaggerFactoriesOnly ||
+        variant.variantFilter.disableComponentMerging
+    }
+
+    compileTaskProvider.configure { task ->
+
+      if (variant.variantFilter.trackSourceFiles && !mergingIsDisabled()) {
+        if (task is AbstractKotlinCompile<*>) {
+          // The `ir-merges.txt` file indicates that the last compilation resulted in adding module
+          // arguments to an annotation or adding interface supertypes.  Those changes do not affect
+          // the output .class files, which means that Kotlin's incremental logic doesn't properly
+          // track the changes.  So, we disable incremental compilation whenever this file exists.
+          task.doFirstCompat {
+            task.incremental = task.incremental && !irMergesFile.get().exists()
+            task.log(
+              "Anvil: Incremental compilation enabled: ${task.incremental} (stub)",
+            )
+          }
+        }
+      }
+    }
+
     variant.project.pluginManager.withPlugin(KAPT_PLUGIN_ID) {
-      variant.project
-        .namedLazy<KaptGenerateStubsTask>(variant.stubsTaskName) { stubsTaskProvider ->
-          if (!variant.variantFilter.generateDaggerFactoriesOnly &&
-            !variant.variantFilter.disableComponentMerging
-          ) {
-            stubsTaskProvider.configure { stubsTask ->
-              // Disable incremental compilation for the stub generating task. Trigger the compiler
-              // plugin if any dependencies in the compile classpath have changed. This will make sure
-              // that we pick up any change from a dependency when merging all the classes. Without
-              // this workaround we could make changes in any library, but these changes wouldn't be
-              // contributed to the Dagger graph, because incremental compilation tricked us.
-              stubsTask.doFirstCompat {
-                stubsTask.incremental = false
-                stubsTask.log(
-                  "Anvil: Incremental compilation enabled: ${stubsTask.incremental} (stub)",
-                )
-              }
+      variant.project.tasks
+        .withType(KaptGenerateStubsTask::class.java)
+        .named { it == variant.stubsTaskName }
+        .configureEach { stubsTask ->
+          if (!mergingIsDisabled()) {
+            // Disable incremental compilation for the stub generating task. Trigger the compiler
+            // plugin if any dependencies in the compile classpath have changed. This will make sure
+            // that we pick up any change from a dependency when merging all the classes. Without
+            // this workaround we could make changes in any library, but these changes wouldn't be
+            // contributed to the Dagger graph, because incremental compilation tricked us.
+            stubsTask.doFirstCompat {
+              stubsTask.incremental = false
+              stubsTask.log(
+                "Anvil: Incremental compilation enabled: ${stubsTask.incremental} (stub)",
+              )
             }
           }
         }
@@ -355,52 +436,11 @@ private fun <T : Task> T.doFirstCompat(block: (T) -> Unit) {
  * yet. If the task is never registered, then this method will throw an error after the
  * configuration phase.
  */
-private inline fun <reified T : Task> Project.namedLazy(
-  name: String,
-  crossinline action: (TaskProvider<T>) -> Unit,
-) {
-  try {
-    action(tasks.named(name, T::class.java))
-    return
-  } catch (ignored: UnknownTaskException) {
-  }
+private inline fun <reified T : Task> Project.namedLazy(name: String, action: Action<T>) {
 
-  var didRun = false
-
-  tasks.withType(T::class.java) { task ->
-    if (task.name == name) {
-      action(tasks.named(name, T::class.java))
-      didRun = true
-    }
-  }
-
-  afterEvaluate {
-    if (!didRun) {
-      throw GradleException("Didn't find task $name with type ${T::class}.")
-    }
-  }
-}
-
-/**
- * Runs the given [action] for each Android variant including androidTest and unit test variants.
- */
-
-private fun Project.androidVariantsConfigure(
-  @Suppress("TYPEALIAS_EXPANSION_DEPRECATION")
-  action: (BaseVariantDeprecated) -> Unit,
-) {
-  val androidExtension = extensions.findByName("android")
-
-  when (androidExtension) {
-    is AppExtension -> androidExtension.applicationVariants.configureEach(action)
-    is LibraryExtension -> androidExtension.libraryVariants.configureEach(action)
-    is TestExtension -> androidExtension.applicationVariants.configureEach(action)
-  }
-
-  if (androidExtension is TestedExtension) {
-    androidExtension.unitTestVariants.configureEach(action)
-    androidExtension.testVariants.configureEach(action)
-  }
+  tasks.withType(T::class.java)
+    .named { it == name }
+    .configureEach(action)
 }
 
 // I considered extending this list with 'java-library' and 'application', but they both apply
@@ -425,8 +465,6 @@ internal class Variant private constructor(
   val name: String,
   val project: Project,
   val compileTaskProvider: TaskProvider<KotlinCompile>,
-  @Suppress("TYPEALIAS_EXPANSION_DEPRECATION")
-  val androidVariant: BaseVariantDeprecated?,
   val androidSourceSets: List<AndroidSourceSet>?,
   val compilerPluginClasspathName: String,
   val variantFilter: VariantFilter,
@@ -471,9 +509,7 @@ internal class Variant private constructor(
       return Variant(
         name = kotlinCompilation.name,
         project = project,
-        compileTaskProvider = kotlinCompilation.compileTaskProvider as
-          TaskProvider<KotlinCompile>,
-        androidVariant = androidVariant,
+        compileTaskProvider = kotlinCompilation.compileTaskProvider as TaskProvider<KotlinCompile>,
         androidSourceSets = androidSourceSets,
         compilerPluginClasspathName = PLUGIN_CLASSPATH_CONFIGURATION_NAME +
           kotlinCompilation.target.targetName.replaceFirstChar(Char::uppercase) +
@@ -488,7 +524,7 @@ internal class Variant private constructor(
 }
 
 private fun addPrefixToSourceSetName(
-  prefix: String,
+  @Suppress("SameParameterValue") prefix: String,
   sourceSetName: String,
 ): String = when (sourceSetName) {
   "main" -> prefix
@@ -502,20 +538,13 @@ internal fun KotlinCompilation<*>.kaptConfigName(): String {
 internal fun KotlinCompilation<*>.kaptConfigOrNull(project: Project): Configuration? =
   project.configurations.findByName(kaptConfigName())
 
-internal fun KotlinCompilation<*>.kspConfigName(): String {
-  return "${addPrefixToSourceSetName("ksp", sourceSetName())}KotlinProcessorClasspath"
-}
-
-internal fun KotlinCompilation<*>.kspConfigOrNull(project: Project): Configuration? =
-  project.configurations.findByName(kspConfigName())
-
 internal fun KotlinCompilation<*>.sourceSetName() =
   when (val comp = this@sourceSetName) {
     // The AGP source set names for test/androidTest variants
     // (e.g. the "androidTest" variant of the "debug" source set)
     // are concatenated differently than in the KGP and Java source sets.
     // In KGP and Java, we get `debugAndroidTest`, but in AGP we get `androidTestDebug`.
-    // The KSP and KAPT configuration names are derived from the AGP name.
+    // The KAPT configuration names are derived from the AGP name.
     is KotlinJvmAndroidCompilation ->
       comp.androidVariant.sourceSets
         // For ['debug', 'androidTest', 'debugAndroidTest'], the last name is always the one we want.
@@ -524,17 +553,6 @@ internal fun KotlinCompilation<*>.sourceSetName() =
     is KotlinJvmCompilation -> comp.name
     else -> name
   }
-
-internal fun kspConfigurationNameForSourceSetName(sourceSetName: String): String {
-  return when (sourceSetName) {
-    "main" -> "ksp"
-    else -> "ksp${sourceSetName.capitalize()}"
-  }
-}
-
-internal fun KotlinTarget.kspConfigName(): String {
-  return kspConfigurationNameForSourceSetName(targetName)
-}
 
 internal fun Configuration.hasDaggerCompilerDependency(): Boolean {
   return allDependencies.any { it.group == "com.google.dagger" && it.name == "dagger-compiler" }

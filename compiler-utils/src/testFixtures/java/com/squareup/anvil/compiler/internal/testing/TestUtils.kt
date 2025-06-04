@@ -11,7 +11,7 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
-import org.jetbrains.kotlin.analysis.utils.collections.mapToSet
+import org.jetbrains.kotlin.utils.mapToSetOrEmpty
 import kotlin.reflect.KClass
 
 @ExperimentalAnvilApi
@@ -29,7 +29,7 @@ public fun Class<*>.moduleFactoryClass(
 
   val providesMethods = methodsOrCompanionMethods
     .filter { it.isAnnotationPresent(Provides::class.java) }
-    .mapToSet { it.name }
+    .mapToSetOrEmpty { it.name }
 
   assertWithMessage("No @Provides methods found in $this")
     .that(providesMethods)
@@ -108,6 +108,13 @@ public val Class<*>.daggerModule: Module
 
 @ExperimentalAnvilApi
 public infix fun Class<*>.extends(other: Class<*>): Boolean = other.isAssignableFrom(this)
+
+@ExperimentalAnvilApi
+public infix fun Class<*>.shouldNotExtend(other: Class<*>) {
+  assertWithMessage("Expected $this to not extend $other")
+    .that(other.isAssignableFrom(this))
+    .isFalse()
+}
 
 @ExperimentalAnvilApi
 public infix fun KClass<*>.extends(other: KClass<*>): Boolean =

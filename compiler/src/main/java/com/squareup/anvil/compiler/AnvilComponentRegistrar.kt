@@ -6,18 +6,18 @@ package com.squareup.anvil.compiler
 import com.google.auto.service.AutoService
 import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.CommandLineOptions.Companion.commandLineOptions
-import com.squareup.anvil.compiler.api.AnalysisBackend
 import com.squareup.anvil.compiler.api.CodeGenerator
-import com.squareup.anvil.compiler.api.ComponentMergingBackend
 import com.squareup.anvil.compiler.codegen.CodeGenerationExtension
 import com.squareup.anvil.compiler.codegen.ContributesSubcomponentHandlerGenerator
-import com.squareup.anvil.compiler.codegen.incremental.ProjectDir
+import com.squareup.anvil.compiler.codegen.incremental.BaseDir
 import com.squareup.anvil.compiler.codegen.reference.RealAnvilModuleDescriptor
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
 import org.jetbrains.kotlin.com.intellij.openapi.extensions.LoadingOrder
 import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.LanguageVersion
+import org.jetbrains.kotlin.config.languageVersionSettings
 import org.jetbrains.kotlin.resolve.jvm.extensions.AnalysisHandlerExtension
 import java.util.ServiceLoader
 import kotlin.LazyThreadSafetyMode.NONE
@@ -29,6 +29,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 @AutoService(ComponentRegistrar::class)
 public class AnvilComponentRegistrar : ComponentRegistrar {
 
+  // We don't do anything for K2, but we need to return true here or the compilation fails.
   override val supportsK2: Boolean = true
 
   private val manuallyAddedCodeGenerators = mutableListOf<CodeGenerator>()
@@ -37,6 +38,10 @@ public class AnvilComponentRegistrar : ComponentRegistrar {
     project: MockProject,
     configuration: CompilerConfiguration,
   ) {
+    if (configuration.languageVersionSettings.languageVersion >= LanguageVersion.KOTLIN_2_0) {
+      return
+    }
+
     val commandLineOptions = configuration.commandLineOptions
     val scanner by lazy(NONE) {
       ClassScanner()
@@ -44,30 +49,27 @@ public class AnvilComponentRegistrar : ComponentRegistrar {
     val moduleDescriptorFactory by lazy(NONE) {
       RealAnvilModuleDescriptor.Factory()
     }
+    val irMergesFile by lazy(NONE) { configuration.getNotNull(irMergesFileKey) }
+    val trackSourceFiles = configuration.getNotNull(trackSourceFilesKey)
 
     val mergingEnabled =
       !commandLineOptions.generateFactoriesOnly && !commandLineOptions.disableComponentMerging
     if (mergingEnabled) {
-      if (commandLineOptions.componentMergingBackend == ComponentMergingBackend.IR) {
-        IrGenerationExtension.registerExtension(
-          project,
-          IrContributionMerger(scanner, moduleDescriptorFactory),
-        )
-      } else {
-        // TODO in dagger-ksp support
-      }
-    }
-
-    // Everything below this point is only when running in embedded compilation mode. If running in
-    // KSP, there's nothing else to do.
-    if (commandLineOptions.backend != AnalysisBackend.EMBEDDED) {
-      return
+      IrGenerationExtension.registerExtension(
+        project,
+        IrContributionMerger(
+          classScanner = scanner,
+          moduleDescriptorFactory = moduleDescriptorFactory,
+          trackSourceFiles = trackSourceFiles,
+          irMergesFile = irMergesFile,
+        ),
+      )
     }
 
     val sourceGenFolder = configuration.getNotNull(srcGenDirKey)
     val cacheDir = configuration.getNotNull(anvilCacheDirKey)
-    val projectDir = ProjectDir(configuration.getNotNull(gradleProjectDirKey))
-    val trackSourceFiles = configuration.getNotNull(trackSourceFilesKey)
+    val projectDir = BaseDir.ProjectDir(configuration.getNotNull(gradleProjectDirKey))
+    val buildDir = BaseDir.BuildDir(configuration.getNotNull(gradleBuildDirKey))
 
     val codeGenerators = loadCodeGenerators() +
       manuallyAddedCodeGenerators +
@@ -89,6 +91,7 @@ public class AnvilComponentRegistrar : ComponentRegistrar {
         commandLineOptions = commandLineOptions,
         moduleDescriptorFactory = moduleDescriptorFactory,
         projectDir = projectDir,
+        buildDir = buildDir,
         generatedDir = sourceGenFolder,
         cacheDir = cacheDir,
         trackSourceFiles = trackSourceFiles,

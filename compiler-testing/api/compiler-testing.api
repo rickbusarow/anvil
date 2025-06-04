@@ -1,0 +1,507 @@
+public abstract interface class com/squareup/anvil/compiler/testing/AnyDaggerComponent {
+	public abstract fun getDependencies ()Ljava/util/List;
+	public abstract fun getModules ()Ljava/util/List;
+}
+
+public final class com/squareup/anvil/compiler/testing/AnyDaggerComponentKt {
+	public static final fun anyDaggerComponent (Ljava/lang/Class;Lkotlin/reflect/KClass;)Lcom/squareup/anvil/compiler/testing/AnyDaggerComponent;
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/CompilationEnvironment : com/rickbusarow/kase/TestEnvironment {
+	public fun compile2 (Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lorg/jetbrains/kotlin/cli/common/ExitCode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/io/File;Lkotlin/jvm/functions/Function1;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;
+	public fun compile2 ([Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lorg/jetbrains/kotlin/cli/common/ExitCode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;Ljava/io/File;Lkotlin/jvm/functions/Function1;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;
+	public static synthetic fun compile2$default (Lcom/squareup/anvil/compiler/testing/CompilationEnvironment;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lorg/jetbrains/kotlin/cli/common/ExitCode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/io/File;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;
+	public static synthetic fun compile2$default (Lcom/squareup/anvil/compiler/testing/CompilationEnvironment;[Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lorg/jetbrains/kotlin/cli/common/ExitCode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;Ljava/io/File;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;
+	public fun getMode ()Lcom/squareup/anvil/compiler/testing/CompilationMode;
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationEnvironment$DefaultImpls {
+	public static fun cleanOutput (Lcom/squareup/anvil/compiler/testing/CompilationEnvironment;Ljava/lang/String;)Ljava/lang/String;
+	public static fun tearDown (Lcom/squareup/anvil/compiler/testing/CompilationEnvironment;)V
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationMode : com/rickbusarow/kase/Kase4 {
+	public fun <init> (Lorg/jetbrains/kotlin/config/LanguageVersion;ZZZ)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlin/config/LanguageVersion;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun component1 ()Ljava/lang/Object;
+	public final fun component1 ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public final fun component2 ()Ljava/lang/Boolean;
+	public synthetic fun component2 ()Ljava/lang/Object;
+	public final fun component3 ()Ljava/lang/Boolean;
+	public synthetic fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Ljava/lang/Boolean;
+	public synthetic fun component4 ()Ljava/lang/Object;
+	public final fun copy (Lorg/jetbrains/kotlin/config/LanguageVersion;ZZZ)Lcom/squareup/anvil/compiler/testing/CompilationMode;
+	public static synthetic fun copy$default (Lcom/squareup/anvil/compiler/testing/CompilationMode;Lorg/jetbrains/kotlin/config/LanguageVersion;ZZZILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/CompilationMode;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getA1 ()Ljava/lang/Object;
+	public fun getA1 ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public fun getA2 ()Ljava/lang/Boolean;
+	public synthetic fun getA2 ()Ljava/lang/Object;
+	public fun getA3 ()Ljava/lang/Boolean;
+	public synthetic fun getA3 ()Ljava/lang/Object;
+	public fun getA4 ()Ljava/lang/Boolean;
+	public synthetic fun getA4 ()Ljava/lang/Object;
+	public fun getDisplayName ()Ljava/lang/String;
+	public final fun getGenerateDaggerFactories ()Z
+	public final fun getLanguageVersion ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public final fun getMergeComponents ()Z
+	public final fun getUseKapt ()Z
+	public fun hashCode ()I
+	public final fun isK2 ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/squareup/anvil/compiler/testing/CompilationModeTest : com/rickbusarow/kase/KaseTestFactory, com/squareup/anvil/compiler/testing/MoreAsserts, com/squareup/anvil/compiler/testing/classgraph/ClassGraphAsserts, com/squareup/anvil/compiler/testing/classgraph/ClassInfoAsserts, com/squareup/anvil/compiler/testing/reflect/ClassAsserts {
+	public static final field Companion Lcom/squareup/anvil/compiler/testing/CompilationModeTest$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/squareup/anvil/compiler/testing/CompilationMode;[Lcom/squareup/anvil/compiler/testing/CompilationMode;)V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun asContainers (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Ljava/util/stream/Stream;
+	public fun asContainers (Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Ljava/util/stream/Stream;
+	public fun asTests (Ljava/lang/Iterable;Lcom/rickbusarow/kase/TestEnvironmentFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun asTests (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun asTests (Lkotlin/sequences/Sequence;Lcom/rickbusarow/kase/TestEnvironmentFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun asTests (Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun asTests ([Lcom/squareup/anvil/compiler/testing/CompilationMode;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public synthetic fun asTests ([Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun getKases ()Ljava/util/List;
+	public fun getParams ()Ljava/util/List;
+	public fun getTestEnvironmentFactory ()Lcom/rickbusarow/kase/ParamTestEnvironmentFactory;
+	public synthetic fun getTestEnvironmentFactory ()Lcom/rickbusarow/kase/TestEnvironmentFactory;
+	public fun test (Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/lang/Object;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public fun test (Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public fun test (Lcom/rickbusarow/kase/NoParamTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public final fun test (Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public fun test (Ljava/lang/Object;Lcom/rickbusarow/kase/TestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun test$default (Lcom/squareup/anvil/compiler/testing/CompilationModeTest;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public fun testFactory (Lcom/rickbusarow/kase/HasParams;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun testFactory (Lcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/squareup/anvil/compiler/testing/CompilationMode;[Lcom/squareup/anvil/compiler/testing/CompilationMode;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun testFactory (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public synthetic fun testFactory (Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public fun testFactory (Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationModeTest$Companion {
+	public final fun getMODE_DEFAULTS ()Ljava/util/List;
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationModeTestEnvironment : com/rickbusarow/kase/DefaultTestEnvironment, com/squareup/anvil/compiler/testing/CompilationEnvironment {
+	public static final field Companion Lcom/squareup/anvil/compiler/testing/CompilationModeTestEnvironment$Companion;
+	public fun <init> (Lcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/rickbusarow/kase/files/HasWorkingDir;)V
+	public fun getMode ()Lcom/squareup/anvil/compiler/testing/CompilationMode;
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationModeTestEnvironment$Companion : com/rickbusarow/kase/ParamTestEnvironmentFactory {
+	public fun create (Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;)Lcom/squareup/anvil/compiler/testing/CompilationModeTestEnvironment;
+	public synthetic fun create (Ljava/lang/Object;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;)Lcom/rickbusarow/kase/TestEnvironment;
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/CompilationTest : com/rickbusarow/kase/KaseTestFactory {
+}
+
+public final class com/squareup/anvil/compiler/testing/CompilationTest$DefaultImpls {
+	public static fun asContainers (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Ljava/util/stream/Stream;
+	public static fun asContainers (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Ljava/util/stream/Stream;
+	public static fun asTests (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Iterable;Lcom/rickbusarow/kase/TestEnvironmentFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun asTests (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun asTests (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lkotlin/sequences/Sequence;Lcom/rickbusarow/kase/TestEnvironmentFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun asTests (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun asTests (Lcom/squareup/anvil/compiler/testing/CompilationTest;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun getKases (Lcom/squareup/anvil/compiler/testing/CompilationTest;)Ljava/util/List;
+	public static fun test (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/lang/Object;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lcom/rickbusarow/kase/NoParamTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Object;Lcom/rickbusarow/kase/TestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun testFactory (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lcom/rickbusarow/kase/HasParams;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun testFactory (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun testFactory (Lcom/squareup/anvil/compiler/testing/CompilationTest;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+	public static fun testFactory (Lcom/squareup/anvil/compiler/testing/CompilationTest;Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Ljava/util/stream/Stream;
+}
+
+public final class com/squareup/anvil/compiler/testing/DaggerTestUtilsKt {
+	public static final fun removeParametersAndSort (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest : com/rickbusarow/kase/HasTestEnvironmentFactory {
+	public fun getTestEnvironmentFactory ()Lcom/rickbusarow/kase/DefaultTestEnvironment$Factory;
+	public synthetic fun getTestEnvironmentFactory ()Lcom/rickbusarow/kase/TestEnvironmentFactory;
+}
+
+public final class com/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest$DefaultImpls {
+	public static fun test (Lcom/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest;Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/lang/Object;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest;Lcom/rickbusarow/kase/HasTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest;Lcom/rickbusarow/kase/NoParamTestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+	public static fun test (Lcom/squareup/anvil/compiler/testing/DefaultTestEnvironmentTest;Ljava/lang/Object;Lcom/rickbusarow/kase/TestEnvironmentFactory;Ljava/util/List;Lcom/rickbusarow/kase/files/TestLocation;Lkotlin/jvm/functions/Function2;)V
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/K2CodeGenerator {
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/MoreAsserts {
+	public fun deleteOrFail (Ljava/io/File;)V
+	public fun deleteRecursivelyOrFail (Ljava/io/File;)V
+	public fun shouldContain (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Iterable;
+	public fun shouldContain (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun shouldExistWithText (Ljava/io/File;Ljava/lang/String;)V
+	public fun shouldExistWithTextContaining (Ljava/io/File;Ljava/lang/String;)V
+}
+
+public final class com/squareup/anvil/compiler/testing/SkipWhenKt {
+	public static final fun skipWhen (ZLkotlin/jvm/functions/Function0;)V
+}
+
+public final class com/squareup/anvil/compiler/testing/TestNames {
+	public static final field INSTANCE Lcom/squareup/anvil/compiler/testing/TestNames;
+	public final fun getAny ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getAnyQualifier ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getAssistedService ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getAssistedServiceFactory ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getComponentInterface ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getContributingInterface ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getContributingObject ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getDaggerModule1 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getDaggerModule2 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getDaggerModule3 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getDaggerModule4 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getInjectClass ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getInjectClass_Factory ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getJavaClass ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getNothing ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getParentInterface ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getParentInterface1 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getParentInterface2 ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getSecondContributingInterface ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getSomeClass ()Lorg/jetbrains/kotlin/name/ClassId;
+	public final fun getSquareupTest ()Lorg/jetbrains/kotlin/name/FqName;
+	public final fun getSubcomponentInterface ()Lorg/jetbrains/kotlin/name/ClassId;
+}
+
+public final class com/squareup/anvil/compiler/testing/TestNamesKt {
+	public static final fun asJavaNameString (Lorg/jetbrains/kotlin/name/ClassId;)Ljava/lang/String;
+	public static final fun child (Lorg/jetbrains/kotlin/name/ClassId;Z)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun child (Lorg/jetbrains/kotlin/name/FqName;Ljava/lang/String;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun child (Lorg/jetbrains/kotlin/name/FqName;Z)Lkotlin/properties/ReadOnlyProperty;
+	public static synthetic fun child$default (Lorg/jetbrains/kotlin/name/ClassId;ZILjava/lang/Object;)Lkotlin/properties/ReadOnlyProperty;
+	public static synthetic fun child$default (Lorg/jetbrains/kotlin/name/FqName;ZILjava/lang/Object;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun getBindingModuleSibling (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getClassId (Lkotlin/reflect/KClass;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getCompanion (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getFactorySibling (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getFqName (Ljava/lang/Class;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getFqName (Lkotlin/reflect/KClass;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getInnerModule (Lorg/jetbrains/kotlin/name/ClassId;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getInnerModule (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getMembersInjectorSibling (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getNestedClass (Lorg/jetbrains/kotlin/name/ClassId;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getNestedClass (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getNestedInterface (Lorg/jetbrains/kotlin/name/ClassId;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getNestedInterface (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun getNestedObject (Lorg/jetbrains/kotlin/name/ClassId;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getNestedObject (Lorg/jetbrains/kotlin/name/FqName;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun nested (Lorg/jetbrains/kotlin/name/ClassId;Z)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun nested (Lorg/jetbrains/kotlin/name/FqName;Ljava/lang/String;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun nested (Lorg/jetbrains/kotlin/name/FqName;Z)Lkotlin/properties/ReadOnlyProperty;
+	public static synthetic fun nested$default (Lorg/jetbrains/kotlin/name/ClassId;ZILjava/lang/Object;)Lkotlin/properties/ReadOnlyProperty;
+	public static synthetic fun nested$default (Lorg/jetbrains/kotlin/name/FqName;ZILjava/lang/Object;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun sibling (Lorg/jetbrains/kotlin/name/FqName;Ljava/lang/String;)Lorg/jetbrains/kotlin/name/FqName;
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/classgraph/ClassGraphAsserts : com/squareup/anvil/compiler/testing/MoreAsserts {
+	public fun shouldBe (Lio/github/classgraph/ClassInfoList;Ljava/util/Collection;)V
+	public fun shouldContainClass (Lio/github/classgraph/ClassInfoList;Ljava/lang/String;)Lio/github/classgraph/ClassInfo;
+	public fun shouldContainClass (Lio/github/classgraph/ClassInfoList;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/ClassInfo;
+	public fun shouldContainClass (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Lio/github/classgraph/ClassInfo;
+	public fun shouldContainClass (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/ClassInfo;
+	public fun shouldContainClasses (Lio/github/classgraph/ClassInfoList;Ljava/lang/Iterable;)V
+	public fun shouldContainClasses (Lio/github/classgraph/ClassInfoList;Ljava/util/Collection;)V
+	public fun shouldContainClasses (Lio/github/classgraph/ScanResult;Ljava/lang/Iterable;)V
+	public fun shouldContainClasses (Lio/github/classgraph/ScanResult;Ljava/util/Collection;)V
+	public fun shouldContainExactly (Lio/github/classgraph/ClassInfoList;Ljava/util/Collection;)V
+	public fun shouldContainPackage (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Lio/github/classgraph/PackageInfo;
+	public fun shouldContainPackage (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/PackageInfo;
+	public fun shouldNotContainClass (Lio/github/classgraph/ClassInfoList;Ljava/lang/String;)V
+	public fun shouldNotContainClass (Lio/github/classgraph/ClassInfoList;Lorg/jetbrains/kotlin/name/ClassId;)V
+	public fun shouldNotContainClass (Lio/github/classgraph/ScanResult;Ljava/lang/String;)V
+	public fun shouldNotContainClass (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/ClassId;)V
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/classgraph/ClassInfoAsserts {
+	public fun shouldContainDeclaredField (Lio/github/classgraph/ClassInfo;Ljava/lang/String;)Lio/github/classgraph/FieldInfo;
+	public fun shouldContainDeclaredFields (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainDeclaredMethod (Lio/github/classgraph/ClassInfo;Ljava/lang/String;)Lio/github/classgraph/MethodInfo;
+	public fun shouldContainDeclaredMethods (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainExactDeclaredFields (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainExactDeclaredMethods (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainExactFields (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainExactMethods (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainField (Lio/github/classgraph/ClassInfo;Ljava/lang/String;)Lio/github/classgraph/FieldInfo;
+	public fun shouldContainFields (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainMethod (Lio/github/classgraph/ClassInfo;Ljava/lang/String;)Lio/github/classgraph/MethodInfo;
+	public fun shouldContainMethods (Lio/github/classgraph/ClassInfo;Ljava/util/Collection;)V
+	public fun shouldContainOverloadedMethodsNamed (Lio/github/classgraph/ClassInfo;Ljava/lang/String;)Lio/github/classgraph/MethodInfoList;
+	public fun shouldHaveSingleConstructor (Lio/github/classgraph/ClassInfo;)Lio/github/classgraph/MethodInfo;
+}
+
+public final class com/squareup/anvil/compiler/testing/classgraph/ClassInfoKt {
+	public static final fun allBindMethods (Lio/github/classgraph/ClassInfo;)Ljava/util/List;
+	public static final fun allProvidesMethods (Lio/github/classgraph/ClassInfo;)Ljava/util/List;
+	public static final fun classIds (Ljava/util/Collection;)Ljava/util/List;
+	public static final fun fqNames (Ljava/util/Collection;)Ljava/util/List;
+	public static final fun getAnnotationInfo (Lio/github/classgraph/ClassInfo;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/AnnotationInfo;
+	public static final fun getClassId (Lio/github/classgraph/ClassInfo;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getModuleNames (Lio/github/classgraph/AnnotationInfo;)Ljava/util/List;
+}
+
+public final class com/squareup/anvil/compiler/testing/classgraph/MethodInfoKt {
+	public static final fun boundTypes (Lio/github/classgraph/MethodInfo;)Lkotlin/Pair;
+}
+
+public final class com/squareup/anvil/compiler/testing/classgraph/ScanResultKt {
+	public static final fun allBindsMethods (Lio/github/classgraph/ScanResult;)Ljava/util/List;
+	public static final fun allBoundTypes (Lio/github/classgraph/ScanResult;)Ljava/util/List;
+	public static final fun allDaggerFactoryClasses (Lio/github/classgraph/ScanResult;)Ljava/util/List;
+	public static final fun allDirectInterfaces (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Ljava/util/List;
+	public static final fun allMergedModulesForComponent (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Ljava/util/List;
+	public static final fun allModuleClasses (Lio/github/classgraph/ScanResult;)Ljava/util/List;
+	public static final fun declaredField (Lio/github/classgraph/ClassInfo;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun field (Lio/github/classgraph/ClassInfo;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun get (Lio/github/classgraph/ClassInfoList;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/ClassInfo;
+	public static final fun get (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Lio/github/classgraph/ClassInfo;
+	public static final fun get (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/ClassInfo;
+	public static final fun getAllClassNames (Lio/github/classgraph/PackageInfo;)Ljava/util/List;
+	public static final fun getAny (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getAnyQualifier (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getAssistedService (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getAssistedServiceFactory (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getClassInfo (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/ClassInfo;
+	public static final fun getClassInfo (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/ClassInfo;
+	public static final fun getClassInfo (Lorg/jetbrains/kotlin/name/FqName;Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getClassInfoOrNull (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/ClassInfo;
+	public static final fun getComponentInterface (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getContributingInterface (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getContributingObject (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getDaggerModule1 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getDaggerModule2 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getDaggerModule3 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getDaggerModule4 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getInjectClass (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getInjectClass_Factory (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getJavaClass (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getNothing (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getPackageInfo (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/PackageInfo;
+	public static final fun getParentInterface (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getParentInterface1 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getParentInterface2 (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getSecondContributingInterface (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getSquareupTest (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/PackageInfo;
+	public static final fun getSubcomponentInterface (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
+	public static final fun getValue (Lio/github/classgraph/ScanResult;Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lio/github/classgraph/ClassInfo;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2Compilation {
+	public fun <init> (Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;Lorg/jetbrains/kotlin/cli/common/ExitCode;)V
+	public final fun getConfig ()Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
+	public final fun getExpectedExitCode ()Lorg/jetbrains/kotlin/cli/common/ExitCode;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration {
+	public static final field Companion Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration$Companion;
+	public fun <init> (Ljava/io/File;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;ZZZLjava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/io/File;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/io/File;
+	public final fun component10 ()Ljava/io/File;
+	public final fun component11 ()Ljava/io/File;
+	public final fun component12 ()Ljava/io/File;
+	public final fun component13 ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public final fun component14 ()Ljava/io/File;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Ljava/util/List;
+	public final fun component17 ()Ljava/util/List;
+	public final fun component18 ()Ljava/util/List;
+	public final fun component19 ()Ljava/util/List;
+	public final fun component2 ()Lcom/squareup/anvil/compiler/testing/CompilationMode;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/io/File;
+	public final fun component8 ()Ljava/io/File;
+	public final fun component9 ()Ljava/io/File;
+	public final fun copy (Ljava/io/File;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;ZZZLjava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/io/File;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
+	public static synthetic fun copy$default (Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;Ljava/io/File;Lcom/squareup/anvil/compiler/testing/CompilationMode;Ljava/util/List;ZZZLjava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/io/File;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/io/File;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllWarningsAsErrors ()Z
+	public final fun getClassFilesDir ()Ljava/io/File;
+	public final fun getCompilationClasspath ()Ljava/util/List;
+	public final fun getCompilerPluginClasspath ()Ljava/util/List;
+	public final fun getFirExtensions ()Ljava/util/List;
+	public final fun getJarOutputDir ()Ljava/io/File;
+	public final fun getJdkHome ()Ljava/io/File;
+	public final fun getKaptClassesDir ()Ljava/io/File;
+	public final fun getKaptGeneratedSourcesDir ()Ljava/io/File;
+	public final fun getKaptIncrementalDir ()Ljava/io/File;
+	public final fun getKaptPluginClasspath ()Ljava/util/List;
+	public final fun getKaptStubsDir ()Ljava/io/File;
+	public final fun getLanguageVersion ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public final fun getMode ()Lcom/squareup/anvil/compiler/testing/CompilationMode;
+	public final fun getModuleName ()Ljava/lang/String;
+	public final fun getRootDir ()Ljava/io/File;
+	public final fun getSourceFiles ()Ljava/util/List;
+	public final fun getUseKapt ()Z
+	public final fun getVerbose ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration$Companion {
+	public final fun default (Ljava/util/List;Ljava/util/List;Ljava/io/File;ZLcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
+	public static synthetic fun default$default (Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration$Companion;Ljava/util/List;Ljava/util/List;Ljava/io/File;ZLcom/squareup/anvil/compiler/testing/CompilationMode;Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;ILjava/lang/Object;)Lcom/squareup/anvil/compiler/testing/compilation/Compile2CompilationConfiguration;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2FirExtensionRegistrar : org/jetbrains/kotlin/fir/extensions/FirExtensionRegistrar {
+	public fun <init> (Lorg/jetbrains/kotlin/cli/common/messages/MessageCollector;Ljava/util/List;)V
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2Result {
+	public fun <init> (Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/util/List;Lorg/jetbrains/kotlin/cli/common/ExitCode;Ljava/lang/ClassLoader;Lcom/squareup/anvil/compiler/testing/compilation/CompilerMessages;)V
+	public final fun getClassFilesDir ()Ljava/io/File;
+	public final fun getClassGraph ()Lio/github/classgraph/ScanResult;
+	public final fun getClassLoader ()Ljava/lang/ClassLoader;
+	public final fun getClasspathFiles ()Ljava/util/List;
+	public final fun getCompilerMessages ()Lcom/squareup/anvil/compiler/testing/compilation/CompilerMessages;
+	public final fun getExitCode ()Lorg/jetbrains/kotlin/cli/common/ExitCode;
+	public final fun getJar ()Ljava/io/File;
+	public final fun getLibsDir ()Ljava/io/File;
+	public final fun getRootDir ()Ljava/io/File;
+	public final fun getScanResult ()Lio/github/classgraph/ScanResult;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/Compile2ResultKt {
+	public static final fun classGraphResult (Ljava/util/List;)Lio/github/classgraph/ScanResult;
+	public static final fun compilationErrorLine (Lcom/squareup/anvil/compiler/testing/compilation/Compile2Result;)Ljava/lang/String;
+	public static final fun requireIsJarFile (Ljava/io/File;)Ljava/io/File;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/CompilerMessages {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getAll ()Ljava/util/List;
+	public final fun getErrors ()Ljava/util/List;
+	public final fun getHasErrors ()Z
+	public final fun getHasWarnings ()Z
+	public final fun getInfos ()Ljava/util/List;
+	public final fun getLogging ()Ljava/util/List;
+	public final fun getOutput ()Ljava/util/List;
+	public final fun getWarnings ()Ljava/util/List;
+	public final fun isEmpty ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/squareup/anvil/compiler/testing/compilation/HostClasspath {
+	public static final field INSTANCE Lcom/squareup/anvil/compiler/testing/compilation/HostClasspath;
+	public final fun getAllInheritedAnvilProjects ()Ljava/util/List;
+	public final fun getAnvilAnnotations ()Ljava/io/File;
+	public final fun getAnvilAnnotationsOptional ()Ljava/io/File;
+	public final fun getAnvilCompiler ()Ljava/io/File;
+	public final fun getAnvilCompilerApi ()Ljava/io/File;
+	public final fun getAnvilCompilerK2 ()Ljava/io/File;
+	public final fun getAnvilCompilerK2Api ()Ljava/io/File;
+	public final fun getAnvilCompilerUtils ()Ljava/io/File;
+	public final fun getAnvilCompilerUtilsTestFixtures ()Ljava/io/File;
+	public final fun getAutoServiceAnnotations ()Ljava/io/File;
+	public final fun getDagger ()Ljava/io/File;
+	public final fun getDaggerCompiler ()Ljava/io/File;
+	public final fun getInheritedClasspath ()Ljava/util/List;
+	public final fun getIntellijCore ()Ljava/io/File;
+	public final fun getIntellijTrove4j ()Ljava/io/File;
+	public final fun getIntellijUtil ()Ljava/io/File;
+	public final fun getJakartaInject ()Ljava/io/File;
+	public final fun getJavaxInject ()Ljava/io/File;
+	public final fun getJavaxJsr250Api ()Ljava/io/File;
+	public final fun getJetbrainsAnnotations ()Ljava/io/File;
+	public final fun getKotlinAnnotationProcessing ()Ljava/io/File;
+	public final fun getKotlinAnnotationProcessingCompiler ()Ljava/io/File;
+	public final fun getKotlinAnnotationProcessingEmbeddable ()Ljava/io/File;
+	public final fun getKotlinCompilerEmbeddable ()Ljava/io/File;
+	public final fun getKotlinReflect ()Ljava/io/File;
+	public final fun getKotlinScriptingCompiler ()Ljava/io/File;
+	public final fun getKotlinScriptingCompilerEmbeddable ()Ljava/io/File;
+	public final fun getKotlinStdLib ()Ljava/io/File;
+	public final fun getKotlinStdLibCommonJar ()Ljava/io/File;
+	public final fun getKotlinStdLibJdkJar ()Ljava/io/File;
+	public final fun getKotlinxSerializationCoreJvm ()Ljava/io/File;
+	public final fun getProjectClassFileDirectories ()Ljava/util/List;
+}
+
+public final class com/squareup/anvil/compiler/testing/reflect/AnnotationKt {
+	public static final fun getBoundType (Ljava/lang/annotation/Annotation;)Lkotlin/reflect/KClass;
+	public static final fun getScope (Ljava/lang/annotation/Annotation;)Lkotlin/reflect/KClass;
+}
+
+public abstract interface class com/squareup/anvil/compiler/testing/reflect/ClassAsserts {
+	public fun shouldExtend (Ljava/lang/Class;Ljava/lang/Class;)V
+	public fun shouldExtend (Ljava/lang/Class;Ljava/lang/String;)V
+	public fun shouldExtend (Ljava/lang/Class;Lorg/jetbrains/kotlin/name/ClassId;)V
+	public fun shouldNotExtend (Ljava/lang/Class;Ljava/lang/Class;)V
+	public fun shouldNotExtend (Ljava/lang/Class;Ljava/lang/String;)V
+	public fun shouldNotExtend (Ljava/lang/Class;Lorg/jetbrains/kotlin/name/ClassId;)V
+}
+
+public final class com/squareup/anvil/compiler/testing/reflect/ClassKt {
+	public static final fun createInstance (Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+	public static final fun declaredField (Ljava/lang/Class;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun extends (Ljava/lang/Class;Ljava/lang/Class;)Z
+	public static final fun factoryClass (Ljava/lang/Class;)Ljava/lang/Class;
+	public static final fun field (Ljava/lang/Class;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun getClassId (Ljava/lang/Class;)Lorg/jetbrains/kotlin/name/ClassId;
+	public static final fun getDaggerComponent (Ljava/lang/Class;)Ldagger/Component;
+	public static final fun getDaggerModule (Ljava/lang/Class;)Ldagger/Module;
+	public static final fun getDaggerSubcomponent (Ljava/lang/Class;)Ldagger/Subcomponent;
+	public static final fun getMembersInjector (Ljava/lang/Class;)Ljava/lang/Class;
+	public static final fun packageName (Ljava/lang/Class;)Ljava/lang/String;
+	public static final fun use (Ljava/lang/reflect/AccessibleObject;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun withoutAnvilModules (Ljava/util/Collection;)Ljava/util/List;
+	public static final fun withoutAnvilModules ([Lkotlin/reflect/KClass;)Ljava/util/List;
+}
+
+public final class com/squareup/anvil/compiler/testing/reflect/MemberKt {
+	public static final fun isAbstract (Ljava/lang/reflect/Member;)Z
+	public static final fun isStatic (Ljava/lang/reflect/Member;)Z
+}
+
+public final class com/squareup/anvil/compiler/testing/reflect/ReflectionKt {
+	public static final fun get (Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+	public static final fun get (Ljava/lang/ClassLoader;Lorg/jetbrains/kotlin/name/FqName;)Ljava/lang/Class;
+	public static final fun getAny (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getAnyQualifier (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getAssistedService (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getAssistedServiceFactory (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getComponentInterface (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getContributesToAnnotation (Ljava/lang/Class;)Lcom/squareup/anvil/annotations/ContributesTo;
+	public static final fun getContributingInterface (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getContributingObject (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getDaggerModule1 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getDaggerModule2 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getDaggerModule3 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getDaggerModule4 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getDeclaredFieldValue (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun getFieldValue (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun getGeneratedBindingModule (Ljava/lang/Class;)Ljava/lang/Class;
+	public static final fun getInjectClass (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getInjectClass_Factory (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getJavaClass (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getNothing (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getParentInterface (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getParentInterface1 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getParentInterface2 (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getPropertyValue (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun getSecondContributingInterface (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun getSubcomponentInterface (Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun invokeGet (Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+	public static final fun loadClass (Ljava/lang/ClassLoader;Lorg/jetbrains/kotlin/name/ClassId;)Ljava/lang/Class;
+	public static final fun loadClass (Ljava/lang/ClassLoader;Lorg/jetbrains/kotlin/name/FqName;)Ljava/lang/Class;
+	public static final fun loadClass (Lorg/jetbrains/kotlin/name/FqName;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+	public static final fun loadClassOrNull (Ljava/lang/ClassLoader;Lorg/jetbrains/kotlin/name/ClassId;)Ljava/lang/Class;
+	public static final fun loadClassOrNull (Ljava/lang/ClassLoader;Lorg/jetbrains/kotlin/name/FqName;)Ljava/lang/Class;
+}
+

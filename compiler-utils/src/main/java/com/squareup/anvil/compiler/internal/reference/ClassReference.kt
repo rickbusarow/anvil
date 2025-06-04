@@ -3,8 +3,9 @@ package com.squareup.anvil.compiler.internal.reference
 import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.api.AnvilCompilationException
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.capitalize
 import com.squareup.anvil.compiler.internal.containingFileAsJavaFile
+import com.squareup.anvil.compiler.internal.generateHintFileName
+import com.squareup.anvil.compiler.internal.joinSimpleNames
 import com.squareup.anvil.compiler.internal.reference.ClassReference.Descriptor
 import com.squareup.anvil.compiler.internal.reference.ClassReference.Psi
 import com.squareup.anvil.compiler.internal.reference.Visibility.INTERNAL
@@ -65,8 +66,69 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
   public val packageFqName: FqName get() = classId.packageFqName
 
   public abstract val constructors: List<MemberFunctionReference>
+
+  @Deprecated(
+    "renamed to `declaredMemberFunctions`.  " +
+      "Use `memberFunctions` to include inherited functions.",
+    replaceWith = ReplaceWith("declaredMemberFunctions"),
+  )
   public abstract val functions: List<MemberFunctionReference>
+
+  /**
+   * All functions that are declared in this class, including overrides.
+   * This list does not include inherited functions that are not overridden by this class.
+   */
+  public abstract val declaredMemberFunctions: List<MemberFunctionReference>
+
+  /**
+   * All functions declared in this class or any of its super-types.
+   */
+  public val memberFunctions: List<MemberFunctionReference> by lazy(NONE) {
+    declaredMemberFunctions
+      .plus(directSuperTypeReferences().flatMap { it.asClassReference().memberFunctions })
+      // Don't include any functions that have been overridden.
+      // That's determined by their name and ordered parameter types.
+      // Parameter names are allowed to change and the return type will change, so they're ignored.
+      .distinctBy { function ->
+        if (function.visibility().isProtectedOrPublic()) {
+          function.parameters.map { param ->
+            param.type().resolveGenericTypeOrSelf(this).asTypeName()
+          } + function.name
+        } else {
+          function
+        }
+      }
+  }
+
+  @Deprecated(
+    "renamed to `declaredMemberProperties`.  \n" +
+      "Use `memberProperties` to include inherited properties.",
+    replaceWith = ReplaceWith("declaredMemberProperties"),
+  )
   public abstract val properties: List<MemberPropertyReference>
+
+  /**
+   * All properties that are declared in this class, including overrides.
+   * This list does not include inherited properties that are not overridden by this class.
+   */
+  public abstract val declaredMemberProperties: List<MemberPropertyReference>
+
+  /**
+   * All properties declared in this class or any of its super-types.
+   */
+  public val memberProperties: List<MemberPropertyReference> by lazy(NONE) {
+    declaredMemberProperties
+      .plus(directSuperTypeReferences().flatMap { it.asClassReference().memberProperties })
+      // Don't include overridden properties.
+      .distinctBy {
+        if (it.visibility().isProtectedOrPublic()) {
+          it.name
+        } else {
+          it
+        }
+      }
+  }
+
   public abstract val typeParameters: List<TypeParameterReference>
 
   protected abstract val innerClassesAndObjects: List<ClassReference>
@@ -145,7 +207,13 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
       clazz.containingFileAsJavaFile()
     }
 
-    override val functions: List<MemberFunctionReference.Psi> by lazy(NONE) {
+    @Deprecated(
+      "renamed to `declaredMemberFunctions`.  Use `memberFunctions` to include inherited functions.",
+      replaceWith = ReplaceWith("declaredMemberFunctions"),
+    )
+    override val functions: List<MemberFunctionReference.Psi> get() = declaredMemberFunctions
+
+    override val declaredMemberFunctions: List<MemberFunctionReference.Psi> by lazy(NONE) {
       clazz
         .children
         .filterIsInstance<KtClassBody>()
@@ -157,7 +225,13 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
       clazz.annotationEntries.map { it.toAnnotationReference(this, module) }
     }
 
-    override val properties: List<MemberPropertyReference.Psi> by lazy(NONE) {
+    @Deprecated(
+      "renamed to `declaredMemberProperties`.  \nUse `memberProperties` to include inherited properties.",
+      replaceWith = ReplaceWith("declaredMemberProperties"),
+    )
+    override val properties: List<MemberPropertyReference.Psi> get() = declaredMemberProperties
+
+    override val declaredMemberProperties: List<MemberPropertyReference.Psi> by lazy(NONE) {
       buildList {
         // Order kind of matters here, since the Descriptor APIs will list body/member properties
         // before the constructor properties.
@@ -262,9 +336,14 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
         )
     }
 
-    override val functions: List<MemberFunctionReference.Descriptor> by lazy(NONE) {
+    @Deprecated(
+      "renamed to `declaredMemberFunctions`.  Use `memberFunctions` to include inherited functions.",
+      replaceWith = ReplaceWith("declaredMemberFunctions"),
+    )
+    override val functions: List<MemberFunctionReference.Descriptor> get() = declaredMemberFunctions
+    override val declaredMemberFunctions: List<MemberFunctionReference.Descriptor> by lazy(NONE) {
       clazz.unsubstitutedMemberScope
-        .getContributedDescriptors(kindFilter = DescriptorKindFilter.FUNCTIONS)
+        .getDescriptorsFiltered(kindFilter = DescriptorKindFilter.FUNCTIONS)
         .filterIsInstance<FunctionDescriptor>()
         .filterNot { it is ConstructorDescriptor }
         .map { it.toFunctionReference(this) }
@@ -274,14 +353,19 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
       clazz.annotations.map { it.toAnnotationReference(this, module) }
     }
 
-    override val properties: List<MemberPropertyReference.Descriptor> by lazy(NONE) {
+    @Deprecated(
+      "renamed to `declaredMemberProperties`.  \nUse `memberProperties` to include inherited properties.",
+      replaceWith = ReplaceWith("declaredMemberProperties"),
+    )
+    override val properties: List<MemberPropertyReference.Descriptor>
+      get() = declaredMemberProperties
+
+    override val declaredMemberProperties: List<MemberPropertyReference.Descriptor> by lazy(NONE) {
       clazz.unsubstitutedMemberScope
         .getDescriptorsFiltered(kindFilter = DescriptorKindFilter.VARIABLES)
         .filterIsInstance<PropertyDescriptor>()
-        .filter {
-          // Remove inherited properties that aren't overridden in this class.
-          it.kind == DECLARATION
-        }
+        // Remove inherited properties that aren't overridden in this class.
+        .filter { it.kind == DECLARATION }
         .map { it.toPropertyReference(this) }
     }
 
@@ -378,32 +462,61 @@ public fun FqName.toClassReference(module: ModuleDescriptor): ClassReference {
     ?: throw AnvilCompilationException("Couldn't resolve ClassReference for $this.")
 }
 
+@Deprecated(
+  message = "Renamed to joinSimpleNames",
+  replaceWith = ReplaceWith("joinSimpleNames(separator, suffix)"),
+)
 @ExperimentalAnvilApi
 public fun ClassReference.generateClassName(
   separator: String = "_",
   suffix: String = "",
-): ClassId {
-  return asClassName().generateClassName(separator, suffix).asClassId()
-}
+): ClassId = joinSimpleNames(separator = separator, suffix = suffix)
 
+/**
+ * Joins the simple names of a class with the given [separator] and [suffix].
+ *
+ * ```
+ * val normalName = ClassName("com.example", "Outer", "Middle", "Inner")
+ * val joinedName = normalName.joinSimpleNames(separator = "_", suffix = "Factory")
+ *
+ * println(joinedName) // com.example.Outer_Middle_InnerFactory
+ * ```
+ * @throws IllegalArgumentException if the resulting class name is too long to be a valid file name.
+ */
+@ExperimentalAnvilApi
+public fun ClassReference.joinSimpleNames(
+  separator: String = "_",
+  suffix: String = "",
+): ClassId = asClassName()
+  .joinSimpleNames(separator = separator, suffix = suffix)
+  .asClassId()
+
+@Deprecated(
+  message = "Renamed to joinSimpleNames",
+  replaceWith = ReplaceWith(
+    "joinSimpleNames(separator, suffix)",
+    "com.squareup.anvil.compiler.internal.joinSimpleNames",
+  ),
+)
 @ExperimentalAnvilApi
 public fun ClassName.generateClassName(
   separator: String = "_",
   suffix: String = "",
-): ClassName {
-  val className = simpleNames.joinToString(separator = separator)
-  return ClassName(packageName, className + suffix)
-}
+): ClassName = joinSimpleNames(separator = separator, suffix = suffix)
 
+@Deprecated(
+  "renamed to generateHintFileName()",
+  replaceWith = ReplaceWith(
+    "generateHintFileName(separator, suffix, capitalizePackage)",
+    "com.squareup.anvil.compiler.internal.generateHintFileName",
+  ),
+)
 @ExperimentalAnvilApi
 public fun ClassName.generateClassNameString(
   separator: String = "",
   suffix: String = "",
-): String {
-  return packageName.split('.').plus(simpleNames).joinToString(separator = separator) {
-    it.capitalize()
-  } + suffix
-}
+  capitalizePackage: Boolean = true,
+): String = generateHintFileName(separator, suffix, capitalizePackage)
 
 @ExperimentalAnvilApi
 public fun ClassName.asClassId(local: Boolean = false): ClassId = ClassId(

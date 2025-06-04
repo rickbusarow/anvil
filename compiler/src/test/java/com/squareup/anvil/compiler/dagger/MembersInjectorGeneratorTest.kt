@@ -11,7 +11,7 @@ import com.squareup.anvil.compiler.internal.testing.getValue
 import com.squareup.anvil.compiler.internal.testing.isStatic
 import com.squareup.anvil.compiler.internal.testing.membersInjector
 import com.squareup.anvil.compiler.nestedInjectClass
-import com.squareup.anvil.compiler.useDaggerAndKspParams
+import com.squareup.anvil.compiler.testParams
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.OK
@@ -39,7 +39,7 @@ class MembersInjectorGeneratorTest(
   companion object {
     @Parameters(name = "Use Dagger: {0}, mode: {1}")
     @JvmStatic
-    fun params() = useDaggerAndKspParams()
+    fun params() = testParams()
   }
 
   @Test fun `a factory class is generated for a field injection`() {
@@ -1434,6 +1434,57 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
       val constructor = membersInjector.declaredConstructors.single()
       assertThat(constructor.parameterTypes.toList())
         .containsExactly(Provider::class.java)
+    }
+  }
+
+  @Test fun `a factory class is generated for an injected generic field in an inherited generic class`() {
+    compile(
+      """
+      package com.squareup.test
+      
+      import javax.inject.Inject
+
+      open class Base<T : Any> {
+        @Inject lateinit var value: T
+      }
+      
+      class InjectClass : Base<Int>() {
+        @Inject lateinit var string: String
+        
+        override fun equals(other: Any?): Boolean {
+          return other is InjectClass && value == other.value && string == other.string 
+        }
+      }
+      """,
+    ) {
+      val baseMembersInjector = classLoader.loadClass("com.squareup.test.Base")
+        .membersInjector()
+      val injectClassMembersInjector = injectClass.membersInjector()
+
+      val constructor = injectClassMembersInjector.declaredConstructors.single()
+      assertThat(constructor.parameterTypes.toList())
+        .containsExactly(
+          Provider::class.java,
+          Provider::class.java,
+        )
+
+      val membersInjectorInstance = constructor.newInstance(
+        Provider { 123 },
+        Provider { "foo" },
+      ) as MembersInjector<Any>
+
+      val injectInstanceConstructor = injectClass.createInstance()
+      membersInjectorInstance.injectMembers(injectInstanceConstructor)
+
+      val injectInstanceStatic = injectClass.createInstance()
+
+      baseMembersInjector.staticInjectMethod("value")
+        .invoke(null, injectInstanceStatic, 123)
+      injectClassMembersInjector.staticInjectMethod("string")
+        .invoke(null, injectInstanceStatic, "foo")
+
+      assertThat(injectInstanceConstructor).isEqualTo(injectInstanceStatic)
+      assertThat(injectInstanceConstructor).isNotSameInstanceAs(injectInstanceStatic)
     }
   }
 
