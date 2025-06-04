@@ -50,7 +50,7 @@ dependencies {
 
   kapt(libs.dagger2.compiler)
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.truth)
 
   androidTestImplementation(libs.androidx.test.core)
@@ -58,7 +58,7 @@ dependencies {
   androidTestImplementation(libs.androidx.test.junit)
   androidTestImplementation(libs.androidx.test.rules)
   androidTestImplementation(libs.androidx.test.runner)
-  androidTestImplementation(libs.junit)
+  androidTestImplementation(libs.junit4)
   androidTestImplementation(libs.truth)
 
   kaptAndroidTest(libs.dagger2.compiler)

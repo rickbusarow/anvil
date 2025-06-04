@@ -84,7 +84,7 @@ dependencies {
   compileOnly(libs.kotlin.gradlePluginApi)
   compileOnly(libs.agp)
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.truth)
 
   gradleTestImplementation(gradleTestKit())
