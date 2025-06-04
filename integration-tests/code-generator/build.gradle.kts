@@ -18,6 +18,6 @@ dependencies {
   kapt(libs.auto.service.processor)
 
   testImplementation(testFixtures("com.rickbusarow.anvil:compiler-utils"))
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.truth)
 }

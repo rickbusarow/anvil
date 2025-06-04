@@ -15,7 +15,7 @@ dependencies {
   implementation(libs.dagger2)
 
   testImplementation(testFixtures("com.rickbusarow.anvil:compiler-utils"))
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.truth)
 
   // Notice that Kapt is only enabled in tests for compiling our Dagger components. We also

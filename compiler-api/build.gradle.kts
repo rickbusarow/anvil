@@ -21,7 +21,7 @@ dependencies {
 
   implementation(platform(libs.kotlin.bom))
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.kase)
   testImplementation(libs.kotest.assertions.api)
   testImplementation(libs.kotest.assertions.core.jvm)

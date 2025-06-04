@@ -51,7 +51,7 @@ kotlin {
 
     val androidUnitTest by getting {
       dependencies {
-        implementation(libs.junit)
+        implementation(libs.junit4)
         implementation(libs.truth)
       }
     }
@@ -59,7 +59,7 @@ kotlin {
     val androidInstrumentedTest by getting {
       dependencies {
 
-        implementation(libs.junit)
+        implementation(libs.junit4)
         implementation(libs.truth)
       }
     }
