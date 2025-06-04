@@ -1,12 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-    tags-ignore:
-      - '**'
+  merge_group:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   binary-compatibility-check:
