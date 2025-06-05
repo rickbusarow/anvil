@@ -18,8 +18,8 @@ com.rickbusarow.kase:kase:0.11.1
 com.squareup.okio:okio-jvm:3.9.1
 com.squareup.okio:okio:3.9.1
 com.squareup:javapoet:1.13.0
-com.squareup:kotlinpoet-jvm:2.0.0
-com.squareup:kotlinpoet:2.0.0
+com.squareup:kotlinpoet-jvm:2.2.0
+com.squareup:kotlinpoet:2.2.0
 dev.drewhamilton.poko:poko-annotations-jvm:0.15.2
 dev.drewhamilton.poko:poko-annotations:0.15.2
 dev.zacsweers.kctfork:core:0.7.0
@@ -46,11 +46,11 @@ org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:2.1.0
 org.jetbrains.kotlin:kotlin-bom:2.1.0
 org.jetbrains.kotlin:kotlin-compiler-embeddable:2.1.0
 org.jetbrains.kotlin:kotlin-daemon-embeddable:2.1.0
-org.jetbrains.kotlin:kotlin-reflect:2.1.0
+org.jetbrains.kotlin:kotlin-reflect:2.1.21
 org.jetbrains.kotlin:kotlin-script-runtime:2.1.0
 org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.0
 org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0
-org.jetbrains.kotlin:kotlin-stdlib:2.1.0
+org.jetbrains.kotlin:kotlin-stdlib:2.1.21
 org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.0
 org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0
 org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0
