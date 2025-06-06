@@ -37,8 +37,9 @@ kotlin = "2.1.0"
 kotlinLanguageVersion = "2.0"
 kotlinx-binaryCompatibility = "0.17.0"
 kotlinpoet = "2.2.0"
-ktlint = "1.0.1"
-ktlintPlugin = "12.3.0"
+ktlint-lib = "1.0.1"
+rickBusarow-ktlint = "0.2.2"
+rickBusarow-ktrules = "1.5.0"
 mavenPublish = "0.32.0"
 
 #
@@ -64,7 +65,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-binaryCompatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binaryCompatibility" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
+ktlint = { id = "com.rickbusarow.ktlint", version.ref = "rickBusarow-ktlint" }
 mavenPublishBase = { id = "com.vanniktech.maven.publish.base", version.ref = "mavenPublish" }
 
 [libraries]
@@ -149,7 +150,8 @@ kotlinx-binaryCompatibility = { module = "org.jetbrains.kotlinx:binary-compatibi
 
 kgx = { module = "com.rickbusarow.kgx:kotlin-gradle-extensions", version.ref = "kgx" }
 
-ktlintRaw = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlintPlugin" }
+ktlint-gradle-plugin = { module = "com.rickbusarow.ktlint:ktlint-gradle-plugin", version.ref = "rickBusarow-ktlint" }
+ktrules = { module = "com.rickbusarow.ktrules:ktrules", version.ref = "rickBusarow-ktrules" }
 
 mavenPublishRaw = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
 

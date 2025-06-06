@@ -490,6 +490,9 @@ kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
 # test methods with descriptive names.
 ktlint_ignore_back_ticked_identifier = true
 
+# kdoc wrapping style.  options are 'greedy' or 'equal'.
+kt-rules_wrapping_style = greedy
+
 ktlint_code_style = intellij_idea
 
 ktlint_standard_class-naming = disabled

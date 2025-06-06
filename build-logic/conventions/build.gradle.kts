@@ -40,7 +40,7 @@ kotlin {
 java.targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.target.minimal.get())
 
 ktlint {
-  version = libs.versions.ktlint.get()
+  version = libs.versions.ktlint.lib.get()
 }
 
 dependencies {
@@ -48,7 +48,7 @@ dependencies {
 
   api(libs.dropbox.dependencyGuard)
   api(libs.kotlinx.binaryCompatibility)
-  api(libs.ktlintRaw)
+  api(libs.ktlint.gradle.plugin)
   api(libs.kotlinpoet)
   api(libs.kgx)
 

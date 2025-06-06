@@ -15,7 +15,7 @@ kotlin {
 java.targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.target.minimal.get())
 
 ktlint {
-  version = libs.versions.ktlint.get()
+  version = libs.versions.ktlint.lib.get()
 }
 
 gradlePlugin {
