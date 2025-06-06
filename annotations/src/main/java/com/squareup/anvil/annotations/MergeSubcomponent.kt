@@ -5,9 +5,9 @@ import kotlin.annotation.AnnotationTarget.CLASS
 import kotlin.reflect.KClass
 
 /**
- * Dagger subcomponents that should automatically include Dagger modules and component interfaces for
- * the given [scope] require this annotation instead of `@Subcomponent`. The Kotlin compiler plugin
- * will add the `@Subcomponent` annotation to this interface. The [modules] parameter is
+ * Dagger subcomponents that should automatically include Dagger modules and component interfaces
+ * for the given [scope] require this annotation instead of `@Subcomponent`. The Kotlin compiler
+ * plugin will add the `@Subcomponent` annotation to this interface. The [modules] parameter is
  * preserved in the `@Subcomponent` annotation.
  *
  *  Imagine this module dependency tree:

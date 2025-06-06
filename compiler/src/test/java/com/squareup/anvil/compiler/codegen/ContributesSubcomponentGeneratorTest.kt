@@ -218,9 +218,9 @@ class ContributesSubcomponentGeneratorTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         $visibility interface SubcomponentInterface
         """,
@@ -242,10 +242,10 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -269,10 +269,10 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -301,10 +301,10 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -330,11 +330,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -362,11 +362,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -385,11 +385,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -411,11 +411,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -438,11 +438,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -468,11 +468,11 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -496,27 +496,27 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-        
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-        
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
           interface AnyParentComponent {
             fun createFactory(): ComponentFactory
           }
-      
+
           interface Creator {
             fun createComponent(): SubcomponentInterface
           }
-      
+
           @Factory
           interface ComponentFactory : Creator
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -575,10 +575,10 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import dagger.Subcomponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Subcomponent.Factory
@@ -604,10 +604,10 @@ class ContributesSubcomponentGeneratorTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import dagger.Subcomponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Subcomponent.Builder
@@ -636,13 +636,13 @@ class ContributesSubcomponentGeneratorTest(
       import com.squareup.anvil.annotations.ContributesSubcomponent
 
       @ContributesSubcomponent(
-        scope = Any::class, 
+        scope = Any::class,
         parentScope = Unit::class
       )
       interface SubcomponentInterface1
 
       @ContributesSubcomponent(
-        scope = Any::class, 
+        scope = Any::class,
         parentScope = Int::class,
         replaces = [SubcomponentInterface1::class]
       )
@@ -666,13 +666,13 @@ class ContributesSubcomponentGeneratorTest(
       import com.squareup.anvil.annotations.ContributesSubcomponent
 
       @ContributesSubcomponent(
-        scope = Long::class, 
+        scope = Long::class,
         parentScope = Unit::class
       )
       interface SubcomponentInterface1
 
       @ContributesSubcomponent(
-        scope = Any::class, 
+        scope = Any::class,
         parentScope = Int::class,
         replaces = [SubcomponentInterface1::class]
       )

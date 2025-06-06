@@ -222,11 +222,10 @@ internal class GeneratedFileCache private constructor(
     }
 
   /**
-   * We can't cache base directories, since those are machine-specific
-   * and it would break remote build caching.
-   * Instead, we cache which base directory a path is relative to,
-   * then when we restore from the cache,
-   * we replace that "type" token with the corresponding directory from the current environment.
+   * We can't cache base directories, since those are machine-specific and it would break remote
+   * build caching. Instead, we cache which base directory a path is relative to, then when we
+   * restore from the cache, we replace that "type" token with the corresponding directory from the
+   * current environment.
    */
   enum class BaseDirType {
     PROJECT,
@@ -391,9 +390,9 @@ private fun BaseDir.resolve(relativePath: RelativeFile): AbsoluteFile {
 }
 
 /**
- * All cached files must be relative to work with Gradle remote build caches.
- * They are all relative to the [project directory][BaseDir.ProjectDir],
- * which mirrors what Gradle does with relative file inputs to tasks.
+ * All cached files must be relative to work with Gradle remote build caches. They are all relative
+ * to the [project directory][BaseDir.ProjectDir], which mirrors what Gradle does with relative file
+ * inputs to tasks.
  */
 @JvmInline
 private value class RelativeFile(val file: File) : Serializable, Comparable<RelativeFile> {

@@ -54,7 +54,7 @@ public sealed class MemberPropertyReference : AnnotatedReference, PropertyRefere
   }
 
   /**
-   * @param property In practice, this is either a [KtProperty], or a [KtParameter] for which
+   * @property property In practice, this is either a [KtProperty], or a [KtParameter] for which
    *   [KtParameter.isPropertyParameter()] is true. [KtCallableDeclaration] is the most applicable
    *   common interface, but it's also implemented by other types like `KtConstructor`.
    */

@@ -83,23 +83,23 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
         import javax.inject.Named
-  
+
         interface ParentInterface
-  
+
         private const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
-  
+
         @Named(CONSTANT)
         @ContributesBinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
       ) {
@@ -122,25 +122,25 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
         import javax.inject.Named
-  
+
         private object Constants {
           const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
         }
-  
+
         interface ParentInterface
-  
+
         @Named(Constants.CONSTANT)
         @ContributesBinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
       ) {
@@ -163,27 +163,27 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
         package com.squareup.test
-  
-        import com.squareup.anvil.annotations.ContributesBinding 
+
+        import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
         import javax.inject.Named
-  
+
         private interface Settings {
           companion object {
             const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
           }
         }
-  
+
         interface ParentInterface
-  
+
         @Named(Settings.CONSTANT)
         @ContributesBinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
       ) {
@@ -265,7 +265,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       import com.squareup.anvil.annotations.ContributesBinding
 
       interface ParentInterface
-      
+
       class Abc {
         @ContributesBinding(Any::class, ParentInterface::class)
         class ContributingClass : ParentInterface
@@ -292,11 +292,11 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
-  
+
         interface ParentInterface
-        
+
         @ContributesBinding(Any::class, ParentInterface::class)
         class $longClassName : ParentInterface
         """,
@@ -356,17 +356,17 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       package com.squareup.test
 
       import javax.inject.Qualifier
-      
+
       @Qualifier
       annotation class AnyQualifier1
-      
+
       @Qualifier
       annotation class AnyQualifier2
 
       interface ParentInterface
 
       @com.squareup.anvil.annotations.ContributesBinding(Any::class)
-      @AnyQualifier1 
+      @AnyQualifier1
       @AnyQualifier2
       interface ContributingInterface : ParentInterface
       """,
@@ -383,11 +383,11 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface, CharSequence
       """,
@@ -407,13 +407,13 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
 
       interface ParentInterface
-      
+
       open class Abc
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : Abc(), ParentInterface
       """,
@@ -433,7 +433,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
 
       @ContributesBinding(Any::class)
@@ -472,7 +472,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
 
       interface ParentInterface
@@ -523,7 +523,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       class ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Unit::class)
       @ContributesBinding(Any::class)
       class SecondContributingInterface : ParentInterface
@@ -565,7 +565,7 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       package com.squareup.test
 
       import com.squareup.anvil.annotations.ContributesBinding
-      
+
       interface ParentInterface
 
       @ContributesBinding(Any::class)
@@ -681,14 +681,14 @@ class ContributesBindingGeneratorTest : AnvilCompilationModeTest(AnvilCompilatio
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeSubcomponent
         import javax.inject.Inject
-  
+
         interface ParentInterface
-  
+
         @ContributesBinding(Unit::class)
         object ContributingObject : ParentInterface
         """,

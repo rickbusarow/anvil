@@ -44,10 +44,9 @@ public interface MoreAsserts {
 }
 
 /**
- * This replaces Kotest's `contain` so that it can return a different `MatcherResult`.
- * The [EqualityMatcherResult] results in a different exception when it fails,
- * which enables the 'click to see difference' feature in IntelliJ.
- * That diff is much more legible.
+ * This replaces Kotest's `contain` so that it can return a different `MatcherResult`. The
+ * [EqualityMatcherResult] results in a different exception when it fails, which enables the 'click
+ * to see difference' feature in IntelliJ. That diff is much more legible.
  */
 private fun containWithActualExpected(substring: String): Matcher<String?> =
   neverNullMatcher { actual ->
@@ -65,10 +64,9 @@ private fun containWithActualExpected(substring: String): Matcher<String?> =
   }
 
 /**
- * This replaces Kotest's `contain` so that it can return a different `MatcherResult`.
- * The [EqualityMatcherResult] results in a different exception when it fails,
- * which enables the 'click to see difference' feature in IntelliJ.
- * That diff is much more legible.
+ * This replaces Kotest's `contain` so that it can return a different `MatcherResult`. The
+ * [EqualityMatcherResult] results in a different exception when it fails, which enables the 'click
+ * to see difference' feature in IntelliJ. That diff is much more legible.
  */
 private fun <T> containWithActualExpected(expected: T): Matcher<Iterable<T>> =
   neverNullMatcher { actual ->

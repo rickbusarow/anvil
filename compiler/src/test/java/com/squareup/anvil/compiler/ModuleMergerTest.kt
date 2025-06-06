@@ -45,9 +45,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -64,9 +64,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(
           scope = Any::class,
           modules = [
@@ -90,9 +90,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(
           scope = Any::class,
           modules = [
@@ -126,9 +126,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       @${daggerComponentClass.java.canonicalName}
       interface ComponentInterface
@@ -143,14 +143,14 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -164,14 +164,14 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       interface DaggerModule1
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -185,14 +185,14 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
-      abstract class DaggerModule1 
-      
+      abstract class DaggerModule1
+
       $annotation(
           scope = Any::class,
           modules = [
@@ -246,7 +246,7 @@ class ModuleMergerTest(
           replaces = [DaggerModule1::class]
       )
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(Any::class)
       interface ComponentInterface
@@ -552,7 +552,7 @@ class ModuleMergerTest(
           replaces = [DaggerModule1::class]
       )
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(Any::class)
       interface ComponentInterface
@@ -580,7 +580,7 @@ class ModuleMergerTest(
           replaces = [DaggerModule1::class]
       )
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(Any::class)
       interface ComponentInterface
@@ -613,7 +613,7 @@ class ModuleMergerTest(
           replaces = [DaggerModule1::class]
       )
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(
           scope = Any::class,
@@ -644,7 +644,7 @@ class ModuleMergerTest(
 
       @ContributesTo(Any::class)
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(
           scope = Any::class,
@@ -674,7 +674,7 @@ class ModuleMergerTest(
 
       @ContributesTo(Any::class)
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(
           scope = Any::class,
@@ -709,7 +709,7 @@ class ModuleMergerTest(
 
       @ContributesTo(Any::class)
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(
           scope = Any::class,
@@ -729,26 +729,26 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
       import com.squareup.anvil.annotations.ContributesTo
-        
+
       @ContributesTo(Any::class, replaces = [DaggerModule2::class])
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
-      abstract class DaggerModule2 
-            
+      abstract class DaggerModule2
+
       $annotation(Any::class)
       interface ComponentInterface
-            
+
       $annotation(
         scope = Any::class,
         exclude = [DaggerModule1::class]
       )
-      interface ComponentInterface2  
+      interface ComponentInterface2
       """,
     ) {
       val component1 = componentInterface.anyDaggerComponent
@@ -898,10 +898,10 @@ class ModuleMergerTest(
 
       @ContributesTo(Unit::class)
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       $annotation(Any::class)
-      interface ComponentInterface 
+      interface ComponentInterface
 
       $annotation(Unit::class)
       interface SubcomponentInterface
@@ -931,10 +931,10 @@ class ModuleMergerTest(
 
       @ContributesTo(Unit::class)
       @dagger.Module
-      abstract class DaggerModule2 
+      abstract class DaggerModule2
 
       @MergeComponent(Any::class)
-      interface ComponentInterface 
+      interface ComponentInterface
 
       @MergeSubcomponent(Unit::class)
       interface SubcomponentInterface
@@ -958,14 +958,14 @@ class ModuleMergerTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesTo
         $import
-        
+
         @ContributesTo(Any::class)
         @dagger.Module
         $visibility abstract class DaggerModule1
-  
+
         $annotation(Any::class)
         interface ComponentInterface
         """,
@@ -983,13 +983,13 @@ class ModuleMergerTest(
 
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       interface ComponentInterface {
         @ContributesTo(Any::class)
         @dagger.Module
         abstract class InnerModule
       }
-      
+
       $annotation(Any::class)
       interface SubcomponentInterface
       """,
@@ -1006,10 +1006,10 @@ class ModuleMergerTest(
 
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       $annotation(Unit::class)
       interface ComponentInterface
-      
+
       $annotation(Any::class)
       interface SubcomponentInterface {
         @ContributesTo(Unit::class)
@@ -1031,11 +1031,11 @@ class ModuleMergerTest(
       """
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -1079,9 +1079,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation
       interface ComponentInterface
       """,
@@ -1110,7 +1110,7 @@ class ModuleMergerTest(
       @MergeModules(Any::class)
       @ContributesTo(Unit::class)
       class DaggerModule1
-      
+
       $annotation(Unit::class)
       interface ComponentInterface
       """,
@@ -1127,7 +1127,7 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       import dagger.Module
       import dagger.Provides
@@ -1141,7 +1141,7 @@ class ModuleMergerTest(
               class ExtraUtilsImpl : ExtraUtils {
                 override fun doSomething() = Unit
               }
-              return ExtraUtilsImpl() 
+              return ExtraUtilsImpl()
             }
         }
       }
@@ -1171,22 +1171,22 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule2
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -1203,10 +1203,10 @@ class ModuleMergerTest(
     val firstResult = compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       import dagger.Module
-        
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @Module
@@ -1219,17 +1219,17 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule2
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -1247,22 +1247,22 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @ContributesTo(Any::class, replaces = [DaggerModule1::class])
       @dagger.Module
       abstract class DaggerModule2
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -1280,25 +1280,25 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @ContributesTo(Int::class, replaces = [DaggerModule1::class])
       @dagger.Module
       abstract class DaggerModule2
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface1
-      
+
       $annotation(Int::class)
       interface SubcomponentInterface2
       """,
@@ -1316,22 +1316,22 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule2
-      
+
       $annotation(Any::class, exclude = [DaggerModule1::class])
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -1350,23 +1350,23 @@ class ModuleMergerTest(
       .compile(
         """
         package com.squareup.test
-      
+
         import com.squareup.anvil.annotations.ContributesTo
         import dagger.Module
-        
+
         @ContributesTo(Any::class)
         @Module
-        abstract class DaggerModule1  
+        abstract class DaggerModule1
         """,
         """
         package anvil.hint
 
         import com.squareup.test.DaggerModule1
         import kotlin.reflect.KClass
-        
+
         public val com_squareup_test_DaggerModule1_reference: KClass<DaggerModule1> = DaggerModule1::class
-        
-        // Note that the number is missing after the scope. 
+
+        // Note that the number is missing after the scope.
         public val com_squareup_test_DaggerModule1_scope: KClass<Any> = Any::class
         """.trimIndent(),
       ) {
@@ -1376,9 +1376,9 @@ class ModuleMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,

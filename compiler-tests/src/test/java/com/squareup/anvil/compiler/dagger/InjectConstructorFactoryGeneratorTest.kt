@@ -60,9 +60,9 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor()
       """,
       ) {
@@ -94,9 +94,9 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor() {
         interface Factory {
           fun doSomething()
@@ -159,11 +159,11 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       data class InjectClass @Inject constructor(
-        val string: String, 
+        val string: String,
         val int: Int
       )
       """,
@@ -255,13 +255,13 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
         package com.squareup.test
-        
+
         import dagger.Lazy
         import javax.inject.Inject
         import javax.inject.Provider
-        
+
         class InjectClass @Inject constructor(
-          val string: String, 
+          val string: String,
           val stringProvider: Provider<String>,
           val stringListProvider: Provider<List<String>>,
           val lazyString: Lazy<String>
@@ -270,7 +270,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
             return toString() == other.toString()
           }
           override fun toString(): String {
-           return string + stringProvider.get() + 
+           return string + stringProvider.get() +
                stringListProvider.get()[0] + lazyString.get()
           }
         }
@@ -362,11 +362,11 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
         package com.squareup.test
-        
+
         import dagger.Lazy
         import javax.inject.Inject
         import javax.inject.Provider
-        
+
         class InjectClass @Inject constructor(
           val string: Provider<Lazy<String>>
         ) {
@@ -374,7 +374,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
             return toString() == other.toString()
           }
           override fun toString(): String {
-           return string.get().get() 
+           return string.get().get()
           }
         }
         """,
@@ -454,11 +454,11 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import dagger.Lazy
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass @Inject constructor(
         val string: Lazy<Provider<String>>
       ) {
@@ -466,7 +466,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
           return toString() == other.toString()
         }
         override fun toString(): String {
-         return string.get().get() 
+         return string.get().get()
         }
       }
       """,
@@ -551,14 +551,14 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import java.io.*
       import java.nio.file.*
       import java.util.*
       import javax.inject.*
-      
+
       data class InjectClass @Inject constructor(
-        val file: File, 
+        val file: File,
         val path: Path,
         val setMultibinding: Set<String>,
       )
@@ -600,7 +600,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
         package a
-  
+
         class A {
           abstract class AA
         }
@@ -611,7 +611,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
         import a.A
         import a.A.*
         import javax.inject.Inject
-        
+
         public class B @Inject constructor(): A.AA()
       """,
       ) {
@@ -673,11 +673,11 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       data class InjectClass @Inject constructor(
-        val pair: Pair<Pair<String, Int>, List<String>>, 
+        val pair: Pair<Pair<String, Int>, List<String>>,
         val set: Set<String>
       )
       """,
@@ -715,7 +715,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
         package com.squareup.test
 
         import javax.inject.Inject
-  
+
         class InjectClass @Inject constructor() : (Int) -> Unit {
           override fun invoke(integer: Int) = Unit
         }
@@ -765,9 +765,9 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class OuterClass {
         class InjectClass @Inject constructor()
       }
@@ -845,13 +845,13 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       typealias StringList = List<String>
-      
+
       data class InjectClass @Inject constructor(
-        val string: String, 
+        val string: String,
         val set: @JvmSuppressWildcards Set<(StringList) -> StringList>
       )
       """,
@@ -933,9 +933,9 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       data class injectClass @Inject constructor(val string: String)
       """,
       ) {
@@ -1002,26 +1002,26 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
 
       class InjectClass @Inject constructor(
         val string: String
       ) {
-      
+
         @Inject lateinit var intProvider: Provider<Int>
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (other !is InjectClass) return false
-      
+
           if (string != other.string) return false
           if (intProvider.get() != other.intProvider.get()) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           var result = string.hashCode()
           result = 31 * result + intProvider.get().hashCode()
@@ -1081,7 +1081,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
         @Inject
         lateinit var middle2: Set<String>
       }
-      
+
       abstract class Base {
 
         @Inject
@@ -1150,7 +1150,7 @@ class InjectConstructorFactoryGeneratorTest : CompilationModeTest() {
 
       import javax.inject.Inject
 
-      class InjectClass @Inject constructor() : Base() 
+      class InjectClass @Inject constructor() : Base()
 
       abstract class Base {
 
@@ -1415,30 +1415,30 @@ public class InjectClass_Factory(
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass @Inject constructor(
         val string: String
       ) {
-      
+
         @Inject lateinit var intProvider: Provider<Int>
         @Inject lateinit var stringLazy: dagger.Lazy<String>
         @Inject lateinit var otherString: String
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (other !is InjectClass) return false
-      
+
           if (string != other.string) return false
           if (intProvider.get() != other.intProvider.get()) return false
           if (stringLazy.get() != other.stringLazy.get()) return false
           if (otherString != other.otherString) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           var result = string.hashCode()
           result = 31 * result + intProvider.get().hashCode()
@@ -1527,11 +1527,11 @@ public class InjectClass_Factory(
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor(inner: otherClass.inner)
-      
+
       class otherClass {
         class inner @Inject constructor()
       }
@@ -1574,13 +1574,13 @@ public class InjectClass_Factory(
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class Other {
         class Inner<T>
       }
-      
+
       class InjectClass @Inject constructor(
         val inner: Other.Inner<String>
       )
@@ -1623,15 +1623,15 @@ public class InjectClass_Factory(
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class Other {
         class Middle {
           class Inner<T>
         }
       }
-      
+
       class InjectClass @Inject constructor(
         val inner: Other.Middle.Inner<String>
       )
@@ -1720,9 +1720,9 @@ public class InjectClass_Factory(
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class MyClass @Inject constructor(arg: innerClass) {
         class innerClass @Inject constructor()
       }
@@ -1826,11 +1826,11 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor(dependencies: Dependencies) {
-        class Dependencies @Inject constructor()     
+        class Dependencies @Inject constructor()
       }
       """,
     ) {
@@ -1922,15 +1922,15 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       open class ParentOne(d: Dependencies) {
         class Dependencies @Inject constructor()
       }
-      
+
       open class ParentTwo(d: Dependencies) : ParentOne(d)
-      
+
       class InjectClass @Inject constructor(d: Dependencies) : ParentTwo(d)
       """,
     ) {
@@ -1990,9 +1990,9 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor(
         interceptors: Set<@JvmSuppressWildcards Interceptor>
       ) {
@@ -2049,17 +2049,17 @@ public final class InjectClass_Inner_Factory implements Factory<InjectClass.Inne
     compile2(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.compiler.dagger.OuterClass
       import javax.inject.Inject
-      
+
       class InjectClass(innerClass: InnerClass): OuterClass(innerClass) {
         class Inner @Inject constructor(val innerClass: InnerClass)
       }
       """,
       """
       package com.squareup.anvil.compiler.dagger
-      
+
       abstract class OuterClass(
         @Suppress("UNUSED_PARAMETER") innerClass: InnerClass,
       ) {
@@ -2112,10 +2112,10 @@ public final class InjectClass_Inner_Factory implements Factory<InjectClass.Inne
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass<T> @Inject constructor(prov: Provider<T>)
       """,
       ) {
@@ -2169,9 +2169,9 @@ public final class InjectClass_Inner_Factory implements Factory<InjectClass.Inne
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass<T> @Inject constructor()
       """,
       ) {
@@ -2227,10 +2227,10 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass @Inject constructor(
         map: Map<Class<out CharSequence>, @JvmSuppressWildcards Provider<String>>
       )
@@ -2275,10 +2275,10 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass<T : CharSequence> @Inject constructor(element: Provider<T>)
       """,
       ) {
@@ -2323,10 +2323,10 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
         package com.squareup.test
-        
+
         import javax.inject.Inject
         import javax.inject.Provider
-        
+
         class InjectClass<T> @Inject constructor(
           private val t: T
         ) where T : Appendable, T : CharSequence
@@ -2402,11 +2402,11 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
         package com.squareup.test
-        
+
         import dagger.Lazy
         import javax.inject.Inject
         import javax.inject.Provider
-        
+
         class InjectClass<T, R : Set<String>> @Inject constructor(
           private val t: T,
           private val r: Lazy<R>
@@ -2490,12 +2490,12 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       abstract class Other
-      
+
       class InjectClass<T> @Inject constructor(
         private val t: T
       ) where T : Appendable, T : Other
@@ -2551,10 +2551,10 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
         package com.squareup.test
-        
+
         import javax.inject.Inject
         import javax.inject.Provider
-  
+
         class InjectClass<T : List<String>> @Inject constructor(
           private val t: T
         )
@@ -2596,7 +2596,7 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       compile2(
         """
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor()
       """,
       ) {
@@ -2624,9 +2624,9 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class InjectClass @Inject constructor() {
         @Inject constructor(string: String)
       }
@@ -2651,7 +2651,7 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile2(
       """
       package com.squareup.test
-      
+
       interface Contract {
         data class State(
           val loading: Boolean = false
@@ -2660,13 +2660,13 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       """,
       """
       package com.squareup.test
-        
+
       import com.squareup.test.Contract.*
       import javax.inject.Inject
-      
+
       class SomeClass @Inject constructor(
         state: State
-      )  
+      )
       """,
     ) {
       assertThat(exitCode).isEqualTo(ExitCode.OK)
@@ -2749,12 +2749,12 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       package com.squareup.test
 
       import kotlin.LazyThreadSafetyMode.NONE
-      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED 
-      import kotlin.reflect.KClass      
+      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
+      import kotlin.reflect.KClass
       import javax.inject.Inject
       import javax.inject.Named
       import javax.inject.Qualifier
-      
+
       const val CONSTANT = "def"
 
       class InjectClass @Inject constructor(
@@ -2767,22 +2767,22 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
         @StringQualifier(CONSTANT) val string2: String,
         @Named(CONSTANT) val string3: String
       )
-      
+
       @Qualifier
       annotation class ClassArrayQualifier(val value: Array<KClass<*>>)
-      
+
       @Qualifier
       annotation class ClassQualifier(val value: KClass<*>)
-      
+
       @Qualifier
       annotation class EnumArrayQualifier(val value: Array<LazyThreadSafetyMode>)
-      
+
       @Qualifier
       annotation class EnumQualifier(val value: LazyThreadSafetyMode)
-      
+
       @Qualifier
       annotation class IntQualifier(val value: Int)
-      
+
       @Qualifier
       annotation class StringQualifier(val value: String)
       """,
@@ -2799,17 +2799,17 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       package com.squareup.test
 
       import kotlin.LazyThreadSafetyMode.NONE
-      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED 
-      import kotlin.reflect.KClass      
+      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
+      import kotlin.reflect.KClass
       import javax.inject.Inject
       import javax.inject.Named
       import javax.inject.Qualifier
-      
+
       class A {
         class Factory @Inject constructor(
           private val innerClassFactory: Achild.Factory
         )
-      
+
         class Achild {
           class Factory
         }

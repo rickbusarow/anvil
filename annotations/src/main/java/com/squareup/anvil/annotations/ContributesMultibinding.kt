@@ -38,8 +38,7 @@ import kotlin.reflect.KClass
  * ```
  *
  * [ContributesMultibinding] supports qualifiers. If you annotate the class additionally with a
- * qualifier, then the generated multibinding method will be annotated with the same qualifier,
- * e.g.
+ * qualifier, then the generated multibinding method will be annotated with the same qualifier, e.g.
  * ```
  * @ContributesMultibinding(AppScope::class)
  * @Named("Prod")
@@ -70,8 +69,7 @@ import kotlin.reflect.KClass
  * [ContributesMultibinding].
  *
  * Contributed multibindings can replace other contributed modules and contributed multibindings
- * with the [replaces] parameter. This is especially helpful for different multibindings in
- * tests.
+ * with the [replaces] parameter. This is especially helpful for different multibindings in tests.
  * ```
  * @ContributesMultibinding(
  *   scope = AppScope::class,
@@ -89,8 +87,8 @@ import kotlin.reflect.KClass
  *
  * [ContributesMultibinding] can be used in conjunction with [ContributesBinding]. Each annotation
  * will generate the respective binding or multibindings method. If a qualifier is only meant for
- * one of the annotations, then you can set [ignoreQualifier] to `true` and the qualifier won't
- * be added to the generated multibinding method.
+ * one of the annotations, then you can set [ignoreQualifier] to `true` and the qualifier won't be
+ * added to the generated multibinding method.
  * ```
  * @ContributesBinding(AppScope::class)
  * @ContributesMultibinding(AppScope::class, ignoreQualifier = true)
@@ -103,9 +101,7 @@ import kotlin.reflect.KClass
 @Retention(RUNTIME)
 @Repeatable
 public annotation class ContributesMultibinding(
-  /**
-   * The scope in which to include this contributed multibinding.
-   */
+  /** The scope in which to include this contributed multibinding. */
   val scope: KClass<*>,
   /**
    * The type that this class is bound to. This class will be included in the collection for

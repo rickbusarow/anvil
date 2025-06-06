@@ -33,9 +33,7 @@ internal sealed class Contribution {
   abstract val qualifier: QualifierData?
   abstract val bindingModuleNameSuffix: String
 
-  /**
-   * ex: `MyClassImpl_MyClass_AppScope_BindingModule_a1b2c3d4e5f6g7h8`
-   */
+  /** ex: `MyClassImpl_MyClass_AppScope_BindingModule_a1b2c3d4e5f6g7h8` */
   val className by lazy(LazyThreadSafetyMode.NONE) {
     uniqueTypeName(
       originType = origin,

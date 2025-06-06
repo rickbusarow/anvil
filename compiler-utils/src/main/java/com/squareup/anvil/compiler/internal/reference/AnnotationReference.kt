@@ -35,15 +35,13 @@ private const val DEFAULT_SCOPE_INDEX = 0
 @ExperimentalAnvilApi
 public sealed class AnnotationReference {
 
-  /**
-   * Refers to the annotation class itself and not the annotated class.
-   */
+  /** Refers to the annotation class itself and not the annotated class. */
   public abstract val classReference: ClassReference
 
   /**
-   * Refers to the class that is annotated with this annotation reference. Note that annotations
-   * can be used at different places, e.g. properties, constructors, functions, etc., therefore
-   * this field must be nullable.
+   * Refers to the class that is annotated with this annotation reference. Note that annotations can
+   * be used at different places, e.g. properties, constructors, functions, etc., therefore this
+   * field must be nullable.
    */
   protected abstract val declaringClass: ClassReference?
 

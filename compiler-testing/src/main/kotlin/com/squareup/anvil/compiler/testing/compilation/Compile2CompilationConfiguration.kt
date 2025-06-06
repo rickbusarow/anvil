@@ -9,9 +9,9 @@ import org.jetbrains.kotlin.config.LanguageVersion
 import java.io.File
 
 /**
- * Encapsulates all configuration needed by [Compile2Compilation] to perform a single
- * compile operation. This includes directories, classpaths, whether to run KAPT,
- * the Kotlin [LanguageVersion], and optional FIR extensions.
+ * Encapsulates all configuration needed by [Compile2Compilation] to perform a single compile
+ * operation. This includes directories, classpaths, whether to run KAPT, the Kotlin
+ * [LanguageVersion], and optional FIR extensions.
  *
  * @property rootDir The root directory for the compilation.
  * @property sourceFiles All files (Kotlin and Java) to compile.
@@ -28,7 +28,8 @@ import java.io.File
  * @property jdkHome Explicit path to a JDK home, if custom or different from the system default.
  * @property compilationClasspath Classpath files required for compilation.
  * @property compilerPluginClasspath Classpath files for any compiler plugins (including Anvil).
- * @property kaptPluginClasspath Classpath files for KAPT annotation processors (if [useKapt] is true).
+ * @property kaptPluginClasspath Classpath files for KAPT annotation processors (if [useKapt] is
+ *   true).
  * @property firExtensions Optional FIR plugin extensions for one-off compiler tests.
  */
 public data class Compile2CompilationConfiguration(
@@ -56,14 +57,15 @@ public data class Compile2CompilationConfiguration(
   public companion object {
 
     /**
-     * Creates a [Compile2CompilationConfiguration] with default paths and classpaths
-     * suitable for typical test usage.
+     * Creates a [Compile2CompilationConfiguration] with default paths and classpaths suitable for
+     * typical test usage.
      *
      * @param sourceFiles a list of .kt or .java files to be compiled
      * @param firExtensions optional FIR extension factories for custom processing
      * @param workingDir The directory to serve as [rootDir].
      * @param useKapt Whether to enable KAPT support in the resulting configuration.
-     * @param previousCompilation a previous [Compile2Result] to add to the classpath for this compilation
+     * @param previousCompilation a previous [Compile2Result] to add to the classpath for this
+     *   compilation
      * @return A [Compile2CompilationConfiguration] pre-filled with typical defaults.
      */
     public fun default(

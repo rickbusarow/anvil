@@ -312,7 +312,7 @@ class BindingModuleMultibindingSetTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesMultibinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
@@ -321,14 +321,14 @@ class BindingModuleMultibindingSetTest(
 
       @ContributesMultibinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
       )
       @dagger.Module
       abstract class DaggerModule1
-      
+
       $annotation(Any::class, exclude = [DaggerModule1::class])
       interface ComponentInterface
       """,
@@ -401,7 +401,7 @@ class BindingModuleMultibindingSetTest(
 
       import com.squareup.anvil.annotations.ContributesMultibinding
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 
@@ -445,7 +445,7 @@ class BindingModuleMultibindingSetTest(
 
       import com.squareup.anvil.annotations.ContributesMultibinding
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 
@@ -488,7 +488,7 @@ class BindingModuleMultibindingSetTest(
       import com.squareup.anvil.annotations.ContributesMultibinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 

@@ -33,7 +33,8 @@ import kotlin.io.path.pathString
  * @property classFilesDir The directory containing all compiled `.class` files.
  * @property classpathFiles The classpath files used during compilation.
  * @property exitCode The compiler's exit code after compilation.
- * @property classLoader A class loader containing the newly compiled classes (and the classpath used).
+ * @property classLoader A class loader containing the newly compiled classes (and the classpath
+ *   used).
  */
 public class Compile2Result(
   public val rootDir: File,
@@ -45,7 +46,7 @@ public class Compile2Result(
   public val compilerMessages: CompilerMessages,
 ) {
   /**
-   * A `.jar` archive containing all `.class` files produced by this compilation.  This is equivalent
+   * A `.jar` archive containing all `.class` files produced by this compilation. This is equivalent
    * to the output of a Gradle `:jar` task.
    *
    * Built lazily when first accessed, it is written to `[libsDir]/output.jar`.
@@ -114,8 +115,8 @@ public fun File.requireIsJarFile(): File = apply {
 }
 
 /**
- * Creates a [ScanResult] by scanning all provided [jars] with [ClassGraph].
- * Any attempt to scan non-jar files results in an error due to [requireIsJarFile].
+ * Creates a [ScanResult] by scanning all provided [jars] with [ClassGraph]. Any attempt to scan
+ * non-jar files results in an error due to [requireIsJarFile].
  *
  * Usage example:
  * ```kotlin

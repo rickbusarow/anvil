@@ -14,7 +14,7 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Subcomponent
       interface ComponentInterface
       """,
@@ -27,9 +27,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.ContributesTo(Any::class)
       class AnyClass
       """,
@@ -42,9 +42,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.ContributesBinding(Any::class)
       class AnyClass
       """,
@@ -57,9 +57,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.ContributesSubcomponent(Any::class, Unit::class)
       class AnyClass
       """,
@@ -72,9 +72,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.MergeComponent(Any::class)
       class AnyClass
       """,
@@ -87,9 +87,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.MergeSubcomponent(Any::class)
       class AnyClass
       """,
@@ -102,9 +102,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.compat.MergeModules(Any::class)
       class AnyClass
       """,
@@ -117,9 +117,9 @@ class AnvilAnnotationDetectorCheckTest {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.compat.MergeInterfaces(Any::class)
       class AnyClass
       """,

@@ -21,7 +21,7 @@ class AnnotationReferenceTest : ReferenceTests {
     compile(
       """
       package com.squareup.test
- 
+
       import com.squareup.anvil.annotations.ContributesTo
 
       @ContributesTo(Any::class)
@@ -67,9 +67,9 @@ class AnnotationReferenceTest : ReferenceTests {
       """
       @file:Suppress("RemoveRedundantQualifierName")
       package com.squareup.test
- 
-      import com.squareup.test.AnyQualifier.Values 
-      import com.squareup.test.AnyQualifier.Values.ABC 
+
+      import com.squareup.test.AnyQualifier.Values
+      import com.squareup.test.AnyQualifier.Values.ABC
 
       annotation class AnyQualifier(val abc: Values) {
         enum class Values {
@@ -114,7 +114,7 @@ class AnnotationReferenceTest : ReferenceTests {
       """
       @file:Suppress("RedundantCompanionReference", "RedundantSuppression")
       package com.squareup.test
- 
+
       annotation class IntQualifier(val num: Int)
       annotation class StringQualifier(val str: String)
 
@@ -243,12 +243,12 @@ class AnnotationReferenceTest : ReferenceTests {
     compile(
       """
       package com.squareup.test
- 
+
       annotation class BindingKey(val value: String)
-      
+
       @BindingKey("1")
       interface SomeClass1
-      
+
       const val CONSTANT = "1"
 
       @BindingKey(CONSTANT)
@@ -284,7 +284,7 @@ class AnnotationReferenceTest : ReferenceTests {
     compile(
       """
       package com.squareup.test
- 
+
       import com.squareup.test2.CONSTANT_2
       import com.squareup.test2.Abc
       import com.squareup.test2.Abc.Companion.CONSTANT_4
@@ -292,50 +292,50 @@ class AnnotationReferenceTest : ReferenceTests {
       import com.squareup.test2.SomeObject.CONSTANT_3
       import com.squareup.test3.*
       import kotlin.Int.Companion.MAX_VALUE
- 
+
       annotation class BindingKey(val value: Int)
-      
+
       @BindingKey(1)
       interface SomeClass1
-      
+
       const val CONSTANT = 1
 
       @BindingKey(CONSTANT)
       interface SomeClass2
-      
+
       @BindingKey(-5)
       interface SomeClass3
-      
+
       @BindingKey(MAX_VALUE)
       interface SomeClass4
-      
+
       @BindingKey(Int.MAX_VALUE)
       interface SomeClass5
-      
+
       @BindingKey(kotlin.Int.MAX_VALUE)
       interface SomeClass6
-      
+
       @BindingKey(CONSTANT_2)
       interface SomeClass7
-      
+
       @BindingKey(com.squareup.test2.CONSTANT_2)
       interface SomeClass8
-      
+
       @BindingKey(CONSTANT_3)
       interface SomeClass9
-      
+
       @BindingKey(SomeObject.CONSTANT_3)
       interface SomeClass10
-      
+
       @BindingKey(com.squareup.test2.SomeObject.CONSTANT_3)
       interface SomeClass11
-      
+
       @BindingKey(CONSTANT_4)
       interface SomeClass12
-      
+
       @BindingKey(Abc.CONSTANT_4)
       interface SomeClass13
-      
+
       @BindingKey(com.squareup.test2.Abc.CONSTANT_4)
       interface SomeClass14
 
@@ -344,13 +344,13 @@ class AnnotationReferenceTest : ReferenceTests {
       """,
       """
       package com.squareup.test2
-        
+
       const val CONSTANT_2 = 2
-      
+
       object SomeObject {
         const val CONSTANT_3 = 3
       }
-      
+
       class Abc {
         companion object {
           const val CONSTANT_4 = 4
@@ -359,7 +359,7 @@ class AnnotationReferenceTest : ReferenceTests {
       """,
       """
       package com.squareup.test3
-        
+
       const val CONSTANT_5 = 5
       """,
       allWarningsAsErrors = false,
@@ -425,15 +425,15 @@ class AnnotationReferenceTest : ReferenceTests {
     compile(
       """
       package com.squareup.test
-      
+
       import kotlin.reflect.KClass
- 
+
       annotation class BindingKey(
         val name: String,
         val implementingClass: KClass<*>,
         val thresholds: IntArray
       )
-      
+
       @BindingKey("abc", Unit::class, [1, 2, 3])
       interface SomeClass1
       """,
@@ -471,7 +471,7 @@ class AnnotationReferenceTest : ReferenceTests {
       package com.squareup.test
 
       import kotlin.reflect.KClass
- 
+
       annotation class BindingKey(val name: String)
 
       const val WORLD: String = "World!"
@@ -509,7 +509,7 @@ class AnnotationReferenceTest : ReferenceTests {
       package com.squareup.test
 
       import kotlin.reflect.KClass
- 
+
       annotation class BindingKey(val name: String)
 
       const val WORLD: String = "World!"
@@ -549,7 +549,7 @@ class AnnotationReferenceTest : ReferenceTests {
       import com.squareup.test2.Abc
       import com.squareup.test2.SomeObject
       import kotlin.reflect.KClass
- 
+
       annotation class BindingKey(val name: String)
 
       @BindingKey("${'$'}{SomeObject.HELLO_NESTED} ${'$'}{Abc.WORLD_NESTED}")
@@ -557,11 +557,11 @@ class AnnotationReferenceTest : ReferenceTests {
       """,
       """
       package com.squareup.test2
-      
+
       object SomeObject {
         const val HELLO_NESTED = "Hello nested,"
       }
-      
+
       class Abc {
         companion object {
           const val WORLD_NESTED = "World nested!"
@@ -596,10 +596,10 @@ class AnnotationReferenceTest : ReferenceTests {
     compile(
       """
       package com.squareup.test
-      
+
       @DslMarker
       annotation class `Fancy${'$'}DslMarker`
-      
+
       @`Fancy${'$'}DslMarker`
       interface SomeClass1
       """,

@@ -4,9 +4,7 @@ import org.gradle.api.Named
 
 public interface VariantFilter : Named {
 
-  /**
-   * Indicate whether or not to ignore Anvil for this particular variant. Default is false.
-   */
+  /** Indicate whether or not to ignore Anvil for this particular variant. Default is false. */
   public var ignore: Boolean
 
   /**
@@ -18,16 +16,16 @@ public interface VariantFilter : Named {
   public var generateDaggerFactories: Boolean
 
   /**
-   * Indicate whether only Dagger factories for this variant should be generated. The default
-   * value comes from the [AnvilExtension].
+   * Indicate whether only Dagger factories for this variant should be generated. The default value
+   * comes from the [AnvilExtension].
    *
    * @see AnvilExtension.generateDaggerFactoriesOnly for more details.
    */
   public var generateDaggerFactoriesOnly: Boolean
 
   /**
-   * Indicate whether component merging for this variant should be disabled. The default
-   * value comes from the [AnvilExtension].
+   * Indicate whether component merging for this variant should be disabled. The default value comes
+   * from the [AnvilExtension].
    *
    * @see AnvilExtension.disableComponentMerging for more details.
    */
@@ -42,16 +40,16 @@ public interface VariantFilter : Named {
   public var syncGeneratedSources: Boolean
 
   /**
-   * Add the `annotations-optional` artifact as a dependency. The default
-   * value comes from the [AnvilExtension].
+   * Add the `annotations-optional` artifact as a dependency. The default value comes from the
+   * [AnvilExtension].
    *
    * @see AnvilExtension.addOptionalAnnotations for more details.
    */
   public var addOptionalAnnotations: Boolean
 
   /**
-   * Enables incremental compilation support for this variant.
-   * The default value comes from the [AnvilExtension].
+   * Enables incremental compilation support for this variant. The default value comes from the
+   * [AnvilExtension].
    *
    * @see AnvilExtension.trackSourceFiles for more details.
    */

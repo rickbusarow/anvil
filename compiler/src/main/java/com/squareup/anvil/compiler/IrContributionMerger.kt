@@ -44,11 +44,13 @@ import java.io.File
  * An [IrGenerationExtension] that performs the two types of merging Anvil supports.
  *
  * 1. **Module merging**: This step sources from `@MergeComponent`, `@MergeSubcomponent`, and
- * `@MergeModules` to merge all contributed modules on the classpath to the annotated element.
+ *    `@MergeModules` to merge all contributed modules on the classpath to the annotated
+ *    element.
  *
- * 2. **Interface merging**: This step finds all contributed component interfaces and adds them
- * as super types to Dagger components annotated with `@MergeComponent` or `@MergeSubcomponent`.
- * This also supports arbitrary interface merging on interfaces annotated with `@MergeInterfaces`.
+ * 2. **Interface merging**: This step finds all contributed component interfaces and adds them as
+ *    super types to Dagger components annotated with `@MergeComponent` or `@MergeSubcomponent`.
+ *    This also supports arbitrary interface merging on interfaces annotated with
+ *    `@MergeInterfaces`.
  */
 @OptIn(org.jetbrains.kotlin.backend.common.extensions.FirIncompatiblePluginAPI::class)
 internal class IrContributionMerger(

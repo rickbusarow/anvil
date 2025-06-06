@@ -115,9 +115,9 @@ class MemberPropertyReferenceTest {
 
       class Subject {
         val name: String = ""
-        
+
         class Nested {
-          val age: Int = 5        
+          val age: Int = 5
         }
       }
       """,
@@ -149,9 +149,9 @@ class MemberPropertyReferenceTest {
 
       class Subject {
         val name: String = ""
-        
+
         class Nested(
-          val age: Int        
+          val age: Int
         )
       }
       """,
@@ -210,8 +210,8 @@ class MemberPropertyReferenceTest {
       package com.squareup.test
 
       class Subject {
-        lateinit var fancy: `Nested${'$'}Fancy` 
-        
+        lateinit var fancy: `Nested${'$'}Fancy`
+
         class `Nested${'$'}Fancy`
       }
       """,
@@ -247,8 +247,8 @@ class MemberPropertyReferenceTest {
       package com.squareup.test
 
       class Subject {
-        lateinit var fancy: Subject.`Nested${'$'}Fancy` 
-        
+        lateinit var fancy: Subject.`Nested${'$'}Fancy`
+
         class `Nested${'$'}Fancy`
       }
       """,
@@ -284,8 +284,8 @@ class MemberPropertyReferenceTest {
       package com.squareup.test
 
       class Subject {
-        lateinit var fancy: com.squareup.test.Subject.`Nested${'$'}Fancy` 
-        
+        lateinit var fancy: com.squareup.test.Subject.`Nested${'$'}Fancy`
+
         class `Nested${'$'}Fancy`
       }
       """,
@@ -359,7 +359,7 @@ class MemberPropertyReferenceTest {
       }
 
       class Subject : Named {
-        override val name: String = "" 
+        override val name: String = ""
       }
       """,
       allWarningsAsErrors = false,
@@ -539,7 +539,7 @@ class MemberPropertyReferenceTest {
       import javax.inject.Inject
 
       class Subject {
-        @set:Inject var name: String = "" 
+        @set:Inject var name: String = ""
       }
       """,
       allWarningsAsErrors = false,
@@ -573,7 +573,7 @@ class MemberPropertyReferenceTest {
       import javax.inject.Inject
 
       class Subject {
-        @set:Inject var name: String = "" 
+        @set:Inject var name: String = ""
       }
       """,
       allWarningsAsErrors = false,
@@ -721,7 +721,7 @@ class MemberPropertyReferenceTest {
       class Subject(
         val name: String,
         val age: Int
-      ) { 
+      ) {
         constructor(
           name: String,
           age: Int,

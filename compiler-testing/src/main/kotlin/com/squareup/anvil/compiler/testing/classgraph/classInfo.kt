@@ -29,9 +29,7 @@ public fun ClassInfo.getAnnotationInfo(annotationClassId: ClassId): AnnotationIn
   return getAnnotationInfo(annotationClassId.asJavaNameString())
 }
 
-/**
- * Returns all Dagger modules specified by the Component as fully qualified names
- */
+/** Returns all Dagger modules specified by the Component as fully qualified names */
 public val AnnotationInfo.moduleNames: List<String>
   get() {
     return parameterValues
@@ -42,16 +40,16 @@ public val AnnotationInfo.moduleNames: List<String>
   }
 
 /**
- * Returns all binding methods declared in a particular `@Module` type.
- * The methods are sorted by their name.
+ * Returns all binding methods declared in a particular `@Module` type. The methods are sorted by
+ * their name.
  */
 public fun ModuleClassInfo.allBindMethods(): List<BindsMethodInfo> {
   return methodInfo.filter { it.hasAnnotation("dagger.Binds") }
 }
 
 /**
- * Returns all `provide___` methods declared in a particular `@Module` type.
- * The methods are sorted by their name.
+ * Returns all `provide___` methods declared in a particular `@Module` type. The methods are sorted
+ * by their name.
  */
 public fun ModuleClassInfo.allProvidesMethods(): List<ProvidesMethodInfo> {
   return methodInfo.filter { it.hasAnnotation("dagger.Provides") }

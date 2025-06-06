@@ -50,8 +50,8 @@ public operator fun ScanResult.getValue(thisRef: Any?, property: KProperty<*>): 
   getClassInfo(property.name)
 
 /**
- * Returns all classes that are annotated with `@Module` in this scan result.
- * The classes are sorted by their name.
+ * Returns all classes that are annotated with `@Module` in this scan result. The classes are sorted
+ * by their name.
  *
  * ```
  * scanResult.allModuleClasses()
@@ -65,8 +65,8 @@ public fun ScanResult.allModuleClasses(): List<ModuleClassInfo> {
 }
 
 /**
- * Returns all classes that implement `dagger.internal.Factory` in this scan result.
- * The classes are sorted by their name.
+ * Returns all classes that implement `dagger.internal.Factory` in this scan result. The classes are
+ * sorted by their name.
  *
  * ```
  * scanResult.allDaggerFactoryClasses().names() shouldBe listOf(
@@ -82,8 +82,8 @@ public fun ScanResult.allDaggerFactoryClasses(): List<DaggerFactoryClassInfo> {
 }
 
 /**
- * Returns all classes that are arguments to the [modules][dagger.Component.modules] parameter
- * of a specific [@Component][dagger.Component] annotation applied to [componentInterfaceName].
+ * Returns all classes that are arguments to the [modules][dagger.Component.modules] parameter of a
+ * specific [@Component][dagger.Component] annotation applied to [componentInterfaceName].
  *
  * ```
  * scanResult.allMergedModulesForComponent("com.squareup.test.AppComponent")
@@ -140,10 +140,9 @@ public fun ScanResult.allBindsMethods(): List<BindsMethodInfo> {
 }
 
 /**
- * Returns pairs of types bound in `@Binds` methods,
- * where the first type is the parameter/contributed type
- * and the second type is the return/bound type.
- * The pairs are sorted by the parameter type.
+ * Returns pairs of types bound in `@Binds` methods, where the first type is the
+ * parameter/contributed type and the second type is the return/bound type. The pairs are sorted by
+ * the parameter type.
  *
  * ```
  * scanResult.allBoundTypes() shouldBe listOf("com.example.FooImpl" to "com.example.Foo")

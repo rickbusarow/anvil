@@ -21,7 +21,7 @@ class Compile2Sample : CompilationModeTest() {
     compile2(
       """
       package com.squareup.test
-      
+
       class KotlinClass(javaClass: JavaClass)
       """.trimIndent(),
       javaSources = listOf(
@@ -47,9 +47,9 @@ class Compile2Sample : CompilationModeTest() {
         package com.squareup.test
 
         import javax.inject.Inject
-    
+
         interface ParentInterface
-    
+
         class InjectClass
         """,
       firExtensions = listOf(myCustomGenerator()),

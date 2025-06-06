@@ -156,7 +156,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       import com.squareup.anvil.annotations.ContributesMultibinding
 
       interface ParentInterface
-      
+
       class Abc {
         @ContributesMultibinding(Any::class, ParentInterface::class)
         class ContributingClass : ParentInterface
@@ -216,23 +216,23 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesMultibinding
         import dagger.multibindings.StringKey
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
-  
+
         interface ParentInterface
-  
+
         private const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
-  
+
         @StringKey(CONSTANT)
         @ContributesMultibinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
         mode = mode,
@@ -256,25 +256,25 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesMultibinding
         import dagger.multibindings.StringKey
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
-  
+
         private object Constants {
           const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
         }
-  
+
         interface ParentInterface
-  
+
         @StringKey(Constants.CONSTANT)
         @ContributesMultibinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
         mode = mode,
@@ -298,27 +298,27 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesMultibinding
         import dagger.multibindings.StringKey
         import com.squareup.test.other.OTHER_CONSTANT
         import javax.inject.Inject
-  
+
         private interface Settings {
           companion object {
             const val CONSTANT = "${'$'}OTHER_CONSTANT.foo"
           }
         }
-  
+
         interface ParentInterface
-  
+
         @StringKey(Settings.CONSTANT)
         @ContributesMultibinding(Any::class)
         class InjectClass @Inject constructor() : ParentInterface
         """,
         """
         package com.squareup.test.other
-        
+
         const val OTHER_CONSTANT = "abc"
         """.trimIndent(),
         mode = mode,
@@ -341,17 +341,17 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
 
       import com.squareup.anvil.annotations.ContributesMultibinding
       import javax.inject.Qualifier
-      
+
       @Qualifier
       annotation class AnyQualifier1
-      
+
       @Qualifier
       annotation class AnyQualifier2
 
       interface ParentInterface
 
       @ContributesMultibinding(Any::class)
-      @AnyQualifier1 
+      @AnyQualifier1
       @AnyQualifier2
       interface ContributingInterface : ParentInterface
       """,
@@ -486,8 +486,8 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       interface ParentInterface
 
       @ContributesMultibinding(
-        scope = Int::class, 
-        ignoreQualifier = true, 
+        scope = Int::class,
+        ignoreQualifier = true,
         boundType = ParentInterface::class
       )
       interface ContributingInterface : ParentInterface, CharSequence
@@ -547,11 +547,11 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       //language=kotlin
       """
           package com.squareup.test
-              
+
           import com.squareup.anvil.annotations.ContributesMultibinding
           import dagger.MapKey
           import javax.inject.Singleton
-       
+
           @ContributesMultibinding(Any::class)
           @BindingKey("abc")
           @Singleton
@@ -572,15 +572,15 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.MapKey
-        
+
         @MapKey
         annotation class BindingKey(val value: String)
-        
+
         interface ParentInterface
-  
+
         @MergeComponent(Any::class)
         interface ComponentInterface
       """,
@@ -597,7 +597,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
         //language=kotlin
         """
           package com.squareup.test
-              
+
           import com.squareup.anvil.annotations.ContributesMultibinding
           import dagger.MapKey
           import javax.inject.Singleton
@@ -606,7 +606,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
 
           @MapKey
           annotation class BindingKey1(val value: String)
-      
+
           @ContributesMultibinding(Any::class)
           @BindingKey1("abc")
           @Singleton
@@ -629,9 +629,9 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
-        
+
         @MergeComponent(Any::class)
         interface ComponentInterface
       """,
@@ -673,7 +673,7 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       package com.squareup.test
 
       import com.squareup.anvil.annotations.ContributesMultibinding
-      
+
       interface ParentInterface
 
       @ContributesMultibinding(Any::class)
@@ -754,14 +754,14 @@ class ContributesMultibindingGeneratorTest : AnvilCompilationModeTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesMultibinding
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeSubcomponent
         import javax.inject.Inject
-  
+
         interface ParentInterface
-  
+
         @ContributesMultibinding(Unit::class)
         object ContributingObject : ParentInterface
         """,

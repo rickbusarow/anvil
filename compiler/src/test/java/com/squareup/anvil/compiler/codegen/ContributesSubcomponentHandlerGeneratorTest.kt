@@ -35,13 +35,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -95,7 +95,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             }
           }
         }
-        
+
       """.trimIndent(),
       enableDaggerAnnotationProcessor = true,
     ) {
@@ -134,13 +134,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeSubcomponent
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         interface SubcomponentInterface
-        
+
         @MergeSubcomponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -159,13 +159,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.compat.MergeInterfaces
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         interface SubcomponentInterface
-        
+
         @MergeInterfaces(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -189,13 +189,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.compat.MergeModules
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         interface SubcomponentInterface
-        
+
         @MergeModules(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -212,13 +212,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Int::class)
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -235,15 +235,15 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         class Outer {
           @ContributesSubcomponent(Any::class, Unit::class)
           interface SubcomponentInterface
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -264,18 +264,18 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         interface SubcomponentInterface
-        
+
         class Outer {
           @MergeComponent(Unit::class)
           interface ComponentInterface
         }
-        
+
       """.trimIndent(),
     ) {
       val anvilComponent = subcomponentInterface.anvilComponent(
@@ -294,19 +294,19 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface1
-  
+
         @ContributesSubcomponent(Int::class, parentScope = Any::class)
         interface SubcomponentInterface2
-  
+
         @ContributesSubcomponent(Long::class, parentScope = Int::class)
         interface SubcomponentInterface3
       """.trimIndent(),
@@ -332,9 +332,9 @@ class ContributesSubcomponentHandlerGeneratorTest {
     val firstCompilationResult = compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
-        
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface1
       """.trimIndent(),
@@ -345,13 +345,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
         import com.squareup.anvil.annotations.ContributesSubcomponent
-        
+
         @ContributesSubcomponent(Unit::class, parentScope = Int::class)
         interface SubcomponentInterface2
-        
+
         @MergeComponent(Int::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -372,21 +372,21 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.Module
 
         @Module
         object DaggerModule1
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           modules = [DaggerModule1::class]
         )
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -402,15 +402,15 @@ class ContributesSubcomponentHandlerGeneratorTest {
     val firstCompilationResult = compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import dagger.Module
 
         @Module
         object DaggerModule1
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           modules = [DaggerModule1::class]
         )
@@ -423,9 +423,9 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -442,7 +442,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
@@ -455,21 +455,21 @@ class ContributesSubcomponentHandlerGeneratorTest {
 
         @ContributesTo(Any::class)
         interface ContributingInterface
-  
+
         @ContributesBinding(Any::class)
         interface SecondContributingInterface : CharSequence
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           exclude = [
-            DaggerModule1::class, 
-            ContributingInterface::class, 
+            DaggerModule1::class,
+            ContributingInterface::class,
             SecondContributingInterface::class
           ]
         )
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -490,7 +490,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     val firstCompilationResult = compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
@@ -502,16 +502,16 @@ class ContributesSubcomponentHandlerGeneratorTest {
 
         @ContributesTo(Any::class)
         interface ContributingInterface
-  
+
         @ContributesBinding(Any::class)
         interface SecondContributingInterface : CharSequence
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           exclude = [
-            DaggerModule1::class, 
-            ContributingInterface::class, 
+            DaggerModule1::class,
+            ContributingInterface::class,
             SecondContributingInterface::class
           ]
         )
@@ -524,7 +524,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
 
         @MergeComponent(Unit::class)
@@ -548,13 +548,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -575,11 +575,11 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -588,7 +588,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             fun integer(): Int
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -616,10 +616,10 @@ class ContributesSubcomponentHandlerGeneratorTest {
     val firstCompilationResult = compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -636,9 +636,9 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -667,11 +667,11 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Int::class)
@@ -679,7 +679,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             fun createComponent(): SubcomponentInterface
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -699,7 +699,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
@@ -711,17 +711,17 @@ class ContributesSubcomponentHandlerGeneratorTest {
         object DaggerModule {
           @Provides fun provideInteger(): Int = 5
         }
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
           interface AnyParentComponent {
             fun createComponent(): SubcomponentInterface
           }
-          
+
           fun integer(): Int
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -753,7 +753,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
@@ -775,10 +775,10 @@ class ContributesSubcomponentHandlerGeneratorTest {
             fun createComponent(): SubcomponentInterface2
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface1
-        
+
         @MergeComponent(Int::class)
         interface ComponentInterface2
       """,
@@ -962,12 +962,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -980,7 +980,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             fun createComponent(): SubcomponentInterface
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -1006,12 +1006,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @ContributesTo(Unit::class)
@@ -1024,7 +1024,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             abstract fun createComponent(): SubcomponentInterface
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -1049,12 +1049,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
           @Factory
@@ -1062,7 +1062,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
             fun createComponent(): SubcomponentInterface
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -1089,7 +1089,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
@@ -1109,10 +1109,10 @@ class ContributesSubcomponentHandlerGeneratorTest {
               @BindsInstance integer: Int
             ): SubcomponentInterface
           }
-          
+
           fun integer(): Int
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1150,12 +1150,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.BindsInstance
-        import javax.inject.Inject 
+        import javax.inject.Inject
 
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
@@ -1165,10 +1165,10 @@ class ContributesSubcomponentHandlerGeneratorTest {
               @BindsInstance integer: Int
             ): SubcomponentInterface
           }
-          
+
           fun integer(): Int
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface {
           fun testClass(): TestClass
@@ -1209,12 +1209,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.BindsInstance
-        import javax.inject.Inject 
+        import javax.inject.Inject
 
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
@@ -1224,15 +1224,15 @@ class ContributesSubcomponentHandlerGeneratorTest {
               @BindsInstance integer: Int
             ): SubcomponentInterface
           }
-          
+
           fun integer(): Int
-        } 
+        }
 
         @ContributesSubcomponent(Unit::class, parentScope = Int::class)
         interface ComponentInterface1 {
           fun testClass(): TestClass
         }
-        
+
         @MergeComponent(Int::class)
         interface ComponentInterface2
 
@@ -1275,7 +1275,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     val firstCompilationResult = compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.ContributesTo
@@ -1283,7 +1283,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
         import dagger.BindsInstance
 
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class
         )
         interface SubcomponentInterface {
@@ -1315,7 +1315,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.MergeComponent
 
         @MergeComponent(Unit::class)
@@ -1351,12 +1351,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.BindsInstance
-        import javax.inject.Inject 
+        import javax.inject.Inject
 
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
@@ -1367,10 +1367,10 @@ class ContributesSubcomponentHandlerGeneratorTest {
             ): SubcomponentInterface
           }
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface1
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface2
       """,
@@ -1405,12 +1405,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesSubcomponent.Factory
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.BindsInstance
-        import javax.inject.Inject 
+        import javax.inject.Inject
 
         @ContributesSubcomponent(Any::class, parentScope = Unit::class)
         interface SubcomponentInterface {
@@ -1420,15 +1420,15 @@ class ContributesSubcomponentHandlerGeneratorTest {
               @BindsInstance integer: Int
             ): SubcomponentInterface
           }
-          
+
           fun integer(): Int
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface1 {
           fun testClass(): TestClass
         }
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface2 {
           fun testClass(): TestClass
@@ -1478,15 +1478,15 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
         import javax.inject.Singleton
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         @Singleton
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -1503,22 +1503,22 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
         import javax.inject.Scope
         import javax.inject.Singleton
         import kotlin.reflect.KClass
-        
+
         @Scope
         @Retention(AnnotationRetention.RUNTIME)
         annotation class SingleIn(val clazz: KClass<*>)
-  
+
         @ContributesSubcomponent(Any::class, Unit::class)
         @SingleIn(Any::class)
         @Singleton
         interface SubcomponentInterface
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """.trimIndent(),
@@ -1721,12 +1721,12 @@ class ContributesSubcomponentHandlerGeneratorTest {
           //language=kotlin
           """
             package com.squareup.test
-                
+
             import com.squareup.anvil.annotations.ContributesSubcomponent
             import com.squareup.test.SubcomponentInterface1
-      
+
             @ContributesSubcomponent(
-              scope = Any::class, 
+              scope = Any::class,
               parentScope = Unit::class,
             )
             interface SubcomponentInterface2
@@ -1737,16 +1737,16 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class
         )
         interface SubcomponentInterface1
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1772,13 +1772,13 @@ class ContributesSubcomponentHandlerGeneratorTest {
           //language=kotlin
           """
             package com.squareup.test
-                  
+
             import com.squareup.anvil.annotations.ContributesSubcomponent
             import com.squareup.anvil.annotations.ContributesTo
             import com.squareup.test.SubcomponentInterface1
-        
+
             @ContributesSubcomponent(
-              scope = Any::class, 
+              scope = Any::class,
               parentScope = Unit::class,
             )
             interface SubcomponentInterface2 {
@@ -1786,7 +1786,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
               interface Factory {
                 fun create(): SubcomponentInterface2
               }
-    
+
               @ContributesTo(Unit::class)
               interface ParentComponent {
                 fun createFactory(): Factory
@@ -1799,16 +1799,16 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class
         )
         interface SubcomponentInterface1
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1830,23 +1830,23 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class
         )
         interface SubcomponentInterface1
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           replaces = [SubcomponentInterface1::class]
         )
         interface SubcomponentInterface2
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1868,7 +1868,7 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.ContributesTo
@@ -1881,28 +1881,28 @@ class ContributesSubcomponentHandlerGeneratorTest {
 
         @ContributesTo(Any::class)
         interface ContributingInterface
-  
+
         @ContributesBinding(Any::class)
         interface SecondContributingInterface : CharSequence
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           exclude = [
-            DaggerModule1::class, 
-            ContributingInterface::class, 
+            DaggerModule1::class,
+            ContributingInterface::class,
             SecondContributingInterface::class
           ]
         )
         interface SubcomponentInterface1
-        
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           replaces = [SubcomponentInterface1::class]
         )
         interface SubcomponentInterface2
-        
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1919,29 +1919,29 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Long::class
         )
         interface SubcomponentInterface1
-  
+
         @ContributesSubcomponent(
-          scope = Long::class, 
+          scope = Long::class,
           parentScope = Unit::class
         )
         interface SubcomponentInterface2
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
           replaces = [SubcomponentInterface1::class]
         )
         interface SubcomponentInterface3
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,
@@ -1980,11 +1980,11 @@ class ContributesSubcomponentHandlerGeneratorTest {
           //language=kotlin
           """
             package com.squareup.test
-                
+
             import com.squareup.anvil.annotations.ContributesSubcomponent
-      
+
             @ContributesSubcomponent(
-              scope = Any::class, 
+              scope = Any::class,
               parentScope = Unit::class,
               replaces = [SubcomponentInterface1::class]
             )
@@ -1996,16 +1996,16 @@ class ContributesSubcomponentHandlerGeneratorTest {
     compile(
       """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesSubcomponent
         import com.squareup.anvil.annotations.MergeComponent
-  
+
         @ContributesSubcomponent(
-          scope = Any::class, 
+          scope = Any::class,
           parentScope = Unit::class,
         )
         interface SubcomponentInterface1
-  
+
         @MergeComponent(Unit::class)
         interface ComponentInterface
       """,

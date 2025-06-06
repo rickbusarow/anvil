@@ -5,12 +5,10 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.reflect.KClass
 
 /**
- * Identifies a type that the injector only instantiates once for the given
- * [scope] marker.
+ * Identifies a type that the injector only instantiates once for the given [scope] marker.
  *
- * This can be used in combination with other Anvil annotations to avoid having
- * to manually define scope annotations for each component and to maintain
- * consistency.
+ * This can be used in combination with other Anvil annotations to avoid having to manually define
+ * scope annotations for each component and to maintain consistency.
  *
  * Component example:
  * ```
@@ -33,8 +31,6 @@ import kotlin.reflect.KClass
 @Scope
 @Retention(RUNTIME)
 public annotation class SingleIn(
-  /**
-   * The marker that identifies this scope.
-   */
+  /** The marker that identifies this scope. */
   val scope: KClass<*>,
 )

@@ -5,9 +5,7 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import java.io.File
 
-/**
- * A [PrivateCodeGenerator] that doesn't generate any code, but instead just performs checks.
- */
+/** A [PrivateCodeGenerator] that doesn't generate any code, but instead just performs checks. */
 internal abstract class CheckOnlyCodeGenerator : PrivateCodeGenerator() {
 
   final override fun generateCodePrivate(

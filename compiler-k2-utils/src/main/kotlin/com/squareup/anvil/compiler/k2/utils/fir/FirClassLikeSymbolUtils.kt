@@ -52,8 +52,8 @@ public fun FirClassLikeSymbol<*>.contributesToScope(
 public fun FirClassLikeSymbol<*>.fqName(): FqName = classId.asSingleFqName()
 
 /**
- * Creates the type name symbol as you would see it in a type argument, like
- * `com.foo.Bar` in `List<com.foo.Bar>`.
+ * Creates the type name symbol as you would see it in a type argument, like `com.foo.Bar` in
+ * `List<com.foo.Bar>`.
  */
 public fun FirClassLikeSymbol<*>.coneLookupTagBasedType(): ConeLookupTagBasedType {
   return classId.toLookupTag().constructType(
@@ -62,9 +62,7 @@ public fun FirClassLikeSymbol<*>.coneLookupTagBasedType(): ConeLookupTagBasedTyp
   )
 }
 
-/**
- * Creates a `kotlin.reflect.KClass` reference to the class symbol, like `KClass<com.foo.Bar>`.
- */
+/** Creates a `kotlin.reflect.KClass` reference to the class symbol, like `KClass<com.foo.Bar>`. */
 public fun FirClassLikeSymbol<*>.toKClassRef(): ConeClassLikeType =
   StandardClassIds.KClass.constructClassLikeType(
     typeArguments = arrayOf(coneLookupTagBasedType()),

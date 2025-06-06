@@ -167,12 +167,12 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
       import javax.inject.Named
-      
+
       typealias StringList = List<String>
-      
+
       // Generate a factory too to cover for https://github.com/square/anvil/issues/362
       class InjectClass @Inject constructor() {
         @Inject lateinit var string: String
@@ -184,13 +184,13 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
         var setterAnnotated: Map<String, String> = emptyMap()
           @Inject set
         @set:Inject var setterAnnotated2: Map<String, Boolean> = emptyMap()
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-      
+
           other as InjectClass
-      
+
           if (string != other.string) return false
           if (qualifiedString != other.qualifiedString) return false
           if (charSequence != other.charSequence) return false
@@ -199,10 +199,10 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
           if (set.single().invoke(emptyList())[0] != other.set.single().invoke(emptyList())[0]) return false
           if (setterAnnotated != other.setterAnnotated) return false
           if (setterAnnotated2 != other.setterAnnotated2) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           var result = string.hashCode()
           result = 31 * result + qualifiedString.hashCode()
@@ -484,14 +484,14 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
     compile(
       """
       package com.squareup.test2
-      
+
       const val CONST_IMPORTED = "yay"
-      
+
       object Constants {
         const val CONST_NESTED = "yay2"
         const val CONST_NESTED_BUT_IMPORTED_DIRECTLY = "yay3"
       }
-      
+
       class ClassWithCompanion {
         class NestedClassWithCompanion {
           companion object CustomCompanionName {
@@ -502,23 +502,23 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
       """,
       """
       package com.squareup.test
-      
+
       const val CONST_SAME_PACKAGE = "samePackageConst"
       """,
       """
       package com.squareup.test
-      
+
       import com.squareup.test2.CONST_IMPORTED
       import com.squareup.test2.Constants
       import com.squareup.test2.Constants.CONST_NESTED_BUT_IMPORTED_DIRECTLY
       import com.squareup.test2.ClassWithCompanion.NestedClassWithCompanion
       import kotlin.LazyThreadSafetyMode.NONE
-      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED 
-      import kotlin.reflect.KClass      
+      import kotlin.LazyThreadSafetyMode.SYNCHRONIZED
+      import kotlin.reflect.KClass
       import javax.inject.Inject
       import javax.inject.Named
       import javax.inject.Qualifier
-      
+
       const val CONSTANT = "def"
 
       class InjectClass @Inject constructor() {
@@ -536,27 +536,27 @@ public final class InjectClass_Factory implements Factory<InjectClass> {
         @Named(CONST_NESTED_BUT_IMPORTED_DIRECTLY) @Inject lateinit var string7: String
         @Named(NestedClassWithCompanion.CONST_NESTED_IN_COMPANION) @Inject lateinit var string8: String
         @Named(CONST_SAME_PACKAGE) @Inject lateinit var string9: String
-        
+
         companion object {
           const val NESTED_CONSTANT = "def2"
         }
       }
-      
+
       @Qualifier
       annotation class ClassArrayQualifier(val value: Array<KClass<*>>)
-      
+
       @Qualifier
       annotation class ClassQualifier(val value: KClass<*>)
-      
+
       @Qualifier
       annotation class EnumArrayQualifier(val value: Array<LazyThreadSafetyMode>)
-      
+
       @Qualifier
       annotation class EnumQualifier(val value: LazyThreadSafetyMode)
-      
+
       @Qualifier
       annotation class IntQualifier(val value: Int)
-      
+
       @Qualifier
       annotation class StringQualifier(val value: String)
       """,
@@ -651,24 +651,24 @@ public final class ParentClass_NestedInjectClass_MembersInjector implements Memb
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class ParentClass {
         class NestedInjectClass {
           @Inject lateinit var string: String
-          
+
           override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
-        
+
             other as NestedInjectClass
-        
+
             if (string != other.string) return false
-        
+
             return true
           }
-        
+
           override fun hashCode(): Int {
             return string.hashCode()
           }
@@ -708,26 +708,26 @@ public final class ParentClass_NestedInjectClass_MembersInjector implements Memb
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       sealed class Base {
         sealed class Error : Base() {
           @Inject lateinit var string: String
-          
+
           class InjectClass : Error() {
             @Inject lateinit var numbers: List<Int>
 
-            
+
             override fun equals(other: Any?): Boolean {
               if (this === other) return true
               if (javaClass != other?.javaClass) return false
-        
+
               other as InjectClass
-        
+
               if (string != other.string) return false
               if (numbers != other.numbers) return false
-        
+
               return true
             }
 
@@ -855,22 +855,22 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Lazy
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass {
         @Inject lateinit var string: String
         @Inject lateinit var stringProvider: Provider<String>
         @Inject lateinit var stringListProvider: Provider<List<String>>
         @Inject lateinit var lazyString: Lazy<String>
-        
+
         override fun equals(other: Any?): Boolean {
           return toString() == other.toString()
         }
         override fun toString(): String {
-         return string + stringProvider.get() + 
+         return string + stringProvider.get() +
              stringListProvider.get()[0] + lazyString.get()
         }
       }
@@ -963,14 +963,14 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Lazy
       import javax.inject.Inject
       import javax.inject.Provider
-      
+
       class InjectClass {
         @Inject lateinit var lazyStringProvider: Provider<Lazy<String>>
-        
+
         override fun equals(other: Any?): Boolean {
           return toString() == other.toString()
         }
@@ -1057,27 +1057,27 @@ public final class InjectClass_MembersInjector implements MembersInjector<Inject
     compile(
       """
       package com.squareup.test
-      
+
       import java.io.*
       import java.nio.file.*
       import javax.inject.*
-      
+
       class InjectClass {
         @Inject lateinit var file: File
         @Inject lateinit var path: Path
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-      
+
           other as InjectClass
-      
+
           if (file != other.file) return false
           if (path != other.path) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           var result = file.hashCode()
           result = 31 * result + path.hashCode()
@@ -1175,28 +1175,28 @@ public final class OuterClass_InjectClass_MembersInjector implements MembersInje
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       class OuterClass {
         class InjectClass {
           @Inject lateinit var string: String
           @Inject lateinit var charSequence: CharSequence
           @Inject lateinit var list: List<String>
-          
+
           override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
-        
+
             other as InjectClass
-        
+
             if (string != other.string) return false
             if (charSequence != other.charSequence) return false
             if (list != other.list) return false
-        
+
             return true
           }
-        
+
           override fun hashCode(): Int {
             var result = string.hashCode()
             result = 31 * result + charSequence.hashCode()
@@ -1321,7 +1321,7 @@ public final class OuterClass_InjectClass_MembersInjector implements MembersInje
         @Inject
         lateinit var middle2: Set<String>
       }
-      
+
       abstract class Base {
 
         @Inject
@@ -1421,9 +1421,9 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       abstract class InjectClass<T> {
         @Inject lateinit var string: String
       }
@@ -1441,18 +1441,18 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
 
       open class Base<T : Any> {
         @Inject lateinit var value: T
       }
-      
+
       class InjectClass : Base<Int>() {
         @Inject lateinit var string: String
-        
+
         override fun equals(other: Any?): Boolean {
-          return other is InjectClass && value == other.value && string == other.string 
+          return other is InjectClass && value == other.value && string == other.string
         }
       }
       """,
@@ -1492,7 +1492,7 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
 
       class InjectClass<T, R> {
@@ -1512,7 +1512,7 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
 
       abstract class Base<T> {
@@ -1521,16 +1521,16 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
 
       class InjectClass : Base<String>() {
         @Inject lateinit var numbers: List<Int>
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
 
           if (unknownItems != other.unknownItems) return false
           if (numbers != other.numbers) return false
-     
+
           return true
         }
       }
@@ -1572,7 +1572,7 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
 
       abstract class Base<T> {
@@ -1581,16 +1581,16 @@ public final class InjectClass_MembersInjector<T> implements MembersInjector<Inj
 
       abstract class Middle<R> : Base<R>() {
         @Inject lateinit var numbers: List<Int>
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
 
           if (unknownItems != other.unknownItems) return false
           if (numbers != other.numbers) return false
-     
+
           return true
         }
       }
@@ -1680,9 +1680,9 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
-      
+
       import javax.inject.Inject
-      
+
       abstract class InjectClass<T, U, V> {
         @Inject lateinit var string: String
       }
@@ -1700,21 +1700,21 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       import javax.inject.Inject
-      
+
       class InjectClass {
         @Inject lateinit var string: String
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-      
+
           other as InjectClass
-      
+
           if (string != other.string) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           return string.hashCode()
         }
@@ -1769,16 +1769,16 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass : Base() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (string != other.string) return false
-     
+
           return true
         }
       }
@@ -1847,17 +1847,17 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass : Mid() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (strings != other.strings) return false
           if (string != other.string) return false
-     
+
           return true
         }
       }
@@ -1936,17 +1936,17 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass : Mid() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (strings != other.strings) return false
           if (string != other.string) return false
-     
+
           return true
         }
       }
@@ -2014,7 +2014,7 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       abstract class Base2 : Base1() {
         @Inject override lateinit var string: String
-      } 
+      }
       """,
     ) {
       assertThat(exitCode).isEqualTo(OK)
@@ -2023,7 +2023,7 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       abstract class Mid : Base2() {
@@ -2032,17 +2032,17 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass : Mid() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (strings != other.strings) return false
           if (string != other.string) return false
-     
+
           return true
         }
       }
@@ -2114,16 +2114,16 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass : Mid() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
 
           if (string != other.string) return false
           if (numbers != other.numbers) return false
-     
+
           return true
         }
       }
@@ -2177,23 +2177,23 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
       package com.squareup.test
 
       import javax.inject.Inject
-      
+
       typealias StringList = List<String>
 
       class InjectClass {
         @Inject lateinit var stringList: StringList
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (stringList != other.stringList) return false
-     
+
           return true
         }
-        
+
         override fun hashCode() = stringList.hashCode()
       }
       """,
@@ -2234,18 +2234,18 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
 
       class InjectClass {
         @Inject lateinit var value: AliasType<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (value != other.value) return false
-     
+
           return true
         }
-        
+
         override fun hashCode() = value.hashCode()
       }
       """,
@@ -2283,21 +2283,21 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
       abstract class ActualBase {
         @Inject lateinit var string: String
       }
-      
+
       typealias Base = ActualBase
 
       class InjectClass : Base() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (string != other.string) return false
-     
+
           return true
         }
 
@@ -2354,7 +2354,7 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
       abstract class ActualBase {
         @Inject lateinit var string: String
       }
-      
+
       typealias Base = ActualBase
       """,
     ) {
@@ -2364,21 +2364,21 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       class InjectClass : Base() {
         @Inject lateinit var numbers: List<Int>
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (numbers != other.numbers) return false
           if (string != other.string) return false
-     
+
           return true
         }
 
@@ -2431,7 +2431,7 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       abstract class Base {
@@ -2439,15 +2439,15 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
       }
 
       class InjectClass : Base() {
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (string != other.string) return false
-     
+
           return true
         }
 
@@ -2468,7 +2468,7 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       class InjectClass {
@@ -2488,28 +2488,28 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
     compile(
       """
       package com.squareup.test
- 
+
       import javax.inject.Inject
 
       class InjectClass {
         @Inject
         lateinit var injected1: String
-        
+
         @Inject @JvmField
         var injected2: String? = null
-        
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-      
+
           other as InjectClass
-      
+
           if (injected1 != other.injected1) return false
           if (injected2 != other.injected2) return false
-      
+
           return true
         }
-      
+
         override fun hashCode(): Int {
           var result = injected1.hashCode()
           result = 31 * result + injected2.hashCode()
@@ -2557,18 +2557,18 @@ public final class InjectClass_MembersInjector<T, U, V> implements MembersInject
           set(value) {
             field = value
           }
-     
+
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-     
+
           other as InjectClass
-     
+
           if (value != other.value) return false
-     
+
           return true
         }
-        
+
         override fun hashCode() = value.hashCode()
       }
       """,

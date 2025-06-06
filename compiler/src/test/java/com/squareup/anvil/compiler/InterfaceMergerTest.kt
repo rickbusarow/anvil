@@ -40,16 +40,16 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -63,15 +63,15 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -84,13 +84,13 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       interface ComponentInterface
       """,
     ) {
@@ -102,12 +102,12 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       interface ContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -120,13 +120,13 @@ class InterfaceMergerTest(
     compile(
       """
       package com.other
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -142,9 +142,9 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       abstract class MergingClass
       """,
@@ -162,10 +162,10 @@ class InterfaceMergerTest(
 
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
@@ -188,10 +188,10 @@ class InterfaceMergerTest(
 
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       class ContributingInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
@@ -216,11 +216,11 @@ class InterfaceMergerTest(
 
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Unit::class)
       @ContributesTo(Int::class)
       interface ContributingInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
@@ -253,7 +253,7 @@ class InterfaceMergerTest(
 
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
@@ -279,7 +279,7 @@ class InterfaceMergerTest(
 
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
 
@@ -307,7 +307,7 @@ class InterfaceMergerTest(
 
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
 
@@ -341,10 +341,10 @@ class InterfaceMergerTest(
 
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       interface OtherInterface : SecondContributingInterface
 
       $annotation(
@@ -378,13 +378,13 @@ class InterfaceMergerTest(
 
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Unit::class)
       interface SecondContributingInterface
 
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -410,13 +410,13 @@ class InterfaceMergerTest(
 
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Unit::class)
       interface SecondContributingInterface
 
       @MergeComponent(Any::class)
       interface ComponentInterface
-      
+
       @MergeSubcomponent(Unit::class)
       interface SubcomponentInterface
       """,
@@ -440,13 +440,13 @@ class InterfaceMergerTest(
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.ContributesTo
         $import
-  
+
         @ContributesTo(Any::class)
         $visibility interface ContributingInterface
-        
+
         $annotation(Any::class)
         interface ComponentInterface
         """,
@@ -470,7 +470,7 @@ class InterfaceMergerTest(
         @ContributesTo(Any::class)
         interface InnerInterface
       }
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -489,10 +489,10 @@ class InterfaceMergerTest(
       import com.squareup.anvil.annotations.ContributesTo
       import com.squareup.anvil.annotations.MergeComponent
       import com.squareup.anvil.annotations.MergeSubcomponent
-      
+
       @MergeComponent(Unit::class)
       interface ComponentInterface
-      
+
       @MergeSubcomponent(Any::class)
       interface SubcomponentInterface {
         @ContributesTo(Unit::class)
@@ -513,10 +513,10 @@ class InterfaceMergerTest(
       """
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -532,17 +532,17 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @dagger.Module
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -556,17 +556,17 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       @com.squareup.anvil.annotations.compat.MergeInterfaces(Unit::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -588,7 +588,7 @@ class InterfaceMergerTest(
           override fun doSomething() = Unit
         }
       }
-      
+
       interface DoSomethingInterface {
         fun doSomething()
       }
@@ -602,20 +602,20 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -632,7 +632,7 @@ class InterfaceMergerTest(
     val firstResult = compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
 
       @ContributesTo(Any::class)
@@ -646,16 +646,16 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -672,20 +672,20 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class, replaces = [ContributingInterface::class])
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -702,23 +702,23 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Int::class, replaces = [ContributingInterface::class])
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface1
-      
+
       $annotation(Int::class)
       interface SubcomponentInterface2
       """,
@@ -736,20 +736,20 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class, exclude = [ContributingInterface::class])
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -767,22 +767,22 @@ class InterfaceMergerTest(
       .compile(
         """
         package com.squareup.test
-      
+
         import com.squareup.anvil.annotations.ContributesTo
         $import
-        
+
         @ContributesTo(Any::class)
-        interface ContributingInterface  
+        interface ContributingInterface
         """,
         """
         package anvil.hint
 
         import com.squareup.test.ContributingInterface
         import kotlin.reflect.KClass
-        
+
         public val com_squareup_test_ContributingInterface_reference: KClass<ContributingInterface> = ContributingInterface::class
-        
-        // Note that the number is missing after the scope. 
+
+        // Note that the number is missing after the scope.
         public val com_squareup_test_ContributingInterface_scope: KClass<Any> = Any::class
         """.trimIndent(),
       ) {
@@ -792,9 +792,9 @@ class InterfaceMergerTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,

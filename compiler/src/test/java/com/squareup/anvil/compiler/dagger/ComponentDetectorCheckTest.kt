@@ -28,9 +28,9 @@ class ComponentDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Component
-      
+
       @Component
       interface ComponentInterface
       """,
@@ -52,9 +52,9 @@ class ComponentDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @Subcomponent
       interface ComponentInterface
       """,
@@ -68,9 +68,9 @@ class ComponentDetectorCheckTest(
     compile(
       """
         package com.squareup.test
-        
+
         import dagger.Component
-        
+
         class OuterClass {
           @Component
           interface ComponentInterface
@@ -94,9 +94,9 @@ class ComponentDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       class OuterClass {
         @Subcomponent
         interface ComponentInterface

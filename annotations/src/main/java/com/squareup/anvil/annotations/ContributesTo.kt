@@ -6,8 +6,8 @@ import kotlin.reflect.KClass
 
 /**
  * Marks a Dagger module or component interface to be included in the Dagger dependency graph in the
- * given [scope]. Anvil automatically adds the module to the list of included modules in the
- * Dagger component marked with [MergeComponent]. For component interfaces it will make the Dagger
+ * given [scope]. Anvil automatically adds the module to the list of included modules in the Dagger
+ * component marked with [MergeComponent]. For component interfaces it will make the Dagger
  * component extend the interface.
  *
  * ```
@@ -40,14 +40,12 @@ import kotlin.reflect.KClass
 @Retention(RUNTIME)
 @Repeatable
 public annotation class ContributesTo(
-  /**
-   * The scope in which to include this module.
-   */
+  /** The scope in which to include this module. */
   val scope: KClass<*>,
   /**
-   * This contributed module will replace these contributed classes. The array is allowed to
-   * include other contributed bindings, multibindings and Dagger modules. All replaced classes
-   * must use the same scope.
+   * This contributed module will replace these contributed classes. The array is allowed to include
+   * other contributed bindings, multibindings and Dagger modules. All replaced classes must use the
+   * same scope.
    */
   val replaces: Array<KClass<*>> = [],
 )

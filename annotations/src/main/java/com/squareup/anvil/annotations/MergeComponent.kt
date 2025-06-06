@@ -5,10 +5,10 @@ import kotlin.annotation.AnnotationTarget.CLASS
 import kotlin.reflect.KClass
 
 /**
- * Dagger components that should automatically include Dagger modules and component interfaces for the
- * given [scope] require this annotation instead of `@Component`. The Kotlin compiler plugin will
- * add the `@Component` annotation to this interface. The parameters [modules] and [dependencies] are
- * preserved in the `@Component` annotation.
+ * Dagger components that should automatically include Dagger modules and component interfaces for
+ * the given [scope] require this annotation instead of `@Component`. The Kotlin compiler plugin
+ * will add the `@Component` annotation to this interface. The parameters [modules] and
+ * [dependencies] are preserved in the `@Component` annotation.
  *
  * ```
  * @MergeComponent(AppScope::class)
@@ -43,9 +43,7 @@ public annotation class MergeComponent(
    * automatically contributed.
    */
   val modules: Array<KClass<*>> = [],
-  /**
-   * List of types that are to be used as component dependencies.
-   */
+  /** List of types that are to be used as component dependencies. */
   val dependencies: Array<KClass<*>> = [],
   /**
    * List of bindings, multibindings, modules and component interfaces that are contributed to the

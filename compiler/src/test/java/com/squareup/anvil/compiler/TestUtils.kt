@@ -413,9 +413,7 @@ internal fun JvmCompilationResult.generatedFileOrNull(
 ): File? = walkGeneratedFiles(mode)
   .singleOrNull { it.name == fileName && "anvil${File.separatorChar}hint" !in it.absolutePath }
 
-/**
- * Parameters for configuring [AnvilCompilationMode] and whether to run a full test run or not.
- */
+/** Parameters for configuring [AnvilCompilationMode] and whether to run a full test run or not. */
 internal fun testParams(
   embeddedCreator: () -> Embedded? = { Embedded() },
 ): Collection<Any> {

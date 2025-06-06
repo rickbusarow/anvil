@@ -29,7 +29,7 @@ class Compile2Test : CompilationModeTest() {
           //language=java
           """
           package com.squareup.test;
-  
+
           public class JavaClass { }
           """.trimIndent(),
         ),
@@ -47,16 +47,16 @@ class Compile2Test : CompilationModeTest() {
       compile2(
         """
         package com.squareup.test
-  
+
         import javax.inject.Inject
-  
+
         class InjectClass @Inject constructor(javaclass: JavaClass)
         """,
         javaSources = listOf(
           //language=java
           """
           package com.squareup.test;
-  
+
           public class JavaClass { }
           """.trimIndent(),
         ),
@@ -77,16 +77,16 @@ class Compile2Test : CompilationModeTest() {
 
         import dagger.Component
         import javax.inject.Inject
-    
+
         @Component
         interface TestComponent {
           val a: A
           fun injectClass(): InjectClass
         }
-    
+
         class A @Inject constructor()
-    
-        class InjectClass @Inject constructor(val a: A) 
+
+        class InjectClass @Inject constructor(val a: A)
         """,
       ) {
         exitCode shouldBe ExitCode.OK
@@ -117,10 +117,10 @@ class Compile2Test : CompilationModeTest() {
         package com.squareup.test
 
         import javax.inject.Inject
-    
+
         interface ParentInterface
-    
-        class InjectClass 
+
+        class InjectClass
         """,
         firExtensions = listOf(
           AnvilFirSupertypeGenerationExtension.Factory { ctx ->

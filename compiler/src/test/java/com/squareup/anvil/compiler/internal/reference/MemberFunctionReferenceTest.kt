@@ -84,7 +84,7 @@ class MemberFunctionReferenceTest {
 
       interface SomeInterface {
         fun test(): Int
-        
+
         companion object {
           fun test2(): Int = 8
         }

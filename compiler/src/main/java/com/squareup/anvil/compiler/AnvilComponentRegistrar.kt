@@ -23,8 +23,8 @@ import java.util.ServiceLoader
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
- * Entry point for the Anvil Kotlin compiler plugin. It registers several callbacks for the
- * various compilation phases.
+ * Entry point for the Anvil Kotlin compiler plugin. It registers several callbacks for the various
+ * compilation phases.
  */
 @AutoService(ComponentRegistrar::class)
 public class AnvilComponentRegistrar : ComponentRegistrar {

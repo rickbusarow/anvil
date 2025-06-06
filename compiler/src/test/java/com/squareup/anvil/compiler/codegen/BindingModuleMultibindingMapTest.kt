@@ -57,7 +57,7 @@ class BindingModuleMultibindingMapTest(
       import com.squareup.anvil.annotations.ContributesMultibinding
       import dagger.MapKey
       $import
-      
+
       @MapKey
       annotation class BindingKey(val value: String)
 
@@ -99,7 +99,7 @@ class BindingModuleMultibindingMapTest(
       import com.squareup.anvil.annotations.ContributesMultibinding
       import dagger.MapKey
       $import
-      
+
       @MapKey
       annotation class BindingKey(val value: String)
 
@@ -146,9 +146,9 @@ class BindingModuleMultibindingMapTest(
       import com.squareup.anvil.annotations.ContributesMultibinding
       import dagger.MapKey
       $import
-      
+
       enum class EnumClass { ABC }
-      
+
       @MapKey
       annotation class BindingKey(val value: EnumClass)
 
@@ -180,7 +180,7 @@ class BindingModuleMultibindingMapTest(
       import dagger.MapKey
       import kotlin.reflect.KClass
       $import
-      
+
       @MapKey
       annotation class BindingKey(val value: KClass<*>)
 
@@ -213,7 +213,7 @@ class BindingModuleMultibindingMapTest(
       import dagger.MapKey
       import kotlin.reflect.KClass
       $import
-      
+
       @MapKey(unwrapValue = false)
       annotation class BindingKey(
         val name: String,
@@ -253,10 +253,10 @@ class BindingModuleMultibindingMapTest(
       import dagger.MapKey
       import kotlin.reflect.KClass
       $import
-      
+
       @MapKey
       annotation class BindingKey1(val value: KClass<*>)
-      
+
       @MapKey
       annotation class BindingKey2(val value: KClass<*>)
 

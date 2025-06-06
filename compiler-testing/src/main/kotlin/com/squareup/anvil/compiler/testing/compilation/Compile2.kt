@@ -28,10 +28,11 @@ import javax.tools.SimpleJavaFileObject
 import javax.tools.ToolProvider
 
 /**
- * Represents a compiler invocation that can handle Kotlin and Java compilation, as well as
- * an optional KAPT pass. Used primarily by [CompilationEnvironment.compile2].
+ * Represents a compiler invocation that can handle Kotlin and Java compilation, as well as an
+ * optional KAPT pass. Used primarily by [CompilationEnvironment.compile2].
  *
- * @property config The [Compile2CompilationConfiguration] containing file paths, classpaths, and various optional flags.
+ * @property config The [Compile2CompilationConfiguration] containing file paths, classpaths, and
+ *   various optional flags.
  * @property expectedExitCode The exit code this compilation expects. Typically [ExitCode.OK].
  * @see CompilationEnvironment.compile2
  */
@@ -40,7 +41,7 @@ public class Compile2Compilation(
   public val expectedExitCode: ExitCode,
 ) {
 
-  /** Renders compiler messages (errors, warnings, etc.) in a human-friendly format.  Now in color! */
+  /** Renders compiler messages (errors, warnings, etc.) in a human-friendly format. Now in color!*/
   private val messageRenderer by lazy { ColorizedPlainTextMessageRenderer() }
 
   /**
@@ -276,8 +277,8 @@ public class Compile2Compilation(
   }
 
   /**
-   * Compiles any Java files using `javac`. This step is only invoked if there are Java files
-   * in the final set of sources (including any KAPT-generated .java files).
+   * Compiles any Java files using `javac`. This step is only invoked if there are Java files in the
+   * final set of sources (including any KAPT-generated .java files).
    *
    * @param javaSources A list of Java [File]s to compile.
    */
@@ -345,35 +346,32 @@ public class Compile2Compilation(
 }
 
 /**
- * A simple in-memory [SimpleJavaFileObject] for reading Java code from a [URI] rather
- * than from a local file. Used to feed source strings directly to `javac`.
+ * A simple in-memory [SimpleJavaFileObject] for reading Java code from a [URI] rather than from a
+ * local file. Used to feed source strings directly to `javac`.
  *
  * @constructor Creates a file object representing the Java source pointed to by [uri].
  */
 private class AnvilSimpleJavaFileObject(uri: URI) :
   SimpleJavaFileObject(uri, JavaFileObject.Kind.SOURCE) {
 
-  /**
-   * Opens the [InputStream] from the underlying URL so `javac` can read the file's contents.
-   */
+  /** Opens the [InputStream] from the underlying URL so `javac` can read the file's contents. */
   override fun openInputStream(): InputStream = uri.toURL().openStream()
 
-  /**
-   * Loads and returns the file contents as a [CharSequence].
-   */
+  /** Loads and returns the file contents as a [CharSequence]. */
   override fun getCharContent(ignoreEncodingErrors: Boolean): CharSequence =
     uri.toURL().readText()
 }
 
 /**
- * @return The current `java.home` as a [File], or throws if not set. Typically used to
- * provide the Kotlin compiler arguments with a Java home directory.
+ * @return The current `java.home` as a [File], or throws if not set. Typically used to provide the
+ *   Kotlin compiler arguments with a Java home directory.
  * @throws IllegalStateException if neither `JAVA_HOME` nor `java.home` is set.
  */
 internal fun javaHome(): File = javaHomeOrNull() ?: error("JAVA_HOME and 'java.home' not set")
 
 /**
- * @return The current Java home as a [File], or `null` if neither `JAVA_HOME` nor `java.home` is set.
+ * @return The current Java home as a [File], or `null` if neither `JAVA_HOME` nor `java.home` is
+ *   set.
  */
 internal fun javaHomeOrNull(): File? {
   val path = System.getProperty("java.home")
@@ -391,8 +389,8 @@ internal fun javaHomeOrNull(): File? {
 internal fun Iterable<File>.pathStrings(): List<String> = map { it.absolutePath }.distinct()
 
 /**
- * Joins all [File] paths in this collection into a single classpath [String],
- * separated by [File.pathSeparator].
+ * Joins all [File] paths in this collection into a single classpath [String], separated by
+ * [File.pathSeparator].
  *
  * @return A classpath string suitable for compiler arguments.
  */

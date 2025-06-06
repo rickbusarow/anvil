@@ -112,10 +112,8 @@ internal fun FunSpec.Builder.addMemberInjection(
  * Order is important. Dagger expects the properties of the most-upstream class to be listed first
  * in a factory's constructor.
  *
- * Given the hierarchy:
- * Impl -> Middle -> Base
- * The order of dependencies in `Impl_Factory`'s constructor should be:
- * Base -> Middle -> Impl
+ * Given the hierarchy: Impl -> Middle -> Base The order of dependencies in `Impl_Factory`'s
+ * constructor should be: Base -> Middle -> Impl
  */
 internal fun ClassReference.memberInjectParameters(): List<MemberInjectParameter> {
   return allSuperTypeClassReferences(includeSelf = true)
@@ -128,7 +126,7 @@ internal fun ClassReference.memberInjectParameters(): List<MemberInjectParameter
 
 /**
  * @param superParameters injected parameters from any super-classes, regardless of whether they're
- * overridden by the receiver class
+ *   overridden by the receiver class
  * @return the member-injected parameters for this class only, not including any super-classes
  */
 private fun ClassReference.declaredMemberInjectParameters(
@@ -154,8 +152,8 @@ private fun ClassReference.declaredMemberInjectParameters(
  * [param0: String, param1: Int] -> "param0, param1"
  * ```
  * [asProvider] allows you to decide if each parameter is wrapped in a `Provider` interface. If
- * true, then the `get()` function will be called for the provider parameter. If false, then
- * then always only the parameter name will used in the argument list:
+ * true, then the `get()` function will be called for the provider parameter. If false, then then
+ * always only the parameter name will used in the argument list:
  * ```
  * "param0.get()" vs "param0"
  * ```

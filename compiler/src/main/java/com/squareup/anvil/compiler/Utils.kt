@@ -101,8 +101,8 @@ internal inline fun <T> Iterable<T>.singleOrEmpty(predicate: (T) -> Boolean): T?
 private val truePredicate: (Any?) -> Boolean = { true }
 
 /**
- * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this
- * method throws an exception if more than one element is found.
+ * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this method
+ * throws an exception if more than one element is found.
  */
 internal fun <T> Iterable<T>.singleOrEmpty(): T? = singleOrEmpty(truePredicate)
 
@@ -116,8 +116,8 @@ internal fun File.requireDelete() {
 /**
  * Transforms the elements of the receiver collection and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform Maps elements of the receiver collection to the output set.
  * @receiver The collection to be transformed.
  * @return A set containing the transformed elements from the receiver collection.
@@ -130,8 +130,8 @@ internal inline fun <C : Collection<T>, T, R> C.mapToSet(
 /**
  * Transforms the elements of the receiver collection and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform A function that maps elements of the receiver collection to the output set.
  * @receiver The collection to be transformed.
  * @return A set containing the transformed elements from the receiver collection.
@@ -144,8 +144,8 @@ public inline fun <C : Collection<T>, T, R : Any> C.mapNotNullToSet(
 /**
  * Transforms the elements of the receiver array and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform Maps elements of the receiver collection to the output set.
  * @receiver The array to be transformed.
  * @return A set containing the transformed elements from the receiver array.

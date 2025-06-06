@@ -54,7 +54,8 @@ import kotlin.reflect.KClass
  * Generates [MapKey] creator classes + static functions for cases where [MapKey.unwrapValue] is set
  * to false.
  *
- * Implemented from eyeballing https://github.com/google/dagger/blob/b5990a0641a7860b760aa9055b90a99d06186af6/javatests/dagger/internal/codegen/MapKeyProcessorTest.java
+ * Implemented from eyeballing
+ * https://github.com/google/dagger/blob/b5990a0641a7860b760aa9055b90a99d06186af6/javatests/dagger/internal/codegen/MapKeyProcessorTest.java
  */
 internal object MapKeyCreatorCodeGen : AnvilApplicabilityChecker {
   override fun isApplicable(context: AnvilContext) = context.generateFactories
@@ -190,9 +191,7 @@ internal object MapKeyCreatorCodeGen : AnvilApplicabilityChecker {
     return spec
   }
 
-  /**
-   * Generates a single static creator function for a given annotation [annotationClass].
-   */
+  /** Generates a single static creator function for a given annotation [annotationClass]. */
   private fun generateCreatorFunction(
     className: ClassName,
     properties: Map<String, AnnotationProperty>,

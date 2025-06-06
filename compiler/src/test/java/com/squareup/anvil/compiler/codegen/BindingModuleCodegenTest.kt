@@ -56,14 +56,14 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -78,17 +78,17 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
       interface ParentInterface
-      
+
       interface Middle : ParentInterface
 
       @ContributesBinding(Any::class, ParentInterface::class)
       interface ContributingInterface : Middle
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -112,17 +112,17 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
       interface ParentInterface
-      
+
       interface Middle : ParentInterface
 
       @ContributesBinding(Any::class, ParentInterface::class)
       object ContributingInterface : Middle
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -153,7 +153,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -161,7 +161,7 @@ class BindingModuleCodegenTest(
 
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -185,7 +185,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -193,13 +193,13 @@ class BindingModuleCodegenTest(
 
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(
           Any::class,
           replaces = [ContributingInterface::class]
       )
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -223,7 +223,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -231,13 +231,13 @@ class BindingModuleCodegenTest(
 
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(
           Any::class,
           replaces = [ContributingInterface::class]
       )
       object SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -261,18 +261,18 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
       interface ParentInterface<T, S>
-      
+
       class SomeOtherType
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface :
               ParentInterface<Map<String, List<Pair<String, Int>>>, SomeOtherType>
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -293,18 +293,18 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
       interface ParentInterface<out OutputT : Any>
       interface MiddleInterface<out OutputT : Any> : ParentInterface<OutputT>
-      
+
       class SomeOtherType
-      
+
       @ContributesBinding(Any::class, ParentInterface::class)
       interface ContributingInterface : MiddleInterface<SomeOtherType>
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -325,7 +325,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
@@ -334,14 +334,14 @@ class BindingModuleCodegenTest(
 
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesTo(
           Any::class,
           replaces = [ContributingInterface::class]
       )
       @dagger.Module
       abstract class DaggerModule1
-      
+
       $annotation(Any::class, exclude = [DaggerModule1::class])
       interface ComponentInterface
       """,
@@ -365,19 +365,19 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-            
+
       $annotation(Any::class)
       interface ComponentInterface
-            
+
       $annotation(
         scope = Any::class,
         exclude = [ContributingInterface::class]
@@ -402,17 +402,17 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       inline fun <reified T> noop(): T = TODO()
-      
+
       interface ParentInterface
 
       @ContributesBinding(Any::class)
       class ContributingInterface : ParentInterface by noop()
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -436,7 +436,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -445,10 +445,10 @@ class BindingModuleCodegenTest(
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -473,7 +473,7 @@ class BindingModuleCodegenTest(
     val previousResult = compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
 
       interface ParentInterface
@@ -489,12 +489,12 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
 
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -522,7 +522,7 @@ class BindingModuleCodegenTest(
 
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 
@@ -532,7 +532,7 @@ class BindingModuleCodegenTest(
 
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -568,7 +568,7 @@ class BindingModuleCodegenTest(
 
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 
@@ -619,7 +619,7 @@ class BindingModuleCodegenTest(
 
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface : com.squareup.test.other.ParentInterface
 
       @ContributesBinding(Any::class, boundType = ParentInterface::class)
@@ -668,7 +668,7 @@ class BindingModuleCodegenTest(
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       interface ParentInterface1
       interface ParentInterface2
 
@@ -697,7 +697,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -706,16 +706,16 @@ class BindingModuleCodegenTest(
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(
           Any::class,
           replaces = [ContributingInterface::class]
       )
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,
@@ -748,20 +748,20 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesTo
       $import
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       interface ContributingInterface : ParentInterface
-            
+
       $annotation(Any::class)
       interface ComponentInterface
-            
+
       $annotation(
         scope = Unit::class,
         exclude = [ContributingInterface::class]
@@ -792,7 +792,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -800,11 +800,11 @@ class BindingModuleCodegenTest(
 
       @ContributesBinding(Unit::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       $annotation(Unit::class)
       interface ComponentInterface
-      
+
       $annotation(Int::class)
       $annotation(Unit::class)
       interface SubcomponentInterface
@@ -829,7 +829,7 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
 
@@ -838,11 +838,11 @@ class BindingModuleCodegenTest(
       @ContributesBinding(Unit::class)
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       $annotation(Unit::class)
       interface ComponentInterface
-      
+
       $annotation(Any::class)
       $annotation(Unit::class, exclude = [ContributingInterface::class])
       interface SubcomponentInterface
@@ -866,17 +866,17 @@ class BindingModuleCodegenTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @DslMarker
       annotation class `Fancy${'$'}DslMarker`
 
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @`Fancy${'$'}DslMarker`
       $annotation(Any::class)
       interface ComponentInterface

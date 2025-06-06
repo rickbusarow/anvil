@@ -45,11 +45,10 @@ private fun ClassName.checkFileLength(): ClassName = apply {
 /**
  * Joins the simple names of a class with the given [separator] and [suffix].
  *
- * The end of the name will be the separator followed by a hash of the
- * [hashParams], so that generated class names are unique.
- * If the resulting class name is too long to be a valid file name,
- * it will be truncated by removing the last characters *before* the hash,
- * but the hash be unchanged.
+ * The end of the name will be the separator followed by a hash of the [hashParams], so that
+ * generated class names are unique. If the resulting class name is too long to be a valid file
+ * name, it will be truncated by removing the last characters *before* the hash, but the hash be
+ * unchanged.
  *
  * ```
  * val someScope = ClassName("com.example", "SomeScope")
@@ -62,9 +61,9 @@ private fun ClassName.checkFileLength(): ClassName = apply {
  * )
  * println(joinedName) // com.example.Outer_Middle_InnerFactory_0a1b2c3d
  * ```
+ * @see ClassName.joinSimpleNames for a version that doesn't truncate the class name.
  * @throws IllegalArgumentException if the resulting class name is too long to be a valid file name
  *   even after truncating.
- * @see ClassName.joinSimpleNames for a version that doesn't truncate the class name.
  */
 @ExperimentalAnvilApi
 public fun ClassName.joinSimpleNamesAndTruncate(
@@ -82,9 +81,8 @@ public fun ClassName.joinSimpleNamesAndTruncate(
 /**
  * Truncates the class name to a valid file name length by removing characters from the end of the
  * class name. The hash of the [hashParams] will be appended to the class name with the given
- * [separator].
- * If the class name is too long, it will be truncated by removing the last characters *before* the
- * hash, but the hash will be unchanged.
+ * [separator]. If the class name is too long, it will be truncated by removing the last characters
+ * *before* the hash, but the hash will be unchanged.
  *
  * ```
  * val someScope = ClassName("com.example", "SomeScope")
@@ -139,8 +137,8 @@ private fun md5Hash(params: List<Any>): String {
 }
 
 /**
- * Generates a unique hint file name by adding the package name as the first simple name,
- * then joining all simple names with the [separator] and [suffix].
+ * Generates a unique hint file name by adding the package name as the first simple name, then
+ * joining all simple names with the [separator] and [suffix].
  *
  * @see ClassName.joinSimpleNames for the joining logic
  */

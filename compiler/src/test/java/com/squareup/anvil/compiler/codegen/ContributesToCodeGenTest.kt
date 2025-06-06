@@ -23,9 +23,9 @@ class ContributesToCodeGenTest : AnvilCompilationModeTest(AnvilCompilationMode.E
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.MergeComponent
-      
+
       @MergeComponent(Any::class)
       interface ComponentInterface
       """,
@@ -37,9 +37,9 @@ class ContributesToCodeGenTest : AnvilCompilationModeTest(AnvilCompilationMode.E
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.MergeSubcomponent
-      
+
       @MergeSubcomponent(Any::class)
       interface ComponentInterface
       """,
@@ -197,7 +197,7 @@ class ContributesToCodeGenTest : AnvilCompilationModeTest(AnvilCompilationMode.E
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule1
-      
+
       @PublishedApi
       internal class FailAnvil
       """,

@@ -42,23 +42,26 @@ public interface CompilationEnvironment : TestEnvironment {
    *    [workingDir]/sources.
    * 2. Each Java source string is written to a `.java` file, with filenames inferred from the
    *    `class` or `interface` declaration in the code.
-   * 3. Constructs a [Compile2CompilationConfiguration] by applying any custom [configuration] block.
-   * 4. Performs a compile via [Compile2Compilation] (and optional KAPT if [mode.useKapt] is `true`).
-   * 5. Returns a [Compile2Result], which can be further inspected (e.g., retrieving the class loader,
-   *    scanning classes via `classGraph`, or verifying code generation).
+   * 3. Constructs a [Compile2CompilationConfiguration] by applying any custom [configuration]
+   *    block.
+   * 4. Performs a compile via [Compile2Compilation] (and optional KAPT if [mode.useKapt] is
+   *    `true`).
+   * 5. Returns a [Compile2Result], which can be further inspected (e.g., retrieving the class
+   *    loader, scanning classes via `classGraph`, or verifying code generation).
    *
    * @param kotlinSources one or more Kotlin source strings
    * @param javaSources optional Java source strings
    * @param firExtensions optional FIR extension factories for advanced compiler customization
-   * @param configuration an optional config transform to modify the default [Compile2CompilationConfiguration]
+   * @param configuration an optional config transform to modify the default
+   *   [Compile2CompilationConfiguration]
    * @param expectedExitCode automatically asserted against each compilation phase's result
    * @param exec invoked with the [Compile2Result] after compilation
    * @return a [Compile2Result] referencing all compilation outputs
+   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.compile_source_strings
    * @see com.squareup.anvil.compiler.testing.CompilationEnvironment.compile2
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2CompilationConfiguration
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2Compilation
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2Result
-   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.compile_source_strings
    */
   public fun compile2(
     @Language("kotlin") vararg kotlinSources: String,
@@ -107,29 +110,32 @@ public interface CompilationEnvironment : TestEnvironment {
    * A convenience overload of [compile2] that accepts raw Kotlin and Java source code strings.
    *
    * **Steps**:
-   *  1. A [Compile2CompilationConfiguration] is constructed (or passed in via [configuration]).
-   *  2. A [Compile2Compilation] is instantiated to run:
-   *     - KAPT (if `useKapt` is true)
-   *     - Kotlin compilation
-   *     - Java compilation (if any `.java` sources are present).
-   *  3. Produces a [Compile2Result], which contains the compiled classes, a [ClassLoader], and
-   *     utilities for scanning or packaging them (e.g., `jar` creation).
+   * 1. A [Compile2CompilationConfiguration] is constructed (or passed in via [configuration]).
+   * 2. A [Compile2Compilation] is instantiated to run:
+   *    - KAPT (if `useKapt` is true)
+   *    - Kotlin compilation
+   *    - Java compilation (if any `.java` sources are present).
+   * 3. Produces a [Compile2Result], which contains the compiled classes, a [ClassLoader], and
+   *    utilities for scanning or packaging them (e.g., `jar` creation).
    *
    * @param sourceFiles a list of .kt or .java files to be compiled
    * @param firExtensions optional FIR extension factories for custom processing
-   * @param configuration a lambda to customize the [Compile2CompilationConfiguration] before compilation
    * @param firExtensions optional FIR extension factories for advanced compiler customization
-   * @param configuration an optional config transform to modify the default [Compile2CompilationConfiguration]
+   * @param configuration a lambda to customize the [Compile2CompilationConfiguration] before
+   *   compilation
+   * @param configuration an optional config transform to modify the default
+   *   [Compile2CompilationConfiguration]
    * @param expectedExitCode automatically asserted against each compilation phase's result
-   * @param previousCompilation a previous [Compile2Result] to add to the classpath for this compilation
+   * @param previousCompilation a previous [Compile2Result] to add to the classpath for this
+   *   compilation
    * @param exec invoked with the [Compile2Result] after compilation
    * @return a [Compile2Result] referencing all compilation outputs
+   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.compile_source_strings
+   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.pass_a_custom_generator
    * @see com.squareup.anvil.compiler.testing.CompilationEnvironment.compile2
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2CompilationConfiguration
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2Compilation
    * @see com.squareup.anvil.compiler.testing.compilation.Compile2Result
-   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.compile_source_strings
-   * @sample com.squareup.anvil.compiler.testing.compilation.Compile2Sample.pass_a_custom_generator
    */
   public fun compile2(
     sourceFiles: List<File>,

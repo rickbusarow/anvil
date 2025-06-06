@@ -83,7 +83,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides fun provideString(): String = "abc"
@@ -154,7 +154,7 @@ public final class DaggerModule1_ProvideFactoryFactory implements Factory<com.sq
       package com.squareup.test
 
       import com.squareup.anvil.compiler.dagger.Factory
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides fun provideFactory(): Factory = Factory
@@ -223,10 +223,10 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(): String = "abc"
@@ -298,10 +298,10 @@ public final class DaggerModule1_ProvideFileFactory implements Factory<File> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideFile(): java.io.File = java.io.File("")
@@ -372,10 +372,10 @@ public final class DaggerModule1_ProvideFileFactory implements Factory<File> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.*
       import java.io.File
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideFile(): File = File("")
@@ -446,7 +446,7 @@ public final class DaggerModule1_ProvideStringListFactory implements Factory<Lis
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides fun provideStringList(): List<String> = listOf("abc")
@@ -518,9 +518,9 @@ public final class DaggerModule1_ProvidePairFactory implements Factory<Pair<Pair
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.*
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun providePair(): Pair<Pair<String, Int>, List<String>> = Pair(Pair("", 1), listOf(""))
@@ -626,7 +626,7 @@ public final class DaggerModule1_ProvideIntFactory implements Factory<Integer> {
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides fun provideString(): String = "abc"
@@ -703,7 +703,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       object DaggerModule1 {
         @dagger.Provides fun provideString(): String = "abc"
@@ -733,7 +733,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides internal fun provideString(): String = "abc"
@@ -802,7 +802,7 @@ public final class DaggerModule1_ProvideString$mainFactory implements Factory<St
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       object DaggerModule1 {
         @dagger.Provides internal fun provideString(): String = "abc"
@@ -833,7 +833,7 @@ public final class DaggerModule1_ProvideString$mainFactory implements Factory<St
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       abstract class DaggerModule1 {
         companion object {
@@ -898,7 +898,7 @@ public final class DaggerModule1_ProvideString$mainFactory implements Factory<St
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       object DaggerModule1 {
         @dagger.Provides @PublishedApi internal fun provideString(): String = "abc"
@@ -974,16 +974,16 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: String, 
-          param2: CharSequence 
+          @Named("abc") param1: String,
+          param2: CharSequence
         ): String = param1 + param2
       }
       """,
@@ -1067,18 +1067,18 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
       import javax.inject.Provider
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: String, 
-          param2: Provider<CharSequence>, 
-          param3: Provider<List<String>> 
+          @Named("abc") param1: String,
+          param2: Provider<CharSequence>,
+          param3: Provider<List<String>>
         ): String = param1 + param2.get() + param3.get()[0]
       }
       """,
@@ -1170,18 +1170,18 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Lazy
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: String, 
-          param2: Lazy<CharSequence>, 
-          param3: Lazy<List<String>> 
+          @Named("abc") param1: String,
+          param2: Lazy<CharSequence>,
+          param3: Lazy<List<String>>
         ): String = param1 + param2.get() + param3.get()[0]
       }
       """,
@@ -1221,15 +1221,15 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          param: dagger.Lazy<String> 
+          param: dagger.Lazy<String>
         ): String = param.get()
       }
       """,
@@ -1314,16 +1314,16 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: List<String>, 
-          param2: Pair<Pair<String, Int>, List<String>> 
+          @Named("abc") param1: List<String>,
+          param2: Pair<Pair<String, Int>, List<String>>
         ): String = param1[0] + param2.first.first + param2.second[0]
       }
       """,
@@ -1403,16 +1403,16 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: String, 
-          param2: CharSequence 
+          @Named("abc") param1: String,
+          param2: CharSequence
         ): String = param1 + param2
       }
       """,
@@ -1486,19 +1486,19 @@ public final class DaggerModule1_Companion_ProvideStringFactory implements Facto
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       abstract class DaggerModule1 {
         @dagger.Binds abstract fun bindString(string: String): CharSequence
-        
+
         companion object {
           @Provides fun provideString(
-            @Named("abc") param1: String, 
-            param2: CharSequence 
+            @Named("abc") param1: String,
+            param2: CharSequence
           ): String = param1 + param2
         }
       }
@@ -1568,11 +1568,11 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(): String? = null
@@ -1641,11 +1641,11 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideString(): String? = null
@@ -1724,16 +1724,16 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Named
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideString(
-          @Named("abc") param1: String?, 
-          param2: CharSequence? 
+          @Named("abc") param1: String?,
+          param2: CharSequence?
         ): String? {
           check(param1 == null)
           check(param2 == null)
@@ -1769,7 +1769,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       abstract class DaggerModule1 {
         @dagger.Binds abstract fun bindString(string: String): CharSequence
@@ -1821,11 +1821,11 @@ public final class DaggerModule1_Companion_ProvideStringFactory implements Facto
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       abstract class DaggerModule1 {
         @dagger.Binds abstract fun bindString(string: String): CharSequence
-        
+
         companion object {
           @dagger.Provides fun provideString(): String = "abc"
         }
@@ -1890,7 +1890,7 @@ public final class ComponentInterface_InnerModule_ProvideStringFactory implement
     compile(
       """
       package com.squareup.test
-      
+
       interface ComponentInterface {
         @dagger.Module
         object InnerModule {
@@ -1922,11 +1922,11 @@ public final class ComponentInterface_InnerModule_ProvideStringFactory implement
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import com.squareup.anvil.compiler.dagger.OuterClass
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideInnerClass(): OuterClass.InnerClass = OuterClass.InnerClass()
@@ -1980,12 +1980,12 @@ public final class ComponentInterface_InnerModule_Companion_ProvideStringFactory
     compile(
       """
       package com.squareup.test
-      
+
       interface ComponentInterface {
         @dagger.Module
         abstract class InnerModule {
           @dagger.Binds abstract fun bindString(string: String): CharSequence
-          
+
           companion object {
             @dagger.Provides fun provideString(): String = "abc"
           }
@@ -2016,7 +2016,7 @@ public final class ComponentInterface_InnerModule_Companion_ProvideStringFactory
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       abstract class DaggerModule1 {
         @dagger.Binds @dagger.multibindings.IntoSet abstract fun bindString(string: String): CharSequence
@@ -2068,7 +2068,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<String>
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       object DaggerModule1 {
         @dagger.Provides @dagger.multibindings.IntoSet fun provideString(): String = "abc"
@@ -2134,7 +2134,7 @@ public final class DaggerModule1_ProvideStringFactory implements Factory<Set<Str
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       object DaggerModule1 {
         @dagger.Provides @dagger.multibindings.ElementsIntoSet fun provideString(): Set<String> = setOf("abc")
@@ -2200,10 +2200,10 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Funct
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideFunction(): (String) -> Int {
@@ -2278,13 +2278,13 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<F
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import dagger.multibindings.ElementsIntoSet
-      
+
       typealias StringList = List<String>
-      
+
       @Module
       object DaggerModule1 {
         @Provides @ElementsIntoSet fun provideFunction(
@@ -2405,15 +2405,15 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.MergeComponent
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       object ContributingObject : ParentInterface
-      
+
       @MergeComponent(Any::class)
       interface ComponentInterface
       """,
@@ -2444,13 +2444,13 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import dagger.multibindings.ElementsIntoSet
-      
+
       typealias StringList = List<String>
-      
+
       @Module
       object DaggerModule1 {
           @Provides fun provideString(): String = ""
@@ -2470,10 +2470,10 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideClass(): Class<*> = java.lang.Runnable::class.java
@@ -2492,11 +2492,11 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import java.lang.Runnable as NamedRunnable
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideRunner(): NamedRunnable = NamedRunnable {}
@@ -2515,7 +2515,7 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import java.util.*
@@ -2551,7 +2551,7 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       @dagger.Module
       class DaggerModule1 {
         @dagger.Provides fun provideString() = "abc"
@@ -2575,11 +2575,11 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import com.squareup.anvil.compiler.dagger.UppercasePackage.TestClassInUppercasePackage
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideThing(): TestClassInUppercasePackage = TestClassInUppercasePackage()
@@ -2603,11 +2603,11 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import com.squareup.anvil.compiler.dagger.UppercasePackage.lowerCaseClassInUppercasePackage
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideThing(): lowerCaseClassInUppercasePackage {
@@ -2634,11 +2634,11 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import com.squareup.anvil.compiler.dagger.UppercasePackage.OuterClass.InnerClass
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun provideThing(): InnerClass = InnerClass()
@@ -2663,24 +2663,24 @@ public final class DaggerComponentInterface implements ComponentInterface {
     compile(
       """
       package com.squareup.test.a
-      
+
       import com.squareup.test.b.User
-      
+
       fun User(): User = User(42)
       """,
       """
       package com.squareup.test.b
-      
+
       data class User(val age: Int)
       """,
       """
       package com.squareup.test
-      
+
       import com.squareup.test.a.User
       import com.squareup.test.b.User
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       object DaggerModule1 {
         @Provides fun user(): User = User()
@@ -2739,10 +2739,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       class DaggerModule1 {
         @get:Provides val string: String = "abc"
@@ -2808,10 +2808,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       object DaggerModule1 {
         @get:Provides val string: String = "abc"
@@ -2875,15 +2875,15 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Binds
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       abstract class DaggerModule1 {
         @Binds abstract fun bindString(string: String): CharSequence
-        
+
         companion object {
           @get:Provides val string: String = "abc"
         }
@@ -2951,10 +2951,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       class DaggerModule1 {
         @get:Provides val string: String? = null
@@ -3022,10 +3022,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       object DaggerModule1 {
         @get:Provides val string: String? = null
@@ -3054,16 +3054,16 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
   @Test fun `warnings are suppressed`() {
     compile(
       """
-      @file:Suppress("DEPRECATION")  
-        
+      @file:Suppress("DEPRECATION")
+
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Deprecated("deprecated")
       object Type
-      
+
       @Module
       class DaggerModule1 {
         @Provides fun provideType(): Type = Type
@@ -3128,10 +3128,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       abstract class DaggerModule1 {
         @Provides abstract fun provideString(): String
@@ -3147,10 +3147,10 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       interface DaggerModule1 {
         @Provides fun provideString(): String = ""
@@ -3166,15 +3166,15 @@ public final class DaggerModule1_GetStringFactory implements Factory<String> {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
-      
+
       @Module
       interface DaggerModule1 {
         companion object {
           @Provides fun provideString(): String = ""
-        }      
+        }
       }
       """,
     ) {
@@ -3225,11 +3225,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Prefe
     val otherModuleResult = compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       object DaggerModule1 {
         @Provides
@@ -3252,10 +3252,10 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Prefe
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Component
       import javax.inject.Singleton
-      
+
       @Component(modules = [DaggerModule1::class])
       @Singleton
       interface ComponentInterface {
@@ -3314,11 +3314,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     val otherModuleResult = compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       object DaggerModule1 {
         @Provides
@@ -3359,11 +3359,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       class DaggerModule1 {
         @get:Provides
@@ -3397,11 +3397,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       class DaggerModule1 {
         @get:Provides
@@ -3435,11 +3435,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       class DaggerModule1 {
         @get:Provides
@@ -3472,11 +3472,11 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
       import javax.inject.Singleton
-      
+
       @Module
       object DaggerModule1 {
         @get:Provides
@@ -3507,14 +3507,14 @@ public final class DaggerModule1_ProvideFunctionFactory implements Factory<Set<S
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
       import dagger.Provides
 
       class ProvidedClass {
         val value: String = "Hello"
       }
-      
+
       @Module
       object DaggerModule1 {
         @Provides

@@ -31,20 +31,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Qualifier
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -67,20 +67,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       compile(
         """
         package com.squareup.test
-        
+
         import com.squareup.anvil.annotations.ContributesMultibinding
         import javax.inject.Qualifier
         $import
-        
+
         @Qualifier
         annotation class AnyQualifier
-  
+
         interface ParentInterface
-        
+
         @ContributesMultibinding(Any::class)
         @AnyQualifier
         interface ContributingInterface : ParentInterface
-        
+
         $annotation(Any::class)
         interface ComponentInterface
         """,
@@ -103,20 +103,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Qualifier
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier
       object ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -139,20 +139,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesMultibinding
       import javax.inject.Qualifier
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesMultibinding(Any::class)
       @AnyQualifier
       object ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -175,17 +175,17 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Named
       $import
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("abc")
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -209,23 +209,23 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Qualifier
       import kotlin.reflect.KClass
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier(
         val abc: KClass<*>
       )
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier(abc = Int::class)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -251,13 +251,13 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.test.AnyQualifier.Values.ABC
       import javax.inject.Qualifier
       import kotlin.reflect.KClass
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier(
         val abc: Values
@@ -268,11 +268,11 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       }
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier(ABC)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -299,12 +299,12 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Qualifier
       import kotlin.reflect.KClass
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier(
         val abc: KClass<*>,
@@ -312,11 +312,11 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       )
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier(abc = String::class, def = 1)
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -343,18 +343,18 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       compile(
         """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @AnyQualifier
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -375,20 +375,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Qualifier
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class, ignoreQualifier = true)
       @AnyQualifier
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -405,20 +405,20 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesMultibinding
       import javax.inject.Qualifier
       $import
-      
+
       @Qualifier
       annotation class AnyQualifier
 
       interface ParentInterface
-      
+
       @ContributesMultibinding(Any::class, ignoreQualifier = true)
       @AnyQualifier
       interface ContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -437,25 +437,25 @@ class BindingModuleQualifierTest : AnvilAnnotationsTest(
       .filterNot { it.a1 == MergeInterfaces::class }
       .asTests {
         compile(
-          """ 
+          """
           package com.squareup.test
           import com.squareup.anvil.annotations.ContributesBinding
           import javax.inject.Qualifier
           $import
-          
+
           @Qualifier
           annotation class AnyQualifier
-          
+
           interface ParentInterface
-          
+
           @ContributesBinding(Any::class)
           @ContributesBinding(Unit::class)
           @AnyQualifier
           interface ContributingInterface : ParentInterface
-          
+
           $annotation(Any::class)
           interface ComponentInterface
-          
+
           $annotation(Unit::class)
           interface SubcomponentInterface
           """,

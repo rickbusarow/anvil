@@ -13,7 +13,7 @@ class TypeReferenceTest {
       package com.squareup.test
 
       abstract class SomeClass1 : Map<String, Int>
-      
+
       abstract class SomeClass2 : List<Map<String, Int>>
       """,
       allWarningsAsErrors = false,
@@ -259,7 +259,7 @@ class TypeReferenceTest {
     compile(
       """
       package com.squareup.test
-      
+
       typealias AliasType<X> = Map<String, X>
 
       typealias MyPair<X, Y> = Triple<X, String, Y>

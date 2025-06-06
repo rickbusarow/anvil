@@ -16,7 +16,7 @@ class FirCanaryTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2 }) {
     compile2(
       """
       package com.squareup.test
-  
+
       import com.squareup.anvil.annotations.ContributesTo
       import com.squareup.anvil.annotations.MergeComponent
       import dagger.Binds
@@ -25,7 +25,7 @@ class FirCanaryTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2 }) {
       import dagger.Subcomponent
       import kotlin.reflect.KClass
       import javax.inject.Inject
-  
+
       @Module
       @ContributesTo(Unit::class)
       interface BBindingModule {
@@ -37,28 +37,28 @@ class FirCanaryTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2 }) {
       interface TestComponent {
         val b: B
       }
-  
+
       @ContributesTo(Unit::class)
       interface ComponentBase {
         fun injectClass(): InjectClass
       }
-  
+
       @Component
       interface OtherComponent
-  
+
       @Module
       interface ABindingModule {
         @Binds
         fun bindAImpl(aImpl: AImpl): A
       }
-  
+
       interface A
       class AImpl @Inject constructor() : A
-      
+
       interface B
       class BImpl @Inject constructor() : B
-  
-      class InjectClass @Inject constructor(val a: A, val b: B) 
+
+      class InjectClass @Inject constructor(val a: A, val b: B)
       """,
     ) {
       val testComponent =

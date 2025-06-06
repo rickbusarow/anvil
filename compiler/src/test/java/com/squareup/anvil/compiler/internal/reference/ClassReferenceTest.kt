@@ -91,7 +91,7 @@ class ClassReferenceTest : ReferenceTests {
       class SomeClass1<T : List<String>>(
         private val t: T
       )
-      
+
       class SomeClass2<V>(
         private val v: V
       ) where V : Appendable, V : CharSequence
@@ -170,7 +170,7 @@ class ClassReferenceTest : ReferenceTests {
       class SomeClass1<T : List<String>>(
         private val t: T
       )
-      
+
       abstract class SomeClass2 : Lazy<String> {
         abstract fun string(): String
       }
@@ -303,7 +303,7 @@ class ClassReferenceTest : ReferenceTests {
       """,
       """
       package com.squareup.other
-      
+
       interface Other
       """,
       allWarningsAsErrors = false,
@@ -432,7 +432,7 @@ class ClassReferenceTest : ReferenceTests {
       abstract class OuterClass {
         interface InnerInterface
       }
-      
+
       class ClassA : OuterClass() {
         class ClassB : InnerInterface
       }
@@ -447,12 +447,12 @@ class ClassReferenceTest : ReferenceTests {
       """,
       """
       package com.squareup.test2
-      
+
       import com.squareup.test.OuterClass
-        
+
       class ClassC : OuterClass() {
         class ClassD : InnerInterface
-      }  
+      }
       """,
       allWarningsAsErrors = false,
       codeGenerators = listOf(
@@ -521,7 +521,7 @@ class ClassReferenceTest : ReferenceTests {
       interface Navigator {
         interface Factory<T : Navigator>
       }
-      
+
       class NavigatorImpl : Navigator {
         interface Factory : Navigator.Factory<NavigatorImpl>
       }
@@ -655,7 +655,7 @@ class ClassReferenceTest : ReferenceTests {
 
         interface Child : Parent {
           fun function1(): String
-          
+
           interface Nested {
             fun nestedFunction(): String
           }
@@ -690,7 +690,7 @@ class ClassReferenceTest : ReferenceTests {
         interface Child : Parent {
           override fun parentFunction1() { }
         }
-        
+
         class ChildClass : Parent {
           override fun parentFunction1() { }
           override fun toString() = ""
@@ -801,7 +801,7 @@ class ClassReferenceTest : ReferenceTests {
         interface Child : Parent {
           override val parentProperty1: String
         }
-        
+
         abstract class ChildClass : Parent {
           abstract override val parentProperty1: String
         }
@@ -833,7 +833,7 @@ class ClassReferenceTest : ReferenceTests {
 
         interface Child : Parent {
           val property1: String
-          
+
           interface Nested {
             val nestedProperty: String
           }

@@ -110,9 +110,9 @@ internal fun ClassReference.atLeastOneAnnotation(
 }
 
 /**
- * Returns the constructor annotated with `@Inject` or `@AssistedInject` for this class.
- * If the class contains multiple constructors annotated with either of these annotations, then
- * this method throws an error as multiple injected constructors aren't allowed.
+ * Returns the constructor annotated with `@Inject` or `@AssistedInject` for this class. If the
+ * class contains multiple constructors annotated with either of these annotations, then this method
+ * throws an error as multiple injected constructors aren't allowed.
  */
 internal fun <T : MemberFunctionReference> Collection<T>.injectConstructor(): T? {
   val constructors = filter {

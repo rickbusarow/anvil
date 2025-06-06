@@ -143,8 +143,8 @@ public fun FileSpec.Companion.createAnvilSpec(
     .build()
 
 /**
- * For `Map<String, Int>` this will return [`String`, `Int`]. For star projections like
- * `List<*>` the result will be mapped to [Any].
+ * For `Map<String, Int>` this will return [`String`, `Int`]. For star projections like `List<*>`
+ * the result will be mapped to [Any].
  */
 public val TypeName.unwrappedTypes: List<TypeName>
   get() = when (this) {
@@ -152,16 +152,12 @@ public val TypeName.unwrappedTypes: List<TypeName>
     else -> emptyList()
   }
 
-/**
- * Returns the result of [findRawType] or throws.
- */
+/** Returns the result of [findRawType] or throws. */
 public fun TypeName.requireRawType(): ClassName {
   return findRawType() ?: error("Cannot get raw type from $this")
 }
 
-/**
- * Returns the raw type for this [TypeName] or null if one can't be resolved.
- */
+/** Returns the raw type for this [TypeName] or null if one can't be resolved. */
 public fun TypeName.findRawType(): ClassName? {
   return when (this) {
     is ClassName -> this

@@ -31,8 +31,8 @@ internal class ColorizedPlainTextMessageRenderer : PlainTextMessageRenderer(true
 
 /**
  * Holds all messages sent through the
- * [MessageRenderer][org.jetbrains.kotlin.cli.common.messages.MessageRenderer]
- * in the corresponding compilation.
+ * [MessageRenderer][org.jetbrains.kotlin.cli.common.messages.MessageRenderer] in the corresponding
+ * compilation.
  */
 public class CompilerMessages(public val all: List<Pair<CompilerMessageSeverity, String>>) {
 

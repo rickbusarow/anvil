@@ -36,8 +36,8 @@ import java.io.File
 import kotlin.reflect.KClass
 
 /**
- * Generates a hint for each contributed subcomponent in the `anvil.hint` packages.
- * This allows the compiler plugin to find all contributed classes a lot faster.
+ * Generates a hint for each contributed subcomponent in the `anvil.hint` packages. This allows the
+ * compiler plugin to find all contributed classes a lot faster.
  */
 internal object ContributesSubcomponentCodeGen : AnvilApplicabilityChecker {
   override fun isApplicable(context: AnvilContext) = !context.generateFactoriesOnly

@@ -93,7 +93,8 @@ public fun FirAnnotation.classListArgumentAt(name: Name, index: Int): List<FirGe
  *
  * @param name The name of the argument.
  * @param index The index of the argument if no name is used.
- * @param unwrapNamedArguments If true, the argument is unwrapped if it is a [FirNamedArgumentExpression].
+ * @param unwrapNamedArguments If true, the argument is unwrapped if it is a
+ *   [FirNamedArgumentExpression].
  * @return The argument expression.
  * @throws KotlinIllegalArgumentExceptionWithAttachments If the argument cannot be found.
  */
@@ -131,7 +132,8 @@ public fun FirAnnotation.requireArgumentAt(
  *
  * @param name The name of the argument.
  * @param index The index of the argument if no name is used.
- * @param unwrapNamedArguments If true, the argument is unwrapped if it is a [FirNamedArgumentExpression].
+ * @param unwrapNamedArguments If true, the argument is unwrapped if it is a
+ *   [FirNamedArgumentExpression].
  * @return The argument expression.
  * @throws KotlinIllegalArgumentExceptionWithAttachments If the argument cannot be found.
  */
@@ -165,12 +167,13 @@ public fun FirAnnotation.argumentAt(
 }
 
 /**
- * Creates a [FirAnnotation] instance with the specified type, argument mapping, source, and use-site target.
+ * Creates a [FirAnnotation] instance with the specified type, argument mapping, source, and
+ * use-site target.
  *
  * @param type The [ClassId] representing the annotation type.
- * @param argumentMapping Named parameters.  Defaults to empty.
+ * @param argumentMapping Named parameters. Defaults to empty.
  * @param source `null` or a [org.jetbrains.kotlin.KtFakeSourceElement] is typically fine.
- * @param useSiteTarget `get`, `set`, `field`, `file`, etc.  see [AnnotationUseSiteTarget].
+ * @param useSiteTarget `get`, `set`, `field`, `file`, etc. see [AnnotationUseSiteTarget].
  * @return A [FirAnnotation] instance.
  */
 public fun createFirAnnotation(

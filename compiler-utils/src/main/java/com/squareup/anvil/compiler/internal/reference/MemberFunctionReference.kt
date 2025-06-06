@@ -25,8 +25,8 @@ import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
- * Used to create a common type between [KtNamedFunction] class references and
- * [FunctionDescriptor] references, to streamline parsing.
+ * Used to create a common type between [KtNamedFunction] class references and [FunctionDescriptor]
+ * references, to streamline parsing.
  */
 @ExperimentalAnvilApi
 public sealed class MemberFunctionReference : AnnotatedReference, FunctionReference {

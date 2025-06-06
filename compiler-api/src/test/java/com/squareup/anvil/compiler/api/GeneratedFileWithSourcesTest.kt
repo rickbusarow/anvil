@@ -63,10 +63,10 @@ internal class GeneratedFileWithSourcesTest :
         - absolute paths
         - actual files (not directories)
         - existent in the file system
-      
+
       not absolute:
       ${workingDirRelative.resolve("src/source1.kt")}
-      
+
       generated file:
       $generated1
       """.trimIndent()
@@ -89,10 +89,10 @@ internal class GeneratedFileWithSourcesTest :
         - absolute paths
         - actual files (not directories)
         - existent in the file system
-      
+
       not files:
       ${source1.parentFile}
-      
+
       generated file:
       $generated1
       """.trimIndent()
@@ -117,10 +117,10 @@ internal class GeneratedFileWithSourcesTest :
         - absolute paths
         - actual files (not directories)
         - existent in the file system
-      
+
       not files:
       $noFile
-      
+
       generated file:
       $generated1
       """.trimIndent()

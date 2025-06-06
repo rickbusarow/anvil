@@ -7,9 +7,8 @@ import kotlin.reflect.KClass
 /**
  * A class based [qualfier](Qualifier).
  *
- * This can be used in combination with other Anvil annotations to avoid having
- * to manually define qualifier annotations for each component and to maintain
- * consistency.
+ * This can be used in combination with other Anvil annotations to avoid having to manually define
+ * qualifier annotations for each component and to maintain consistency.
  *
  * Example:
  * ```
@@ -28,8 +27,7 @@ import kotlin.reflect.KClass
 @Retention(RUNTIME)
 public annotation class ForScope(
   /**
-   * The marker that identifies the component in which the annotated object is
-   * provided or bound in.
+   * The marker that identifies the component in which the annotated object is provided or bound in.
    */
   val scope: KClass<*>,
 )

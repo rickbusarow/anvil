@@ -58,7 +58,7 @@ class RealAnvilModuleDescriptorTest : ReferenceTests {
         compile(
           """
           package com.squareup.test
-        
+
           ${declaration("a")}
           """.trimIndent(),
           codeGenerators = listOf(extraGenerator),

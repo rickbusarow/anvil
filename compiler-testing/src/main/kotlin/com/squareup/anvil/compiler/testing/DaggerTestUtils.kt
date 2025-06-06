@@ -5,9 +5,8 @@ package com.squareup.anvil.compiler.testing
  * ```
  * [create([string]), get([])]
  * ```
- * That's necessary, because the output of the parameters is slightly different between Anvil
- * and Dagger. Dagger will utilize Java types while Anvil will utilize Kotlin types,
- * e.g. int vs Int.
+ * That's necessary, because the output of the parameters is slightly different between Anvil and
+ * Dagger. Dagger will utilize Java types while Anvil will utilize Kotlin types, e.g. int vs Int.
  *
  * Dagger also doesn't guarantee any order of functions.
  */

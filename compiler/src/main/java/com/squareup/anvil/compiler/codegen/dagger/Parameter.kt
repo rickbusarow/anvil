@@ -41,10 +41,10 @@ internal sealed interface Parameter {
  * [superParameters] argument.
  *
  * This is necessary for member-injected parameters, because a subclass may override a parameter
- * which is member-injected in the super.  The `MembersInjector` corresponding to the subclass must
+ * which is member-injected in the super. The `MembersInjector` corresponding to the subclass must
  * have unique constructor parameters for each declaration, so their names must be unique.
  *
- * This mimics Dagger's method of unique naming.  If there are three parameters named "foo", the
+ * This mimics Dagger's method of unique naming. If there are three parameters named "foo", the
  * unique parameter names will be [foo, foo2, foo3].
  */
 internal fun String.uniqueParameterName(

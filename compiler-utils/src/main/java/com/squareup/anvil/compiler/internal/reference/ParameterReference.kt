@@ -21,8 +21,8 @@ public sealed class ParameterReference : AnnotatedReference {
   protected abstract val declaringClass: ClassReference?
 
   /**
-   * The type can be null for generic type parameters like `T`. In this case try to resolve the
-   * type with [TypeReference.resolveGenericTypeOrNull].
+   * The type can be null for generic type parameters like `T`. In this case try to resolve the type
+   * with [TypeReference.resolveGenericTypeOrNull].
    */
   public fun typeOrNull(): TypeReference? = type
   public fun type(): TypeReference = type

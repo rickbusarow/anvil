@@ -29,9 +29,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Module
-      
+
       @Module
       @com.squareup.anvil.annotations.ContributesTo(Any::class)
       object AnyClass
@@ -46,9 +46,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       interface BaseType
-      
+
       @com.squareup.anvil.annotations.ContributesBinding(Any::class)
       class AnyClass : BaseType
       """,
@@ -62,9 +62,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.MergeComponent(Any::class)
       class AnyClass
       """,
@@ -78,9 +78,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.MergeSubcomponent(Any::class)
       class AnyClass
       """,
@@ -94,9 +94,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.compat.MergeModules(Any::class)
       class AnyClass
       """,
@@ -110,9 +110,9 @@ class AnvilMergeAnnotationDetectorCheckTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.Subcomponent
-      
+
       @com.squareup.anvil.annotations.compat.MergeInterfaces(Any::class)
       class AnyClass
       """,

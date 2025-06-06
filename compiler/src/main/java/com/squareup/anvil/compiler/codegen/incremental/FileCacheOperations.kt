@@ -34,28 +34,27 @@ internal class FileCacheOperations(
   }
 
   /**
-   * For any non-generated file in the cache that no longer exists on disk,
-   * we delete any downstream generated files from the disk.
+   * For any non-generated file in the cache that no longer exists on disk, we delete any downstream
+   * generated files from the disk.
    *
    * The [inputKtFiles] parameter should correspond to the `files: List<KtFile>` parameters in
    * [doAnalysis][com.squareup.anvil.compiler.codegen.CodeGenerationExtension.doAnalysis].
    *
    * For any file in [inputKtFiles], we delete it and everything generated from it from the cache,
-   * and we delete anything generated from it from the disk.
-   * This is because we'll be passing those files through the code generators again anyway,
-   * so we'll get up-to-date results. This is also useful when a file's content is unchanged,
-   * but there was a classpath change that would result in different bindings or interface merges.
+   * and we delete anything generated from it from the disk. This is because we'll be passing those
+   * files through the code generators again anyway, so we'll get up-to-date results. This is also
+   * useful when a file's content is unchanged, but there was a classpath change that would result
+   * in different bindings or interface merges.
    *
-   * For any non-generated file on disk that was *not* passed in as `inputKtFiles`
-   * *and* is identical to its version in the cache,
-   * we restore any downstream generated files from the cache to the disk.
+   * For any non-generated file on disk that was *not* passed in as `inputKtFiles` *and* is
+   * identical to its version in the cache, we restore any downstream generated files from the cache
+   * to the disk.
    *
-   * We use all cached source files as the basis for cache restoration,
-   * instead of using the [inputKtFiles] passed in by the compiler.
-   * Those `inputKtFiles` are an incremental, possibly partial list of source files.
-   * If a source file exists on disk but isn't in the list,
-   * that means the compiler expects it and any generated files to be up-to-date --
-   * so that's what we need to restore.
+   * We use all cached source files as the basis for cache restoration, instead of using the
+   * [inputKtFiles] passed in by the compiler. Those `inputKtFiles` are an incremental, possibly
+   * partial list of source files. If a source file exists on disk but isn't in the list, that means
+   * the compiler expects it and any generated files to be up-to-date -- so that's what we need to
+   * restore.
    */
   fun restoreFromCache(generatedDir: File, inputKtFiles: Set<AbsoluteFile>): RestoreCacheResult {
 
@@ -107,12 +106,12 @@ internal class FileCacheOperations(
   }
 
   /**
-   * If there are any files in the generated directory that aren't valid files
-   * (derived from current, unchanged source files), delete them.
-   * They aren't tracked in the cache, or they would have been deleted already.
+   * If there are any files in the generated directory that aren't valid files (derived from
+   * current, unchanged source files), delete them. They aren't tracked in the cache, or they would
+   * have been deleted already.
    *
-   * This should theoretically never happen because of how Gradle treats
-   * the generated "output" directory, but that's technically not a guarantee.
+   * This should theoretically never happen because of how Gradle treats the generated "output"
+   * directory, but that's technically not a guarantee.
    */
   private fun deleteUntrackedFiles(
     generatedDir: File,

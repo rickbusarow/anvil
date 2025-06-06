@@ -3,8 +3,8 @@ package com.squareup.anvil.compiler.k2.utils.stdlib
 private val truePredicate: (Any?) -> Boolean = { true }
 
 /**
- * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this
- * method throws an exception if more than one element is found.
+ * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this method
+ * throws an exception if more than one element is found.
  */
 public fun <T> Iterable<T>.singleOrNone(): T? = singleOrNone(truePredicate)
 
@@ -32,8 +32,8 @@ public inline fun <T> Iterable<T>.singleOrNone(predicate: (T) -> Boolean): T? {
 /**
  * Transforms the elements of the receiver collection and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform Maps elements of the receiver collection to the output set.
  * @receiver The collection to be transformed.
  * @return A set containing the transformed elements from the receiver collection.
@@ -46,8 +46,8 @@ public inline fun <C : Collection<T>, T, R> C.mapToSet(
 /**
  * Transforms the elements of the receiver collection and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform A function that maps elements of the receiver collection to the output set.
  * @receiver The collection to be transformed.
  * @return A set containing the transformed elements from the receiver collection.
@@ -60,8 +60,8 @@ public inline fun <C : Collection<T>, T, R : Any> C.mapNotNullToSet(
 /**
  * Transforms the elements of the receiver array and adds the results to a set.
  *
- * @param destination The destination set where the transformed
- *   elements are placed. By default, it is an empty mutable set.
+ * @param destination The destination set where the transformed elements are placed. By default, it
+ *   is an empty mutable set.
  * @param transform Maps elements of the receiver collection to the output set.
  * @receiver The array to be transformed.
  * @return A set containing the transformed elements from the receiver array.

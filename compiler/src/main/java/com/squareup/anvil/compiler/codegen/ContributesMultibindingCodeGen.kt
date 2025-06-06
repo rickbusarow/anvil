@@ -20,9 +20,9 @@ import java.io.File
 import kotlin.properties.Delegates
 
 /**
- * Generates binding modules for every [ContributesMultibinding]-annotated class. If a class has repeated
- * annotations, a binding module will be generated for each contribution. Each generated module is
- * annotated with [ContributesTo] for merging.
+ * Generates binding modules for every [ContributesMultibinding]-annotated class. If a class has
+ * repeated annotations, a binding module will be generated for each contribution. Each generated
+ * module is annotated with [ContributesTo] for merging.
  */
 internal object ContributesMultibindingCodeGen : AnvilApplicabilityChecker {
 

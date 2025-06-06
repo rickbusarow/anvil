@@ -47,9 +47,7 @@ internal const val willHaveDaggerFactoriesName = "will-have-dagger-factories"
 internal val willHaveDaggerFactoriesKey =
   CompilerConfigurationKey.create<Boolean>("anvil $willHaveDaggerFactoriesName")
 
-/**
- * Parses arguments from the Gradle plugin for the compiler plugin.
- */
+/** Parses arguments from the Gradle plugin for the compiler plugin. */
 @AutoService(CommandLineProcessor::class)
 public class AnvilCommandLineProcessor : CommandLineProcessor {
   override val pluginId: String = ANVIL_PLUGIN_ID

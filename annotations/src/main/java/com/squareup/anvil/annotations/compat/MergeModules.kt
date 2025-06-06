@@ -35,8 +35,8 @@ import kotlin.reflect.KClass
  * public interface AppComponent {}
  * ```
  *
- * It's possible to exclude any automatically added Dagger module with the [exclude] parameter
- * if needed.
+ * It's possible to exclude any automatically added Dagger module with the [exclude] parameter if
+ * needed.
  *
  * ```
  * @MergeModules(
@@ -54,8 +54,8 @@ import kotlin.reflect.KClass
 @Repeatable
 public annotation class MergeModules(
   /**
-   * The scope used to find all contributed bindings, multibindings and modules, which should
-   * be included in this merged module.
+   * The scope used to find all contributed bindings, multibindings and modules, which should be
+   * included in this merged module.
    */
   val scope: KClass<*>,
   /**
@@ -64,13 +64,13 @@ public annotation class MergeModules(
    */
   val includes: Array<KClass<*>> = [],
   /**
-   * List of subcomponent annotated classes which should be children of the component in which
-   * this module is installed.
+   * List of subcomponent annotated classes which should be children of the component in which this
+   * module is installed.
    */
   val subcomponents: Array<KClass<*>> = [],
   /**
-   * List of bindings, multibindings and modules that are contributed to the same scope, but
-   * should be excluded from the merged module.
+   * List of bindings, multibindings and modules that are contributed to the same scope, but should
+   * be excluded from the merged module.
    */
   val exclude: Array<KClass<*>> = [],
 )

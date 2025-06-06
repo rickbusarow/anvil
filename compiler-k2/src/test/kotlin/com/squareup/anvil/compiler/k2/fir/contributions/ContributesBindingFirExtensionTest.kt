@@ -32,11 +32,11 @@ class ContributesBindingFirExtensionTest : CompilationModeTest(
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.test.other.AppScope
       import javax.inject.Inject
-      
+
       interface ParentInterface
 
       @ContributesBinding(
-        scope = AppScope::class, 
+        scope = AppScope::class,
         boundType = ParentInterface::class
       )
       object ContributingObject : ParentInterface
@@ -57,11 +57,11 @@ class ContributesBindingFirExtensionTest : CompilationModeTest(
 
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Inject
-      
+
       interface ParentInterface
 
       @ContributesBinding(
-        scope = Int::class, 
+        scope = Int::class,
         boundType = ParentInterface::class
       )
       object ContributingObject : ParentInterface
@@ -80,11 +80,11 @@ class ContributesBindingFirExtensionTest : CompilationModeTest(
 
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Inject
-      
+
       interface ParentInterface
 
       @ContributesBinding(
-        scope = Int::class, 
+        scope = Int::class,
         boundType = ParentInterface::class
       )
       object ContributingObject : ParentInterface
@@ -105,23 +105,23 @@ class ContributesBindingFirExtensionTest : CompilationModeTest(
     compile2(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.MergeComponent
       import dagger.Component
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(
-        scope = Any::class, 
+        scope = Any::class,
         boundType = ParentInterface::class
       )
       object ContributingObject : ParentInterface
-      
+
       @MergeComponent(scope = Any::class)
       interface TestComponent {
-        fun testClass(): ParentInterface 
-      
+        fun testClass(): ParentInterface
+
         @Component.Factory
         interface Factory {
           fun create(): TestComponent
@@ -145,23 +145,23 @@ class ContributesBindingFirExtensionTest : CompilationModeTest(
       compile2(
         """
         package com.squareup.test
-        
+
         import com.squareup.anvil.annotations.ContributesBinding
         import com.squareup.anvil.annotations.MergeComponent
         import dagger.Component
-        
+
         interface ParentInterface
-        
+
         @ContributesBinding(
-          scope = Int::class, 
+          scope = Int::class,
           boundType = ParentInterface::class
         )
         object ContributingObject : ParentInterface
-        
+
         @MergeComponent(scope = Any::class)
         interface TestComponent {
-          fun testClass(): ParentInterface 
-        
+          fun testClass(): ParentInterface
+
           @Component.Factory
           interface Factory {
             fun create(): TestComponent

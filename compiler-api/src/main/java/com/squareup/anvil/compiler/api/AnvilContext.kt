@@ -13,10 +13,10 @@ public interface AnvilContext {
    * Allows you to use Anvil to generate Factory classes that usually the Dagger annotation
    * processor would generate for @Provides methods, @Inject constructors and @Inject fields.
    *
-   * The benefit of this feature is that you don't need to enable the Dagger annotation processor
-   * in this module. That often means you can skip KAPT and the stub generating task. In addition
-   * Anvil generates Kotlin instead of Java code, which allows Gradle to skip the Java compilation
-   * task. The result is faster builds.
+   * The benefit of this feature is that you don't need to enable the Dagger annotation processor in
+   * this module. That often means you can skip KAPT and the stub generating task. In addition Anvil
+   * generates Kotlin instead of Java code, which allows Gradle to skip the Java compilation task.
+   * The result is faster builds.
    *
    * This feature can only be enabled in Gradle modules that don't compile any Dagger component.
    * Since Anvil only processes Kotlin code, you shouldn't enable it in modules with mixed Kotlin /
@@ -27,30 +27,30 @@ public interface AnvilContext {
   public val generateFactories: Boolean
 
   /**
-   * There are occasions where consumers of Anvil are only interested in generating Dagger
-   * factories to speed up build times and don't want to make use of the other features. With this
-   * flag Anvil will only generate Dagger factories and skip all other steps. If this flag is set
-   * to `true`, then also [generateFactories] must be set to `true`.
+   * There are occasions where consumers of Anvil are only interested in generating Dagger factories
+   * to speed up build times and don't want to make use of the other features. With this flag Anvil
+   * will only generate Dagger factories and skip all other steps. If this flag is set to `true`,
+   * then also [generateFactories] must be set to `true`.
    */
   public val generateFactoriesOnly: Boolean
 
   /**
    * Enabling this indicates that only code generation should run and no component merging should
-   * run. This is useful for cases where you want to use `@ContributesTo`, `@ContributesBinding`,
-   * or similar annotations but _not_ `@MergeComponent` or `@MergeSubcomponent` functionality.
-   * This allows for anvil use in projects with kapt enabled but _not_ require disabling
-   * incremental compilation in kapt stub generation tasks.
+   * run. This is useful for cases where you want to use `@ContributesTo`, `@ContributesBinding`, or
+   * similar annotations but _not_ `@MergeComponent` or `@MergeSubcomponent` functionality. This
+   * allows for anvil use in projects with kapt enabled but _not_ require disabling incremental
+   * compilation in kapt stub generation tasks.
    */
   public val disableComponentMerging: Boolean
 
   /**
    * Enables incremental compilation support.
    *
-   * This is achieved by tracking the source files for each generated file,
-   * which allows for two new behaviors:
+   * This is achieved by tracking the source files for each generated file, which allows for two new
+   * behaviors:
    * - Generated code is "invalidated" and deleted when the source file is changed or deleted.
-   * - Generated code is cached in a way that Gradle understands,
-   *   and will be restored from cache along with other build artifacts.
+   * - Generated code is cached in a way that Gradle understands, and will be restored from cache
+   *   along with other build artifacts.
    */
   public val trackSourceFiles: Boolean
 
@@ -63,8 +63,6 @@ public interface AnvilContext {
    */
   public val willHaveDaggerFactories: Boolean
 
-  /**
-   * The module of the current compilation.
-   */
+  /** The module of the current compilation. */
   public val module: ModuleDescriptor
 }

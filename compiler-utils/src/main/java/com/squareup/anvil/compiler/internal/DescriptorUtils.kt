@@ -61,9 +61,7 @@ public fun ConstantValue<*>.argumentType(module: ModuleDescriptor): KotlinType {
     )
 }
 
-/**
- * Assumes that the FqName is a top-level property, e.g. com.squareup.CONSTANT.
- */
+/** Assumes that the FqName is a top-level property, e.g. com.squareup.CONSTANT. */
 @ExperimentalAnvilApi
 public fun FqName.getContributedPropertyOrNull(module: ModuleDescriptor): PropertyDescriptor? {
   return module.getPackage(parent()).memberScope

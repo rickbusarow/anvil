@@ -46,23 +46,23 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGH
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGHEST
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGHEST)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGH)
       interface ContributingInterface2 : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface3 : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -82,23 +82,23 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGH
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGHEST
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGHEST)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGH, replaces = [ContributingInterface::class])
       interface SecondContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface3 : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -118,18 +118,18 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -151,18 +151,18 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class, replaces = [ContributingInterface::class])
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -182,18 +182,18 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class, exclude = [ContributingInterface::class])
       interface ComponentInterface
       """,
@@ -213,21 +213,21 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Named
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("a")
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("b")
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -252,21 +252,21 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Named
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("a")
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("a")
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -288,21 +288,21 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Named
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class, ignoreQualifier = true)
       @Named("a")
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class, ignoreQualifier = true)
       @Named("b")
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -324,21 +324,21 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import javax.inject.Named
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("a")
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @Named("a")
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class, exclude = [ContributingInterface::class])
       interface ComponentInterface
       """,
@@ -358,18 +358,18 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesMultibinding
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesMultibinding(Any::class)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesMultibinding(Any::class)
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
       """,
@@ -384,27 +384,27 @@ class BindingModuleRankTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesBinding
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGH
       import com.squareup.anvil.annotations.ContributesBinding.Companion.RANK_HIGHEST
       $import
-      
+
       interface ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGHEST)
       interface ContributingInterface : ParentInterface
-      
+
       @ContributesBinding(Any::class, rank = RANK_HIGH)
       interface ContributingInterface2 : ParentInterface
-      
+
       @ContributesBinding(Any::class)
       @ContributesBinding(Unit::class)
       interface SecondContributingInterface : ParentInterface
-      
+
       $annotation(Any::class)
       interface ComponentInterface
-      
+
       $annotation(Unit::class)
       interface SubcomponentInterface
       """,

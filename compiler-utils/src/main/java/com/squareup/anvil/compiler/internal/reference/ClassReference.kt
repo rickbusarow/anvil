@@ -75,14 +75,12 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
   public abstract val functions: List<MemberFunctionReference>
 
   /**
-   * All functions that are declared in this class, including overrides.
-   * This list does not include inherited functions that are not overridden by this class.
+   * All functions that are declared in this class, including overrides. This list does not include
+   * inherited functions that are not overridden by this class.
    */
   public abstract val declaredMemberFunctions: List<MemberFunctionReference>
 
-  /**
-   * All functions declared in this class or any of its super-types.
-   */
+  /** All functions declared in this class or any of its super-types. */
   public val memberFunctions: List<MemberFunctionReference> by lazy(NONE) {
     declaredMemberFunctions
       .plus(directSuperTypeReferences().flatMap { it.asClassReference().memberFunctions })
@@ -108,14 +106,12 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
   public abstract val properties: List<MemberPropertyReference>
 
   /**
-   * All properties that are declared in this class, including overrides.
-   * This list does not include inherited properties that are not overridden by this class.
+   * All properties that are declared in this class, including overrides. This list does not include
+   * inherited properties that are not overridden by this class.
    */
   public abstract val declaredMemberProperties: List<MemberPropertyReference>
 
-  /**
-   * All properties declared in this class or any of its super-types.
-   */
+  /** All properties declared in this class or any of its super-types. */
   public val memberProperties: List<MemberPropertyReference> by lazy(NONE) {
     declaredMemberProperties
       .plus(directSuperTypeReferences().flatMap { it.asClassReference().memberProperties })
@@ -163,7 +159,8 @@ public sealed class ClassReference : Comparable<ClassReference>, AnnotatedRefere
     innerClassesAndObjects.filterNot { it.isCompanion() }
 
   /**
-   * @param parameterName The name of the parameter to be found, not including any variance modifiers.
+   * @param parameterName The name of the parameter to be found, not including any variance
+   *   modifiers.
    * @return The 0-based index of a declared generic type.
    */
   internal abstract fun indexOfTypeParameter(parameterName: String): Int
@@ -449,8 +446,8 @@ public fun KtClassOrObject.toClassReference(module: ModuleDescriptor): Psi =
 
 /**
  * Attempts to find the [KtClassOrObject] for the [FqName] first, then falls back to the
- * [ClassDescriptor] if the Psi element cannot be found. This will happen if the class for
- * [FqName] is not part of this compilation unit.
+ * [ClassDescriptor] if the Psi element cannot be found. This will happen if the class for [FqName]
+ * is not part of this compilation unit.
  */
 @ExperimentalAnvilApi
 public fun FqName.toClassReferenceOrNull(module: ModuleDescriptor): ClassReference? =

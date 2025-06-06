@@ -30,7 +30,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -65,7 +65,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -97,7 +97,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -124,7 +124,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -152,7 +152,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -181,7 +181,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -208,7 +208,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -238,7 +238,7 @@ class BindsMethodValidatorTest(
       """,
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import javax.inject.Inject
@@ -279,7 +279,7 @@ class BindsMethodValidatorTest(
     compile(
       """
       package com.squareup.test
- 
+
       import dagger.Binds
       import dagger.Module
       import dagger.Provides
@@ -300,7 +300,7 @@ class BindsMethodValidatorTest(
         abstract fun @receiver:Marker Foo.bindsBar(): Bar
 
         companion object {
-            @Provides 
+            @Provides
             @Marker
             fun providesFoo(): Foo = Foo()
         }

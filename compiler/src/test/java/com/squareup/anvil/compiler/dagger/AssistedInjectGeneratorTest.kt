@@ -68,10 +68,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         val int: Int,
         @Assisted val string: String
@@ -101,10 +101,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         @Assisted val action: suspend () -> String?
       )
@@ -133,19 +133,19 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       class AssistedService @AssistedInject constructor() {
         override fun equals(other: Any?): Boolean {
           if (this === other) return true
           if (javaClass != other?.javaClass) return false
-      
+
           other as AssistedService
-      
+
           return true
-        } 
+        }
       }
       """,
     ) {
@@ -170,10 +170,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         val int: Int,
         @Assisted("one") val string1: String,
@@ -204,10 +204,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         @Assisted("one") val string1: String,
         @Assisted("two") val string2: String
@@ -236,12 +236,12 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class SomeType(val int: Int)
-      
+
       data class AssistedService @AssistedInject constructor(
         @Assisted val type1: SomeType,
         @Assisted val type2: SomeType
@@ -260,12 +260,12 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class SomeType(val int: Int)
-      
+
       data class AssistedService @AssistedInject constructor(
         @Assisted("one") val type1: SomeType,
         @Assisted(value = "one") val type2: SomeType
@@ -284,10 +284,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         val int: Int
       )
@@ -316,10 +316,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<T : CharSequence> @AssistedInject constructor(
         val int: Int,
         @Assisted val strings: List<String>
@@ -349,10 +349,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<T : List<String>> @AssistedInject constructor(
         val int: Int,
         @Assisted val strings: T
@@ -382,10 +382,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<T> @AssistedInject constructor(
         val int: Int,
         @Assisted val stringBuilder : T
@@ -413,10 +413,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<T : CharSequence> @AssistedInject constructor(
         val int: Int,
         @Assisted val strings: List<String>,
@@ -447,10 +447,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<T : CharSequence> @AssistedInject constructor(
         val int: Int,
         @Assisted val string: T
@@ -480,10 +480,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService<S : Any, T : CharSequence> @AssistedInject constructor(
         val int: S,
         @Assisted val string: T
@@ -513,17 +513,17 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       class Outer {
         data class AssistedService @AssistedInject constructor(
           val int: Int,
           @Assisted val string: String
         )
       }
-      
+
       """,
     ) {
       val factoryClass = classLoader
@@ -585,10 +585,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       data class AssistedService @AssistedInject constructor(
         val int: Int?,
         @Assisted val string: String?
@@ -618,10 +618,10 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
-      
+
       class AssistedService @AssistedInject constructor(
         int: Int,
         @Assisted string: String
@@ -646,11 +646,11 @@ public final class AssistedService_Factory {
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.assisted.Assisted
       import dagger.assisted.AssistedInject
       import javax.inject.Inject
-      
+
       class AssistedService @AssistedInject constructor(
         int: Int,
         @Assisted string: String

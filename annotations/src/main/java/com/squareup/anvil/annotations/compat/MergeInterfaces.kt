@@ -19,7 +19,8 @@ import kotlin.reflect.KClass
  *
  * One common scenario where this annotation is used is when you want to use javac and not KAPT for
  * compiling your Dagger components. The recommendation there is to add an extra Gradle module that
- * merges interfaces. Your Dagger component must manually extend this interface using this annotation.
+ * merges interfaces. Your Dagger component must manually extend this interface using this
+ * annotation.
  *
  * ```
  * // Gradle Module A.

@@ -15,14 +15,14 @@ import java.io.File
  * - Most commonly, you won't interact directly with this object. Instead, it's used to pre-fill
  *   classpaths for compilation.
  * - In more advanced scenarios, you might directly reference something like
- *   [HostClasspath.kotlinxSerializationCoreJvm] or [HostClasspath.kotlinReflect]
- *   for custom classloading or other tasks.
+ *   [HostClasspath.kotlinxSerializationCoreJvm] or [HostClasspath.kotlinReflect] for custom
+ *   classloading or other tasks.
  */
 public object HostClasspath {
 
   /**
-   * A lazily computed [ClassGraph] instance configured to scan the current JVM process's
-   * classpath and module path.
+   * A lazily computed [ClassGraph] instance configured to scan the current JVM process's classpath
+   * and module path.
    *
    * This will typically be a test source set's runtime classpath.
    */
@@ -49,9 +49,9 @@ public object HostClasspath {
   }
 
   /**
-   * All JAR files in the inherited classpath that appear to be Anvil module builds,
-   * discovered by matching a typical Gradle build output directory structure.
-   * For example, jar files under `anvil/compiler/build/libs/`.
+   * All JAR files in the inherited classpath that appear to be Anvil module builds, discovered by
+   * matching a typical Gradle build output directory structure. For example, jar files under
+   * `anvil/compiler/build/libs/`.
    */
   public val allInheritedAnvilProjects: List<File> by lazy {
 
@@ -221,8 +221,8 @@ public object HostClasspath {
    * Infers group, module, and version from a `.m2/repository/` path.
    *
    * Example path:
-   * `~/.m2/repository/com/squareup/anvil/compiler-utils/1.0.0/compiler-utils-1.0.0.jar`
-   * becomes `[com.squareup.anvil, compiler-utils, 1.0.0]`.
+   * `~/.m2/repository/com/squareup/anvil/compiler-utils/1.0.0/compiler-utils-1.0.0.jar` becomes
+   * `[com.squareup.anvil, compiler-utils, 1.0.0]`.
    */
   private fun parseMavenLocalClasspath(classpath: File): List<String> {
     // ~/.m2/repository/com/square/anvil/compiler-utils/1.0.0/compiler-utils-1.0.0.jar
@@ -251,9 +251,8 @@ public object HostClasspath {
   /**
    * Parses the group, module, and version from a Gradle cache path.
    *
-   * Example path:
-   * `[...]/com.squareup.anvil/compiler/1.0.0/abcdef123/compiler-1.0.0.jar`
-   * results in `[com.squareup.anvil, compiler, 1.0.0]`.
+   * Example path: `[...]/com.squareup.anvil/compiler/1.0.0/abcdef123/compiler-1.0.0.jar` results in
+   * `[com.squareup.anvil, compiler, 1.0.0]`.
    */
   @Suppress("MagicNumber")
   private fun parseGradleCacheClasspath(classpath: File): List<String> {

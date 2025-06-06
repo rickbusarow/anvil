@@ -40,9 +40,9 @@ class ModuleMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       $annotation(Any::class)
       interface ComponentInterface
@@ -62,10 +62,10 @@ class ModuleMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.MergeComponent
       import com.squareup.anvil.annotations.MergeSubcomponent
-      
+
       @MergeComponent(Any::class)
       @MergeSubcomponent(Unit::class)
       interface ComponentInterface
@@ -318,9 +318,9 @@ class ModuleMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(
           scope = Any::class,
           modules = [Boolean::class],

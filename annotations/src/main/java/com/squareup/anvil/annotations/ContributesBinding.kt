@@ -20,8 +20,8 @@ import kotlin.reflect.KClass
  * }
  * ```
  * This is a lot of boilerplate if you always want to use `RealAuthenticator` when injecting
- * `Authenticator`. You can replace this entire module with the [ContributesBinding] annotation.
- * The equivalent would be:
+ * `Authenticator`. You can replace this entire module with the [ContributesBinding] annotation. The
+ * equivalent would be:
  * ```
  * interface Authenticator
  *
@@ -61,8 +61,8 @@ import kotlin.reflect.KClass
  * ```
  *
  * [ContributesBinding] is a convenience for a very simple but the most common scenario. Multiple
- * bound types or generic types are not supported. In these cases it's still required to write
- * a Dagger module.
+ * bound types or generic types are not supported. In these cases it's still required to write a
+ * Dagger module.
  *
  * Contributed bindings can replace other contributed modules and bindings with the [replaces]
  * parameter. This is especially helpful for different bindings in instrumentation tests.
@@ -82,16 +82,14 @@ import kotlin.reflect.KClass
  * @ContributesBinding(AppScope::class)
  * object RealAuthenticator : Authenticator
  * ```
- * In this scenario instead of generating a `@Binds` method Anvil will generate a `@Provides`
- * method returning [boundType].
+ * In this scenario instead of generating a `@Binds` method Anvil will generate a `@Provides` method
+ * returning [boundType].
  */
 @Target(CLASS)
 @Retention(RUNTIME)
 @Repeatable
 public annotation class ContributesBinding(
-  /**
-   * The scope in which to include this contributed binding.
-   */
+  /** The scope in which to include this contributed binding. */
   val scope: KClass<*>,
   /**
    * The type that this class is bound to. When injecting [boundType] the concrete class will be
@@ -100,8 +98,8 @@ public annotation class ContributesBinding(
   val boundType: KClass<*> = Unit::class,
   /**
    * This contributed binding will replace these contributed classes. The array is allowed to
-   * include other contributed bindings or contributed Dagger modules. All replaced classes must
-   * use the same scope.
+   * include other contributed bindings or contributed Dagger modules. All replaced classes must use
+   * the same scope.
    */
   val replaces: Array<KClass<*>> = [],
   @Suppress("DEPRECATION")
@@ -109,21 +107,20 @@ public annotation class ContributesBinding(
   val priority: Priority = Priority.NORMAL,
   /**
    * Whether the qualifier for this class should be included in the generated binding method. This
-   * parameter is only necessary to use when [ContributesBinding] and [ContributesMultibinding]
-   * are used together for the same class. If not, simply remove the qualifier from the class
-   * and don't use this parameter.
+   * parameter is only necessary to use when [ContributesBinding] and [ContributesMultibinding] are
+   * used together for the same class. If not, simply remove the qualifier from the class and don't
+   * use this parameter.
    */
   val ignoreQualifier: Boolean = false,
   /**
-   * The rank of this contributed binding. The rank should be changed only if you don't
-   * have access to the contributed binding class that you want to replace at compile time. If
-   * you have access and can reference the other class, then it's highly suggested to
-   * use [replaces] instead.
+   * The rank of this contributed binding. The rank should be changed only if you don't have access
+   * to the contributed binding class that you want to replace at compile time. If you have access
+   * and can reference the other class, then it's highly suggested to use [replaces] instead.
    *
    * In case of a duplicate binding for multiple contributed bindings, the binding with the highest
-   * rank will be used and replace other contributed bindings for the same type with a lower
-   * rank. If duplicate contributed bindings use the same rank, then there will be an
-   * error for duplicate bindings.
+   * rank will be used and replace other contributed bindings for the same type with a lower rank.
+   * If duplicate contributed bindings use the same rank, then there will be an error for duplicate
+   * bindings.
    *
    * Note that [replaces] takes precedence. If you explicitly replace a binding, it won't be
    * considered no matter what its rank is.
@@ -139,9 +136,7 @@ public annotation class ContributesBinding(
     public const val RANK_HIGHEST: Int = Int.MAX_VALUE
   }
 
-  /**
-   * The rank of a contributed binding.
-   */
+  /** The rank of a contributed binding. */
   @Suppress("unused")
   @Deprecated("Use the new int-based rank")
   public enum class Priority(public val value: Int) {

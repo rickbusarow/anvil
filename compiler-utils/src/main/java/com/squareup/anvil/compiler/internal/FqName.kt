@@ -41,8 +41,8 @@ internal val mergeModulesFqName = MergeModules::class.fqName
 internal val anyFqName = Any::class.fqName
 
 /**
- * Generates a sequence of [FqName] starting from the current FqName and including its parents
- * up to the root. The sequence will include the current FqName as well.
+ * Generates a sequence of [FqName] starting from the current FqName and including its parents up to
+ * the root. The sequence will include the current FqName as well.
  */
 @ExperimentalAnvilApi
 public fun FqName.parentsWithSelf(): Sequence<FqName> {
@@ -56,8 +56,8 @@ public fun FqName.parentsWithSelf(): Sequence<FqName> {
 }
 
 /**
- * Generates a sequence of [FqName] starting from the current FqName and including its parents
- * up to the root. The sequence will not include the current FqName.
+ * Generates a sequence of [FqName] starting from the current FqName and including its parents up to
+ * the root. The sequence will not include the current FqName.
  */
 @ExperimentalAnvilApi
 public fun FqName.parents(): Sequence<FqName> = parentsWithSelf().drop(1)

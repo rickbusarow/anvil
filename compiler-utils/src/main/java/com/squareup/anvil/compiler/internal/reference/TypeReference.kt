@@ -54,8 +54,7 @@ public sealed class TypeReference {
   public abstract val declaringClass: ClassReference?
 
   /**
-   * If the type refers to class and is not a generic type, then the returned reference
-   * is non-null.
+   * If the type refers to class and is not a generic type, then the returned reference is non-null.
    */
   protected abstract val classReference: ClassReference?
 
@@ -63,8 +62,8 @@ public sealed class TypeReference {
   protected abstract val typeName: TypeName
 
   /**
-   * For `Map<String, Int>` this will return [`String`, `Int`]. For star projections like
-   * `List<*>` the result will be mapped to [Any].
+   * For `Map<String, Int>` this will return [`String`, `Int`]. For star projections like `List<*>`
+   * the result will be mapped to [Any].
    */
   public abstract val unwrappedTypes: List<TypeReference>
 
@@ -164,9 +163,9 @@ public sealed class TypeReference {
     }
 
     /**
-     * Safely resolves a type reference, when that type reference may be a generic
-     * expressed by a type variable name. This is done by inspecting the class hierarchy to
-     * find where the generic type is declared, then resolving *that* reference.
+     * Safely resolves a type reference, when that type reference may be a generic expressed by a
+     * type variable name. This is done by inspecting the class hierarchy to find where the generic
+     * type is declared, then resolving *that* reference.
      *
      * For instance, given:
      *
@@ -179,8 +178,8 @@ public sealed class TypeReference {
      * ```
      *
      * The type reference `T` will fail to resolve, since it isn't a type. This function will
-     * instead look to the `ServiceFactory` interface, then look at the supertype declaration
-     * in order to determine the type.
+     * instead look to the `ServiceFactory` interface, then look at the supertype declaration in
+     * order to determine the type.
      *
      * It's possible that this method may still return a generic type, if `T` resolves to another
      * generic type. For instance, `T` will resolve to `R` in the following example:
@@ -191,8 +190,8 @@ public sealed class TypeReference {
      * interface UnknownFactory<R> : Factory<R>
      * ```
      *
-     * @param implementingClass The class which actually references the type. In the above
-     * example, this would be `ServiceFactory`.
+     * @param implementingClass The class which actually references the type. In the above example,
+     *   this would be `ServiceFactory`.
      */
     internal fun resolveTypeReference(
       implementingClass: ClassReference,
@@ -395,8 +394,8 @@ public sealed class TypeReference {
 
     /**
      * Safely resolves a [KotlinType], when that type reference is a generic expressed by a type
-     * variable name. This is done by inspecting the class hierarchy to find where the generic
-     * type is declared, then resolving *that* reference.
+     * variable name. This is done by inspecting the class hierarchy to find where the generic type
+     * is declared, then resolving *that* reference.
      *
      * For instance, given:
      *
@@ -404,12 +403,12 @@ public sealed class TypeReference {
      * interface SomeFactory : Function1<String, SomeClass>
      * ```
      *
-     * There's an invisible `fun invoke(p1: P1): R`. If `SomeFactory` is parsed using PSI (such
-     * as if it's generated), then the function can only be parsed to have the projected types
-     * of `P1` and `R`
+     * There's an invisible `fun invoke(p1: P1): R`. If `SomeFactory` is parsed using PSI (such as
+     * if it's generated), then the function can only be parsed to have the projected types of `P1`
+     * and `R`
      *
      * @param implementingClass The class which actually references the type. In the above example,
-     * this would be `SomeFactory`.
+     *   this would be `SomeFactory`.
      */
     internal fun resolveGenericKotlinTypeOrNull(
       implementingClass: ClassReference,
@@ -649,8 +648,8 @@ private fun KotlinType.containingClassReference(
 /**
  * Converts a lambda `TypeName` to a standard `kotlin.Function*` type.
  *
- * given the lambda type: `(kotlin.String) -> kotlin.Unit`
- * returns the function type: `kotlin.Function1<String, Unit>`
+ * given the lambda type: `(kotlin.String) -> kotlin.Unit` returns the function type:
+ * `kotlin.Function1<String, Unit>`
  */
 private fun TypeName.lambdaFix(): TypeName {
   // This is a special case when mixing parsing between descriptors and PSI.  Descriptors

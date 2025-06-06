@@ -69,14 +69,10 @@ class AnnotationTestEnvironment(
 ) : DefaultTestEnvironment(hasWorkingDir),
   CompilationEnvironment {
 
-  /**
-   * Always an unqualified string, e.g. "@MergeComponent".
-   */
+  /** Always an unqualified string, e.g. "@MergeComponent". */
   val annotation = "@${annotationClass.simpleName}"
 
-  /**
-   * ex: `import com.squareup.anvil.annotations.MergeComponent`
-   */
+  /** ex: `import com.squareup.anvil.annotations.MergeComponent` */
   val import = "import ${annotationClass.java.canonicalName}"
 
   companion object : ParamTestEnvironmentFactory<Kase1<KClass<out Annotation>>, AnnotationTestEnvironment> {

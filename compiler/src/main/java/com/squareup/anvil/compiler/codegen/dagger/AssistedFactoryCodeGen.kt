@@ -218,15 +218,11 @@ internal object AssistedFactoryCodeGen : AnvilApplicabilityChecker {
       }
     }
 
-    /**
-     * Represents a parsed function in an `@AssistedInject.Factory`-annotated interface.
-     */
+    /** Represents a parsed function in an `@AssistedInject.Factory`-annotated interface. */
     private data class AssistedFactoryFunction(
       val function: MemberFunctionReference,
       val parameterKeys: List<AssistedParameterKey>,
-      /**
-       * Pair of parameter reference to parameter type.
-       */
+      /** Pair of parameter reference to parameter type. */
       val parameterPairs: List<Pair<ParameterReference, TypeName>>,
     ) {
       companion object {

@@ -13,9 +13,9 @@ class MergeModulesTest {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.compat.MergeModules
-      
+
       @MergeModules(Any::class)
       class DaggerModule1
       """,
@@ -796,14 +796,14 @@ class MergeModulesTest {
       compile(
         """
         package com.squareup.test
-  
+
         import com.squareup.anvil.annotations.compat.MergeModules
         import com.squareup.anvil.annotations.ContributesTo
-  
+
         @ContributesTo(Any::class)
         @dagger.Module
         $visibility abstract class DaggerModule2
-  
+
         @MergeModules(Any::class)
         class DaggerModule1
         """,
@@ -862,7 +862,7 @@ class MergeModulesTest {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.compat.MergeModules
       import com.squareup.anvil.annotations.ContributesBinding
 
@@ -872,7 +872,7 @@ class MergeModulesTest {
         @ContributesBinding(Any::class)
         object Factory : BaseFactory
       }
-      
+
       @MergeModules(Any::class)
       class DaggerModule1
       """,
@@ -947,22 +947,22 @@ class MergeModulesTest {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.compat.MergeModules
       import com.squareup.anvil.annotations.ContributesTo
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule3
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule4
-      
+
       @MergeModules(Any::class)
       class DaggerModule1
-      
+
       @MergeModules(Unit::class)
       class DaggerModule2
       """,
@@ -979,22 +979,22 @@ class MergeModulesTest {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.compat.MergeModules
       import com.squareup.anvil.annotations.ContributesTo
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule3
-      
+
       @ContributesTo(Any::class, replaces = [DaggerModule3::class])
       @dagger.Module
       abstract class DaggerModule4
-      
+
       @MergeModules(Any::class)
       class DaggerModule1
-      
+
       @MergeModules(Unit::class)
       class DaggerModule2
       """,
@@ -1011,22 +1011,22 @@ class MergeModulesTest {
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.compat.MergeModules
       import com.squareup.anvil.annotations.ContributesTo
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       @dagger.Module
       abstract class DaggerModule3
-      
+
       @ContributesTo(Any::class)
       @dagger.Module
       abstract class DaggerModule4
-      
+
       @MergeModules(Any::class, exclude = [DaggerModule3::class])
       class DaggerModule1
-      
+
       @MergeModules(Unit::class)
       class DaggerModule2
       """,

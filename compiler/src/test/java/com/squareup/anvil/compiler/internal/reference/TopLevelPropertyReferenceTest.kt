@@ -26,8 +26,8 @@ class TopLevelPropertyReferenceTest {
     propertyTest(
       """
       package com.squareup.test
-      
-      private val prop = Unit 
+
+      private val prop = Unit
       """,
     ) { ref ->
       assertThat(ref.fqName).isEqualTo(FqName("com.squareup.test.prop"))
@@ -51,8 +51,8 @@ class TopLevelPropertyReferenceTest {
     propertyTest(
       """
       package com.squareup.test
-      
-      var prop: String = "" 
+
+      var prop: String = ""
       """,
     ) { ref ->
       assertThat(ref.fqName).isEqualTo(FqName("com.squareup.test.prop"))
@@ -70,9 +70,9 @@ class TopLevelPropertyReferenceTest {
     propertyTest(
       """
       package com.squareup.test
-      
+
       @PublishedApi
-      internal val prop: Int? = null 
+      internal val prop: Int? = null
       """,
     ) { ref ->
       assertThat(ref.fqName).isEqualTo(FqName("com.squareup.test.prop"))
@@ -94,8 +94,8 @@ class TopLevelPropertyReferenceTest {
       package com.squareup.test
 
       import javax.inject.Inject
-      
-      @set:Inject var prop: String = "" 
+
+      @set:Inject var prop: String = ""
       """,
     ) { ref ->
       assertThat(ref.fqName).isEqualTo(FqName("com.squareup.test.prop"))
@@ -117,8 +117,8 @@ class TopLevelPropertyReferenceTest {
       package com.squareup.test
 
       import javax.inject.Inject
-      
-      @get:Inject var prop: String = "" 
+
+      @get:Inject var prop: String = ""
       """,
     ) { ref ->
       assertThat(ref.fqName).isEqualTo(FqName("com.squareup.test.prop"))

@@ -21,9 +21,8 @@ public class ContributesBindingSessionComponent(
   session: FirSession,
 ) : AnvilFirExtensionSessionComponent(anvilFirContext, session) {
   /**
-   * A map to help us track the original annotated classes' bindings, and their
-   * generated module IDs.
-   * E.g. Key: "Foo_BindingModule", Value: ClassSymbol<Foo>
+   * A map to help us track the original annotated classes' bindings, and their generated module
+   * IDs. E.g. Key: "Foo_BindingModule", Value: ClassSymbol<Foo>
    */
   public val generatedIdsToMatchedSymbols: Map<ClassId, FirClassSymbol<*>> by lazy {
     session.predicateBasedProvider.getSymbolsByPredicate(hasAnvilContributesBinding)

@@ -143,8 +143,8 @@ public val ClassId.companion: ClassId get() = child("Companion")
  * topLevel.sibling("SiblingClass").asFqNameString() shouldBe "com.example.SiblingClass"
  * ```
  *
- * If the receiver ClassId is a nested class, this function returns a new ClassId
- * with the same package and the given name, but nested inside the receiver ClassId.
+ * If the receiver ClassId is a nested class, this function returns a new ClassId with the same
+ * package and the given name, but nested inside the receiver ClassId.
  *
  * ```
  * val innerClass1 = ClassId(

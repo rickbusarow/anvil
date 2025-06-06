@@ -31,9 +31,9 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
           //language=kotlin
           """
           package generated.com.squareup.test
-          
+
           class Abc
-          
+
           private const val abc = "${clazz.shortName}"
         """
         }
@@ -44,7 +44,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
       package com.squareup.test
 
       interface ComponentInterface1
-      
+
       interface ComponentInterface2
       """,
       codeGenerators = listOf(codeGenerator),
@@ -74,7 +74,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
           //language=kotlin
           """
           package generated.com.squareup.test
-          
+
           class Abc
         """
         }
@@ -85,7 +85,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
       package com.squareup.test
 
       interface ComponentInterface1
-      
+
       interface ComponentInterface2
       """,
       codeGenerators = listOf(codeGenerator),
@@ -125,7 +125,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
 
       """
         package com.squareup.test
-          
+
         class Abc
       """.trimIndent()
     }
@@ -133,7 +133,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
     //language=kotlin
     val componentInterface = """
       package com.squareup.test
-  
+
       interface ComponentInterface
     """.trimIndent()
 
@@ -186,7 +186,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
 
       """
         package com.squareup.test
-          
+
         class Abc
       """.trimIndent()
     }
@@ -222,7 +222,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
 
       """
         package com.squareup.test
-          
+
         class Abc
       """.trimIndent()
     }
@@ -257,7 +257,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
 
       """
         package com.squareup.test
-          
+
         class Abc
       """.trimIndent()
     }
@@ -265,7 +265,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
     //language=kotlin
     val componentInterface = """
       package com.squareup.test
-  
+
       interface ComponentInterface
     """.trimIndent()
 
@@ -331,14 +331,14 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
           //language=kotlin
           val content = """
             package $packagePrefix.$packageFqName
-              
+
             import $packageFqName.$shortName
             import $scope
             import $supPackage.$supSimpleName
             import com.squareup.anvil.annotations.ContributesTo
             import dagger.Binds
             import dagger.Module
-              
+
             @Module
             @ContributesTo(${scope.shortName()}::class$replacesString)
             interface ${shortName}ExtraModule {
@@ -365,7 +365,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
       annotation class Trigger(
         val scope: KClass<*>,
         val replaces: Array<KClass<*>> = []
-      ) 
+      )
 
       interface TypeA
     """.trimIndent()
@@ -375,7 +375,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
       package anvil
 
       import javax.inject.Inject
-    
+
       @Trigger(Any::class)
       class RealTypeA @Inject constructor() : TypeA
     """.trimIndent()
@@ -383,10 +383,10 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
     val result1 = compile(
       """
         package anvil
-  
+
         import javax.inject.Inject
-  
-        @Trigger(Any::class, replaces = [RealTypeA::class]) 
+
+        @Trigger(Any::class, replaces = [RealTypeA::class])
         class DebugTypeA @Inject constructor() : TypeA
       """,
       trigger,
@@ -416,10 +416,10 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
     compile(
       """
         package anvil
-  
+
         import javax.inject.Inject
-  
-        @Trigger(Any::class, replaces = [RealTypeA::class]) 
+
+        @Trigger(Any::class, replaces = [RealTypeA::class])
         class DebugTypeA @Inject constructor() : TypeA {
           fun noOp() = Unit
         }
@@ -459,7 +459,7 @@ class CodeGenerationExtensionTest : HasTestEnvironmentFactory<AnvilEmbeddedCompi
 
       @InternalApi
       @ContributesBinding(Unit::class)
-      class SomeClass @Inject constructor() : Type 
+      class SomeClass @Inject constructor() : Type
       """,
     ) {
       assertThat(exitCode).isEqualTo(OK)

@@ -30,7 +30,7 @@ class MapKeyCreatorGeneratorTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.MapKey
       import kotlin.reflect.KClass
       import com.squareup.anvil.compiler.dagger.TestEnum
@@ -142,7 +142,7 @@ class MapKeyCreatorGeneratorTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.MapKey
 
       annotation class RecursiveAnnotation(
@@ -185,7 +185,7 @@ class MapKeyCreatorGeneratorTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.MapKey
 
       @MapKey(unwrapValue = true)
@@ -214,7 +214,7 @@ class MapKeyCreatorGeneratorTest(
     compile(
       """
       package com.squareup.test
-      
+
       import dagger.MapKey
 
       class Container {

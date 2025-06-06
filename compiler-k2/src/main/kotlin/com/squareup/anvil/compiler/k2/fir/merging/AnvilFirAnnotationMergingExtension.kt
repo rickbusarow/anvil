@@ -142,9 +142,7 @@ public class AnvilFirAnnotationMergingExtension(
     return listOf()
   }
 
-  /**
-   * Gets all Dagger modules annotated with @ContributesTo that match the scope being merged
-   */
+  /** Gets all Dagger modules annotated with @ContributesTo that match the scope being merged */
   private fun getContributedModules(
     mergeScopeName: FqName,
     typeResolver: TypeResolveService,

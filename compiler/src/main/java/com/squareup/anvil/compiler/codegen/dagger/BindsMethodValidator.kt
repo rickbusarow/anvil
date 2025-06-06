@@ -21,9 +21,9 @@ import java.io.File
 /**
  * We do not need to generate any code for @Binds methods in the way that we do for @Provides
  * methods, but we still need to validate them since we are taking Dagger's place in evaluating them
- * for all compile-time needs. Without performing some validation here, it's possible a binding
- * that Dagger would consider a compile time failure would instead manifest as a runtime failure
- * when Anvil generates Dagger factories.
+ * for all compile-time needs. Without performing some validation here, it's possible a binding that
+ * Dagger would consider a compile time failure would instead manifest as a runtime failure when
+ * Anvil generates Dagger factories.
  */
 internal object BindsMethodValidator : AnvilApplicabilityChecker {
 

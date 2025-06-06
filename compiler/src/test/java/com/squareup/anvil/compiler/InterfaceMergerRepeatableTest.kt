@@ -38,9 +38,9 @@ class InterfaceMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       $import
-      
+
       $annotation(Any::class)
       $annotation(Any::class)
       interface ComponentInterface
@@ -60,10 +60,10 @@ class InterfaceMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.MergeComponent
       import com.squareup.anvil.annotations.MergeSubcomponent
-      
+
       @MergeComponent(Any::class)
       @MergeSubcomponent(Unit::class)
       interface ComponentInterface
@@ -82,16 +82,16 @@ class InterfaceMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Unit::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       $annotation(Unit::class)
       interface ComponentInterface
@@ -106,18 +106,18 @@ class InterfaceMergerRepeatableTest(
     compile(
       """
       package com.squareup.test
-      
+
       import com.squareup.anvil.annotations.ContributesTo
       $import
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface ContributingInterface
-      
+
       @ContributesTo(Any::class)
       @ContributesTo(Unit::class)
       interface SecondContributingInterface
-      
+
       $annotation(Any::class)
       $annotation(Unit::class)
       interface ComponentInterface
