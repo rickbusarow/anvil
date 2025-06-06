@@ -27,13 +27,12 @@ import org.jetbrains.kotlin.name.SpecialNames
 import kotlin.collections.get
 
 /**
- * Given this kotlin source:
- * class InjectClass @Inject constructor(private val param0: String)
- *
+ * Given this kotlin source: class InjectClass @Inject constructor(private val param0: String)
  *
  * Using a FirDeclarationGenerationExtension in kotlin k2 fir plugin generate a class file
  * representing the following:
  *
+ * ```
  * public class InjectClass_Factory(
  *   private val param0: Provider<String>
  * ) : com.internal.Dagger.Factory<InjectClass> {
@@ -48,6 +47,7 @@ import kotlin.collections.get
  *     public fun newInstance(param0: String): InjectClass = InjectClass(param0)
  *   }
  * }
+ * ```
  */
 internal class FirInjectConstructorFactoryGenerationExtension(
   anvilFirContext: AnvilFirContext,

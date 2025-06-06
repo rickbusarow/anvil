@@ -3,20 +3,21 @@ package com.squareup.anvil.compiler.api
 import java.io.File
 
 /**
- * Represents a generated file that Anvil should eventually write. The [sourceFiles] are the
- * files that triggered the generation of this file or are referenced by the generated file.
- * A modification to any of the [sourceFiles] will invalidate this generated file.
+ * Represents a generated file that Anvil should eventually write. The [sourceFiles] are the files
+ * that triggered the generation of this file or are referenced by the generated file. A
+ * modification to any of the [sourceFiles] will invalidate this generated file.
  *
  * All source files must be:
- *   - absolute paths
- *   - actual files (not directories)
- *   - existent in the file system
+ * - absolute paths
+ * - actual files (not directories)
+ * - existent in the file system
  *
  * @property file the [File] to generate.
  * @property content the file contents to write to [file].
  * @property sourceFiles the source files used to generate this file.
- * @throws AnvilCompilationException if a [sourceFiles] is not an absolute file, doesn't exist, or is a directory
- * @throw AnvilCompilationException if a source file is the same as the generated [file]
+ * @throws AnvilCompilationException if a source file is the same as the generated [file]
+ * @throws AnvilCompilationException if a [sourceFiles] is not an absolute file, doesn't exist, or
+ *   is a directory
  */
 public class GeneratedFileWithSources(
   override val file: File,
