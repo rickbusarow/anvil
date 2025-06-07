@@ -35,7 +35,7 @@ dependencies {
   testFixturesImplementation(project(":compiler"))
   testFixturesImplementation(libs.dagger2.compiler)
   testFixturesImplementation(libs.dagger2)
-  testFixturesImplementation(libs.junit)
+  testFixturesImplementation(libs.junit4)
   testFixturesImplementation(libs.truth)
 
   // Necessary because this is what dagger uses when it runs to support instantiating annotations at runtime
@@ -46,7 +46,7 @@ dependencies {
   if (isInIdeaSync) {
     compileOnly(project(":compiler"))
     compileOnly(libs.dagger2.compiler)
-    compileOnly(libs.junit)
+    compileOnly(libs.junit4)
     compileOnly(libs.kotlin.compileTesting)
     compileOnly(libs.truth)
   }

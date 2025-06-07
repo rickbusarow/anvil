@@ -23,7 +23,7 @@ if (libs.versions.config.generateDaggerFactoriesWithAnvil.get().toBoolean()) {
 
 dependencies {
   implementation(libs.dagger2)
-  testImplementation(libs.junit)
+  testImplementation(libs.junit4)
   testImplementation(libs.kotlin.test)
   testImplementation(libs.truth)
 }
