@@ -27,7 +27,7 @@ gradlePublish = "1.3.1"
 jakarta-inject = "2.0.1"
 jUnit5 = "5.11.4"
 jvm-toolchain = "17"
-jvm-target-library = "8"
+jvm-target-library = "11"
 jvm-target-minimal = "11"
 kase = "0.11.1"
 kct = "0.7.1"
@@ -89,6 +89,11 @@ classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classg
 
 dagger2 = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger2-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+
+dokka-all-modules = { module = "org.jetbrains.dokka:all-modules-page-plugin", version.ref = "dokka" }
+dokka-core = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
+dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+dokka-versioning = { module = "org.jetbrains.dokka:versioning-plugin", version.ref = "dokka" }
 
 dropbox-dependencyGuard = { module = "com.dropbox.dependency-guard:dependency-guard", version.ref = "dropbox-dependencyGuard" }
 

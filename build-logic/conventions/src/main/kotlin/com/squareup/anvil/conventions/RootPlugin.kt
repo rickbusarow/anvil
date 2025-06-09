@@ -14,6 +14,8 @@ open class RootPlugin : BasePlugin() {
 
     if (target.isInAnvilBuild()) {
       target.plugins.apply(BenchmarkPlugin::class.java)
+      target.plugins.apply(DokkaConventionPlugin::class.java)
+      target.plugins.apply(DokkaVersionArchivePlugin::class.java)
     }
 
     target.plugins.apply("java-base")

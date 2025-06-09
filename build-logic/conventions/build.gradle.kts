@@ -56,6 +56,9 @@ dependencies {
   api(libs.kotlin.gradlePlugin)
   api(libs.mavenPublishRaw)
 
+  implementation(libs.dokka.gradle)
+  implementation(libs.dokka.versioning)
+
   // Expose the generated version catalog API to the plugins.
   implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
 }

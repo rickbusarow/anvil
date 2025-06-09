@@ -25,9 +25,9 @@ open class PublishConventionPlugin : Plugin<Project> {
     target.extensions.create("publish", PublishExtension::class.java)
 
     target.plugins.apply("com.vanniktech.maven.publish.base")
-    target.plugins.apply("org.jetbrains.dokka")
+    target.plugins.apply(DokkaConventionPlugin::class.java)
 
-    target.tasks.named(DOKKA_HTML)
+    target.tasks.named(DokkaConventionPlugin.DOKKA_HTML_TASK_NAME)
       .mustRunAfter(target.tasks.withType(KaptTask::class.java))
 
     val mavenPublishing = target.extensions
@@ -48,10 +48,9 @@ open class PublishConventionPlugin : Plugin<Project> {
         }
 
         else -> {
-          @Suppress("UnstableApiUsage")
           mavenPublishing.configure(
             platform = KotlinJvm(
-              javadocJar = Dokka(DOKKA_HTML),
+              javadocJar = Dokka(DokkaConventionPlugin.DOKKA_HTML_TASK_NAME),
               sourcesJar = true,
             ),
           )
@@ -111,7 +110,6 @@ open class PublishConventionPlugin : Plugin<Project> {
   }
 
   companion object {
-    internal const val DOKKA_HTML = "dokkaHtml"
     internal const val PUBLISH_TO_BUILD_M2 = "publishToBuildM2"
   }
 }

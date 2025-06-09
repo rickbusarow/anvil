@@ -1,4 +1,4 @@
-# Compiler-API
+# Module Compiler-API
 
 Anvil is composed of several independent code generators that provide hints for the later stages
 in the build graph when all modules and components are merged together. These code generators
