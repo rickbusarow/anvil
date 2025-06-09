@@ -5,6 +5,7 @@ import com.rickbusarow.kase.gradle.GradleKotlinAgpTestVersions
 import com.rickbusarow.kase.gradle.GradleKotlinTestVersions
 import com.rickbusarow.kase.gradle.versions
 import com.rickbusarow.kase.kase
+import com.squareup.anvil.plugin.buildProperties.anvilPluginID
 import com.squareup.anvil.plugin.buildProperties.anvilVersion
 import com.squareup.anvil.plugin.testing.BaseGradleTest
 import io.kotest.matchers.shouldBe
@@ -35,7 +36,7 @@ internal class ClasspathTest : BaseGradleTest() {
     """
     plugins {
       kotlin("jvm") version "${versions.kotlinVersion}"
-      id("com.squareup.anvil") version "$anvilVersion"
+      id("$anvilPluginID") version "$anvilVersion"
     }
     """.trimIndent()
   }
@@ -51,7 +52,7 @@ internal class ClasspathTest : BaseGradleTest() {
     plugins {
       id("com.android.application") version "${versions.agpVersion}"
       kotlin("android") version "${versions.kotlinVersion}"
-      id("com.squareup.anvil") version "$anvilVersion"
+      id("$anvilPluginID") version "$anvilVersion"
     }
     
     ${androidBlockString()}
@@ -68,7 +69,7 @@ internal class ClasspathTest : BaseGradleTest() {
     plugins {
       id("com.android.library") version "${versions.agpVersion}"
       kotlin("android") version "${versions.kotlinVersion}"
-      id("com.squareup.anvil") version "$anvilVersion"
+      id("$anvilPluginID") version "$anvilVersion"
     }
     
     ${androidBlockString()}
@@ -143,7 +144,7 @@ internal class ClasspathTest : BaseGradleTest() {
         }
 
         taskOutputs[":printCompileClasspath"] shouldBe """
-          com.squareup.anvil:annotations
+          com.rickbusarow.anvil:annotations
           $stdlib
         """.trimIndent()
 

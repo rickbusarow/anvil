@@ -30,6 +30,7 @@ publish {
 
 val GROUP: String by project
 val VERSION_NAME: String by project
+val pluginId = "com.rickbusarow.anvil"
 
 buildConfig {
   className("BuildProperties")
@@ -52,6 +53,7 @@ buildConfig {
 
     val buildM2 = rootProject.layout.buildDirectory.dir("m2").map { it.asFile }
     buildConfigField("anvilVersion", VERSION_NAME)
+    buildConfigField("anvilPluginID", pluginId)
     buildConfigField("daggerVersion", libs.versions.dagger)
     buildConfigField("fullTestRun", libs.versions.config.fullTestRun.map(String::toBoolean))
     buildConfigField("gradleVersion", gradle.gradleVersion)
@@ -66,7 +68,7 @@ gradlePlugin {
 
   plugins {
     register("anvilPlugin") {
-      id = "com.squareup.anvil"
+      id = pluginId
       displayName = pomName
       implementationClass = "com.squareup.anvil.plugin.AnvilPlugin"
       description = pomDescription

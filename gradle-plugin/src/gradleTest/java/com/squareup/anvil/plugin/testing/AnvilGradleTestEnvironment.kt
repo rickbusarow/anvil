@@ -73,7 +73,7 @@ class AnvilGradleTestEnvironment(
       BuildFileSpec {
         plugins {
           kotlin("jvm", versions.kotlinVersion)
-          id("com.squareup.anvil", version = anvilVersion)
+          anvil()
         }
 
         anvil {
@@ -100,7 +100,7 @@ class AnvilGradleTestEnvironment(
             kotlin("android", version = versions.kotlinVersion, apply = false)
             kotlin("jvm", version = versions.kotlinVersion, apply = false)
             kotlin("kapt", version = versions.kotlinVersion, apply = false)
-            id("com.squareup.anvil", version = anvilVersion, apply = false)
+            anvilWithVersion(version = anvilVersion, apply = false)
             if (versions is HasAgpDependencyVersion) {
               id("com.android.application", versions.agpVersion, apply = false)
               id("com.android.library", versions.agpVersion, apply = false)

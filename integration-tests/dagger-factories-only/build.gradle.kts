@@ -6,7 +6,7 @@ plugins {
 }
 
 if (libs.versions.config.generateDaggerFactoriesWithAnvil.get().toBoolean()) {
-  apply(plugin = "com.squareup.anvil")
+  apply(plugin = "com.rickbusarow.anvil")
 
   configure<AnvilExtension> {
     generateDaggerFactories = true

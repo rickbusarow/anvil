@@ -257,7 +257,7 @@ class LifecycleTest : BaseGradleTest() {
           buildFile {
             plugins {
               kotlin("jvm", apply = false)
-              id("com.squareup.anvil", apply = false)
+              anvil(apply = false)
             }
           }
           settingsFile(
@@ -377,7 +377,7 @@ class LifecycleTest : BaseGradleTest() {
   private fun BuildFileSpec.pluginsBlock(addKapt: Boolean = false) {
     plugins {
       kotlin("jvm")
-      id("com.squareup.anvil")
+      anvil()
       if (addKapt) {
         kotlin("kapt")
       }

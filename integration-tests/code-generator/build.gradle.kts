@@ -11,13 +11,13 @@ conventions {
 }
 
 dependencies {
-  api("com.squareup.anvil:compiler-api")
-  implementation("com.squareup.anvil:compiler-utils")
+  api("com.rickbusarow.anvil:compiler-api")
+  implementation("com.rickbusarow.anvil:compiler-utils")
 
   compileOnly(libs.auto.service.annotations)
   kapt(libs.auto.service.processor)
 
-  testImplementation(testFixtures("com.squareup.anvil:compiler-utils"))
+  testImplementation(testFixtures("com.rickbusarow.anvil:compiler-utils"))
   testImplementation(libs.junit)
   testImplementation(libs.truth)
 }

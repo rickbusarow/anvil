@@ -26,4 +26,9 @@ abstract class BaseGradleTest(
   @Suppress("UnusedReceiverParameter")
   val GradleTestEnvironment.anvilVersion: String
     get() = com.squareup.anvil.plugin.buildProperties.anvilVersion
+
+  /** Forced overload so that tests don't reference the generated BuildProperties file directly */
+  @Suppress("UnusedReceiverParameter")
+  val GradleTestEnvironment.anvilPluginID: String
+    get() = com.squareup.anvil.plugin.buildProperties.anvilPluginID
 }

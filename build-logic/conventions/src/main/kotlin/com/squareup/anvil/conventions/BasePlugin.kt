@@ -126,9 +126,11 @@ abstract class BasePlugin : Plugin<Project> {
     // The -api and -utils projects declare the annotations as an `api` dependency.
     val providingProjects = setOf("annotations", "compiler-api", "compiler-utils")
 
+    val projectGroup = this@hasAnnotationDependency.group
+
     return configs.any { cfg ->
       cfg.dependencies.any { dep ->
-        dep.group == "com.squareup.anvil" && dep.name in providingProjects
+        dep.group == projectGroup && dep.name in providingProjects
       }
     }
   }

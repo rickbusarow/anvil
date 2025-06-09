@@ -33,6 +33,7 @@ buildConfig {
   buildConfigField("FULL_TEST_RUN", libs.versions.config.fullTestRun.map { it.toBoolean() })
   buildConfigField("anvilVersion", VERSION_NAME)
   buildConfigField("kotlinVersion", libs.versions.kotlin)
+  buildConfigField("group", group.toString())
   buildConfigField(
     "org.jetbrains.kotlin.config.LanguageVersion",
     "languageVersion",

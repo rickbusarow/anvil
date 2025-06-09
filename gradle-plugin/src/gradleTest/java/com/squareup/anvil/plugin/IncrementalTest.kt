@@ -223,7 +223,7 @@ class IncrementalTest : BaseGradleTest() {
       buildFile {
         plugins {
           kotlin("jvm")
-          id("com.squareup.anvil")
+          anvil()
         }
         anvil {
           generateDaggerFactories.set(true)
@@ -260,7 +260,7 @@ class IncrementalTest : BaseGradleTest() {
       buildFile {
         plugins {
           kotlin("jvm")
-          id("com.squareup.anvil")
+          anvil()
         }
         dependencies {
           implementation(libs.dagger2.annotations)
@@ -347,7 +347,7 @@ class IncrementalTest : BaseGradleTest() {
         buildFile {
           plugins {
             kotlin("jvm")
-            id("com.squareup.anvil")
+            id("com.rickbusarow.anvil")
           }
           anvil {
             generateDaggerFactories.set(true)
@@ -384,7 +384,7 @@ class IncrementalTest : BaseGradleTest() {
         buildFile {
           plugins {
             kotlin("jvm")
-            id("com.squareup.anvil")
+            id("com.rickbusarow.anvil")
           }
           dependencies {
             implementation(libs.dagger2.annotations)
@@ -479,7 +479,7 @@ class IncrementalTest : BaseGradleTest() {
         buildFile {
           plugins {
             kotlin("jvm")
-            id("com.squareup.anvil")
+            id("com.rickbusarow.anvil")
           }
           anvil {
             generateDaggerFactories.set(true)
@@ -509,7 +509,7 @@ class IncrementalTest : BaseGradleTest() {
         buildFile {
           plugins {
             kotlin("jvm")
-            id("com.squareup.anvil")
+            id("com.rickbusarow.anvil")
           }
           dependencies {
             implementation(libs.dagger2.annotations)
@@ -604,7 +604,7 @@ class IncrementalTest : BaseGradleTest() {
       buildFile {
         plugins {
           kotlin("jvm")
-          id("com.squareup.anvil")
+          anvil()
         }
         anvil {
           generateDaggerFactories.set(true)
@@ -634,7 +634,7 @@ class IncrementalTest : BaseGradleTest() {
       buildFile {
         plugins {
           kotlin("jvm")
-          id("com.squareup.anvil")
+          anvil()
         }
         dependencies {
           implementation(libs.dagger2.annotations)
@@ -995,7 +995,7 @@ class IncrementalTest : BaseGradleTest() {
           buildFile {
             plugins {
               kotlin("jvm")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             anvil {
               generateDaggerFactories.set(true)
@@ -1015,7 +1015,7 @@ class IncrementalTest : BaseGradleTest() {
             plugins {
               kotlin("jvm")
               kotlin("kapt")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             dependencies {
               compileOnly(libs.dagger2.annotations)
@@ -1091,7 +1091,7 @@ class IncrementalTest : BaseGradleTest() {
           buildFile {
             plugins {
               kotlin("jvm")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             anvil {
               generateDaggerFactories.set(true)
@@ -1127,7 +1127,7 @@ class IncrementalTest : BaseGradleTest() {
             plugins {
               kotlin("jvm")
               kotlin("kapt")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             dependencies {
               compileOnly(libs.dagger2.annotations)
@@ -1265,7 +1265,7 @@ class IncrementalTest : BaseGradleTest() {
           buildFile {
             plugins {
               kotlin("jvm")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             anvil {
               generateDaggerFactories.set(true)
@@ -1302,7 +1302,7 @@ class IncrementalTest : BaseGradleTest() {
             plugins {
               kotlin("jvm")
               kotlin("kapt")
-              id("com.squareup.anvil")
+              id("com.rickbusarow.anvil")
             }
             dependencies {
               compileOnly(libs.dagger2.annotations)

@@ -1,5 +1,6 @@
 package com.squareup.anvil.compiler.testing.compilation
 
+import com.squareup.anvil.compiler.testing.BuildConfig
 import com.squareup.anvil.compiler.testing.BuildConfig.anvilVersion
 import io.github.classgraph.ClassGraph
 import java.io.File
@@ -79,7 +80,7 @@ public object HostClasspath {
     return findInClasspathOrNull("${localBuildDirLibs}$moduleName-$anvilVersion${afterVersion}\\.jar".toRegex())
       // If the jar isn't in a project build directory, this is probably being consumed by an external project.
       // In that case, the jar should resolve like any other dependency from the Gradle cache.
-      ?: findInClasspath(group = "com.squareup.anvil", module = moduleName, version = anvilVersion)
+      ?: findInClasspath(group = BuildConfig.group, module = moduleName, version = anvilVersion)
   }
 
   public val anvilAnnotations: File by lazy { anvilModuleJar("annotations") }
