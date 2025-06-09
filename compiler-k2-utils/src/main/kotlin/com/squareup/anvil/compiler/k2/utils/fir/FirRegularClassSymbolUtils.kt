@@ -16,8 +16,8 @@ public fun FirRegularClassSymbol.resolvedTypeRef(): FirResolvedTypeRef {
 }
 
 /**
- * Creates the type name symbol as you would see it in a type argument, like
- * `com.foo.Bar` in `List<com.foo.Bar>`.
+ * Creates the type name symbol as you would see it in a type argument, like `com.foo.Bar` in
+ * `List<com.foo.Bar>`.
  */
 internal fun FirRegularClassSymbol.coneLookupTagBasedType(): ConeLookupTagBasedType {
   return classId.toLookupTag().constructType(
@@ -26,9 +26,7 @@ internal fun FirRegularClassSymbol.coneLookupTagBasedType(): ConeLookupTagBasedT
   )
 }
 
-/**
- * Creates a `kotlin.reflect.KClass` reference to the class symbol, like `KClass<com.foo.Bar>`.
- */
+/** Creates a `kotlin.reflect.KClass` reference to the class symbol, like `KClass<com.foo.Bar>`. */
 internal fun FirRegularClassSymbol.toKClassRef(): ConeClassLikeType =
   StandardClassIds.KClass.constructClassLikeType(
     typeArguments = arrayOf(coneLookupTagBasedType()),

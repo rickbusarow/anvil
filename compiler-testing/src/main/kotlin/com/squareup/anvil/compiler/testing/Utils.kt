@@ -21,14 +21,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.internal.DoubleCheck
-import org.jetbrains.kotlin.name.FqName
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Qualifier
-import kotlin.reflect.KClass
-
-internal val KClass<*>.fqName: FqName
-  get() = FqName(requireNotNull(qualifiedName))
 
 internal val mergeComponentFqName = MergeComponent::class.fqName
 internal val mergeSubcomponentFqName = MergeSubcomponent::class.fqName
@@ -103,7 +98,7 @@ internal inline fun <T> Iterable<T>.singleOrEmpty(predicate: (T) -> Boolean): T?
 private val truePredicate: (Any?) -> Boolean = { true }
 
 /**
- * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this
- * method throws an exception if more than one element is found.
+ * Returns single element, or `null` if the collection is empty. Unlike [singleOrNull] this method
+ * throws an exception if more than one element is found.
  */
 internal fun <T> Iterable<T>.singleOrEmpty(): T? = singleOrEmpty(truePredicate)

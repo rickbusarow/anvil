@@ -18,4 +18,10 @@ public class AnvilSessionComponentAccessor<T : AnvilSessionComponent>(
   ): AnvilSessionComponent {
     TODO("Not yet implemented")
   }
+
+  // public operator fun getValue(thisRef: AnvilFirContext, property: KProperty<*>): T {
+  //   return extractValue(thisRef)
+  //     ?: default
+  //     ?: error("No '$keyQualifiedName'($id) in array owner: $thisRef")
+  // }
 }

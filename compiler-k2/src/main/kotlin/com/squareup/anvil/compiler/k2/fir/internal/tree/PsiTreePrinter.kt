@@ -3,8 +3,8 @@ package com.squareup.anvil.compiler.k2.fir.internal.tree
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 
 /**
- * prints a tree starting at any arbitrary psi element,
- * showing all its children types and their text
+ * prints a tree starting at any arbitrary psi element, showing all its children types and their
+ * text
  */
 internal class PsiTreePrinter(
   whitespaceChar: Char = ' ',

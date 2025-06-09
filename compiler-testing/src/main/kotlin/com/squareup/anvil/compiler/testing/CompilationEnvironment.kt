@@ -120,10 +120,8 @@ public interface CompilationEnvironment : TestEnvironment {
    *    utilities for scanning or packaging them (e.g., `jar` creation).
    *
    * @param sourceFiles a list of .kt or .java files to be compiled
-   * @param firExtensions optional FIR extension factories for custom processing
-   * @param configuration a lambda to customize the [Compile2CompilationConfiguration] before
-   *   compilation
-   * @param configuration an optional config transform to modify the default
+   * @param firProcessors optional FIR processor factories for custom processing
+   * @param configuration an optional transform to modify the default
    *   [Compile2CompilationConfiguration]
    * @param expectedExitCode automatically asserted against each compilation phase's result
    * @param previousCompilation a previous [Compile2Result] to add to the classpath for this

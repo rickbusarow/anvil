@@ -17,7 +17,7 @@ class AnnotationMergingTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2
 
     val dep1 = compile2(
       """
-        package com.squareup.test.dep1 
+        package com.squareup.test.dep1
 
         @dagger.Module
         @com.squareup.anvil.annotations.ContributesTo(Unit::class)
@@ -44,7 +44,7 @@ class AnnotationMergingTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2
         interface Dep2A
 
         @com.squareup.anvil.annotations.ContributesBinding(Unit::class)
-        class Dep2AImpl @javax.inject.Inject constructor() : Dep2A 
+        class Dep2AImpl @javax.inject.Inject constructor() : Dep2A
 
         @dagger.Module
         @com.squareup.anvil.annotations.ContributesTo(Unit::class)
@@ -108,7 +108,7 @@ class AnnotationMergingTest : CompilationModeTest(MODE_DEFAULTS.filter { it.isK2
 
     val dep1 = compile2(
       """
-        package com.squareup.test.dep1 
+        package com.squareup.test.dep1
 
         @com.squareup.anvil.annotations.ContributesTo(Unit::class)
         interface DependencySuper1

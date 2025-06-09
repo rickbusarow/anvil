@@ -9,46 +9,12 @@ import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.extensions.FirExtensionSessionComponent
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
-import org.jetbrains.kotlin.util.AbstractArrayMapOwner
 import org.jetbrains.kotlin.util.ComponentArrayOwner
 import org.jetbrains.kotlin.util.TypeRegistry
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
-
-public class AnvilSessionComponentAccessor<T : AnvilSessionComponent>(
-  private val keyQualifiedName: String,
-  id: Int,
-  public val default: T? = null,
-) : AbstractArrayMapOwner.AbstractArrayMapAccessor<AnvilSessionComponent, AnvilSessionComponent, T>(
-  id,
-),
-  ReadOnlyProperty<AbstractArrayMapOwner<AnvilSessionComponent, AnvilSessionComponent>, AnvilSessionComponent> {
-
-  override fun getValue(
-    thisRef: AbstractArrayMapOwner<AnvilSessionComponent, AnvilSessionComponent>,
-    property: KProperty<*>,
-  ): AnvilSessionComponent {
-    TODO("Not yet implemented")
-  }
-
-  // public operator fun getValue(thisRef: AnvilFirContext, property: KProperty<*>): T {
-  //   return extractValue(thisRef)
-  //     ?: default
-  //     ?: error("No '$keyQualifiedName'($id) in array owner: $thisRef")
-  // }
-}
 
 private class DelegatingComponentArrayOwner(
   override val typeRegistry: TypeRegistry<AnvilSessionComponent, AnvilSessionComponent>,
 ) : ComponentArrayOwner<AnvilSessionComponent, AnvilSessionComponent>()
-
-public abstract class AnvilSessionComponent(
-  session: FirSession,
-) : HasFirCachesFactory(session.firCachesFactory),
-  HasAnvilFirContext {
-
-  override val anvilContext: AnvilFirContext by lazyValue { session.anvilContext }
-}
 
 public class MyAnvilSessionComponent(session: FirSession) : AnvilSessionComponent(session)
 

@@ -25,10 +25,10 @@ class CustomGeneratorsTest : CompilationModeTest() {
         package com.squareup.test
 
         import javax.inject.Inject
-    
+
         interface ParentInterface
-    
-        class InjectClass 
+
+        class InjectClass
         """,
         firProcessors = listOf(
           AnvilFirProcessor.Factory { session ->

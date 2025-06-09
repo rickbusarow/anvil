@@ -213,8 +213,9 @@ public val Class<*>.fqName: FqName
 /** Returns the FqName for this KClass. */
 @Suppress("RecursivePropertyAccessor")
 public val KClass<*>.fqName: FqName
-  get() = this.java.enclosingClass?.kotlin?.fqName?.child(Name.identifier(simpleName!!))
-    ?: FqName(qualifiedName!!)
+  get() = this.java.enclosingClass?.kotlin?.fqName
+    ?.child(Name.identifier(requireNotNull(simpleName)))
+    ?: FqName(requireNotNull(qualifiedName))
 
 public fun FqName.child(capitalize: Boolean = true): ReadOnlyProperty<Any?, FqName> =
   nested(capitalize)

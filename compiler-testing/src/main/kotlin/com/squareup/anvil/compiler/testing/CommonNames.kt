@@ -32,7 +32,8 @@ internal object CommonNames {
   val anyQualifier = FqName("com.squareup.test.AnyQualifier")
 }
 
-internal operator fun Compile2Result.invoke(fqName: FqName): Class<*> = classLoader.loadClass(fqName)
+internal operator fun Compile2Result.invoke(fqName: FqName): Class<*> =
+  classLoader.loadClass(fqName)
 
 internal operator fun ClassLoader.get(fqName: FqName): Class<*> = loadClass(fqName)
 internal operator fun ClassLoader.get(fqName: String): Class<*> = loadClass(fqName)
@@ -42,87 +43,87 @@ internal operator fun ScanResult.get(fqName: String): ClassInfo = getClassInfo(f
 internal val Compile2Result.contributingObject: Class<*>
   get() = classLoader.loadClass(CommonNames.contributingObject)
 internal val Compile2Result.contributingObjectInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.contributingObject)
+  get() = scanResult.getClassInfo(CommonNames.contributingObject)
 internal val Compile2Result.contributingInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.contributingInterface)
 internal val Compile2Result.contributingInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.contributingInterface)
+  get() = scanResult.getClassInfo(CommonNames.contributingInterface)
 internal val Compile2Result.secondContributingInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.secondContributingInterface)
 internal val Compile2Result.secondContributingInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.secondContributingInterface)
+  get() = scanResult.getClassInfo(CommonNames.secondContributingInterface)
 internal val Compile2Result.someClassInnerInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.someClassInnerInterface)
 internal val Compile2Result.someClassInnerInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.someClassInnerInterface)
+  get() = scanResult.getClassInfo(CommonNames.someClassInnerInterface)
 internal val Compile2Result.parentInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.parentInterface)
 internal val Compile2Result.parentInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.parentInterface)
+  get() = scanResult.getClassInfo(CommonNames.parentInterface)
 internal val Compile2Result.parentInterface1: Class<*>
   get() = classLoader.loadClass(CommonNames.parentInterface1)
 internal val Compile2Result.parentInterface1Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.parentInterface1)
+  get() = scanResult.getClassInfo(CommonNames.parentInterface1)
 internal val Compile2Result.parentInterface2: Class<*>
   get() = classLoader.loadClass(CommonNames.parentInterface2)
 internal val Compile2Result.parentInterface2Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.parentInterface2)
+  get() = scanResult.getClassInfo(CommonNames.parentInterface2)
 internal val Compile2Result.componentInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.componentInterface)
 internal val Compile2Result.componentInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.componentInterface)
+  get() = scanResult.getClassInfo(CommonNames.componentInterface)
 internal val Compile2Result.subcomponentInterface: Class<*>
   get() = classLoader.loadClass(CommonNames.subcomponentInterface)
 internal val Compile2Result.subcomponentInterfaceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.subcomponentInterface)
+  get() = scanResult.getClassInfo(CommonNames.subcomponentInterface)
 internal val Compile2Result.daggerModule1: Class<*>
   get() = classLoader.loadClass(CommonNames.daggerModule1)
 internal val Compile2Result.daggerModule1Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.daggerModule1)
+  get() = scanResult.getClassInfo(CommonNames.daggerModule1)
 internal val Compile2Result.assistedService: Class<*>
   get() = classLoader.loadClass(CommonNames.assistedService)
 internal val Compile2Result.assistedServiceInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.assistedService)
+  get() = scanResult.getClassInfo(CommonNames.assistedService)
 internal val Compile2Result.assistedServiceFactory: Class<*>
   get() = classLoader.loadClass(CommonNames.assistedServiceFactory)
 internal val Compile2Result.assistedServiceFactoryInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.assistedServiceFactory)
+  get() = scanResult.getClassInfo(CommonNames.assistedServiceFactory)
 internal val Compile2Result.daggerModule2: Class<*>
   get() = classLoader.loadClass(CommonNames.daggerModule2)
 internal val Compile2Result.daggerModule2Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.daggerModule2)
+  get() = scanResult.getClassInfo(CommonNames.daggerModule2)
 internal val Compile2Result.daggerModule3: Class<*>
   get() = classLoader.loadClass(CommonNames.daggerModule3)
 internal val Compile2Result.daggerModule3Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.daggerModule3)
+  get() = scanResult.getClassInfo(CommonNames.daggerModule3)
 internal val Compile2Result.daggerModule4: Class<*>
   get() = classLoader.loadClass(CommonNames.daggerModule4)
 internal val Compile2Result.daggerModule4Info: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.daggerModule4)
+  get() = scanResult.getClassInfo(CommonNames.daggerModule4)
 internal val Compile2Result.componentInterfaceInnerModule: Class<*>
   get() = classLoader.loadClass(CommonNames.componentInterfaceInnerModule)
 internal val Compile2Result.componentInterfaceInnerModuleInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.componentInterfaceInnerModule)
+  get() = scanResult.getClassInfo(CommonNames.componentInterfaceInnerModule)
 internal val Compile2Result.parentClassNestedInjectClass: Class<*>
   get() = classLoader.loadClass(CommonNames.parentClassNestedInjectClass)
 internal val Compile2Result.parentClassNestedInjectClassInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.parentClassNestedInjectClass)
+  get() = scanResult.getClassInfo(CommonNames.parentClassNestedInjectClass)
 internal val Compile2Result.injectClass: Class<*>
   get() = classLoader.loadClass(CommonNames.injectClass)
 internal val Compile2Result.injectClassInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.injectClass)
+  get() = scanResult.getClassInfo(CommonNames.injectClass)
 internal val Compile2Result.injectClassFactory: Class<*>
   get() = classLoader.loadClass(CommonNames.injectClassFactory)
 internal val Compile2Result.injectClassFactoryInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.injectClassFactory)
+  get() = scanResult.getClassInfo(CommonNames.injectClassFactory)
 internal val Compile2Result.javaClass: Class<*>
   get() = classLoader.loadClass(CommonNames.javaClass)
 internal val Compile2Result.javaClassInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.javaClass)
+  get() = scanResult.getClassInfo(CommonNames.javaClass)
 internal val Compile2Result.anyQualifier: Class<*>
   get() = classLoader.loadClass(CommonNames.anyQualifier)
 internal val Compile2Result.anyQualifierInfo: ClassInfo
-  get() = classGraph.getClassInfo(CommonNames.anyQualifier)
+  get() = scanResult.getClassInfo(CommonNames.anyQualifier)
 
 internal fun ScanResult.getClassInfo(fqName: FqName) = getClassInfo(fqName.asString())
 internal fun ScanResult.getClassInfoOrNull(fqName: FqName) = try {
@@ -141,6 +142,7 @@ internal fun ClassLoader.loadClassOrNull(fqName: FqName): Class<*>? = try {
 internal fun FqName.loadClass(classLoader: ClassLoader): Class<*> {
   return classLoader.loadClass(this.asString())
 }
+
 internal fun FqName.loadClass(scanResult: ScanResult): ClassInfo? {
   return scanResult.getClassInfo(this)
 }

@@ -3,9 +3,11 @@ package com.squareup.anvil.compiler.testing.classgraph
 import com.squareup.anvil.compiler.testing.TestNames
 import com.squareup.anvil.compiler.testing.asJavaNameString
 import dagger.Component
+import io.github.classgraph.AnnotationInfo
 import io.github.classgraph.ClassInfo
 import io.github.classgraph.ClassInfoList
 import io.github.classgraph.FieldInfo
+import io.github.classgraph.HasName
 import io.github.classgraph.PackageInfo
 import io.github.classgraph.ScanResult
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -39,9 +41,15 @@ public fun ClassInfo.field(): ReadOnlyProperty<Any?, FieldInfo> =
 public fun ClassInfo.declaredField(): ReadOnlyProperty<Any?, FieldInfo> =
   ReadOnlyProperty { _, property -> getDeclaredFieldInfo(property.name).shouldNotBeNull() }
 
+public fun ClassInfo.getAnnotationInfo(fqName: FqName): AnnotationInfo? {
+  return getAnnotationInfo(fqName.asString())
+}
+
 public fun FqName.getClassInfo(scanResult: ScanResult): ClassInfo {
   return scanResult.getClassInfo(this)
 }
+
+public fun Collection<HasName>.fqNames(): List<FqName> = map { FqName(it.name) }
 
 public operator fun ScanResult.get(fqName: FqName): ClassInfo = getClassInfo(fqName)
 public operator fun ScanResult.get(fqName: String): ClassInfo = getClassInfo(fqName)

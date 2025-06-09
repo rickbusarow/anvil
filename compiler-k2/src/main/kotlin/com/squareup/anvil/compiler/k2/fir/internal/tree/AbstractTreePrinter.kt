@@ -4,14 +4,14 @@ import com.squareup.anvil.compiler.k2.fir.internal.tree.AbstractTreePrinter.Colo
 import kotlin.experimental.ExperimentalTypeInference
 
 /**
- * Conditionally applies the provided transform function to the receiver
- * object if the predicate is true, then returns the result of that transform.
- * If the predicate is false, the receiver object itself is returned.
+ * Conditionally applies the provided transform function to the receiver object if the predicate is
+ * true, then returns the result of that transform. If the predicate is false, the receiver object
+ * itself is returned.
  *
  * @param predicate The predicate to determine whether to apply the transform function.
  * @param transform The transform function to apply to the receiver object.
- * @return The result of the transform function if the
- *   predicate is true, or the receiver object itself otherwise.
+ * @return The result of the transform function if the predicate is true, or the receiver object
+ *   itself otherwise.
  */
 @OptIn(ExperimentalTypeInference::class)
 internal inline fun <T : R, R> T.letIf(
@@ -27,8 +27,8 @@ internal fun String.noAnsi(): String = replace("""\u001B\[[;\d]*m""".toRegex(), 
 /**
  * Base class for printing a tree structure of objects of type [T].
  *
- * @param whitespaceChar the character to use for replacing
- *   whitespaces in the node text when printing. Default is ' '.
+ * @param whitespaceChar the character to use for replacing whitespaces in the node text when
+ *   printing. Default is ' '.
  */
 internal abstract class AbstractTreePrinter<T : Any>(
   private val whitespaceChar: Char? = null,

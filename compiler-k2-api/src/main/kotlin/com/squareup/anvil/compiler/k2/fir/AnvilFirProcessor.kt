@@ -2,7 +2,6 @@ package com.squareup.anvil.compiler.k2.fir
 
 import com.squareup.anvil.annotations.internal.InternalAnvilApi
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.caches.FirCachesFactory
 import org.jetbrains.kotlin.fir.caches.FirLazyValue
 import org.jetbrains.kotlin.fir.caches.firCachesFactory
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
@@ -27,24 +26,13 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import kotlin.properties.Delegates
 
-public abstract class HasFirCachesFactory(
-  protected val cachesFactory: FirCachesFactory,
-) {
-  protected inline fun <T, R> FirLazyValue<T>.map(
-    crossinline transform: (T) -> R,
-  ): FirLazyValue<R> = lazyValue { transform(this.getValue()) }
-
-  protected inline fun <T> lazyValue(crossinline initializer: () -> T): FirLazyValue<T> {
-    return cachesFactory.createLazyValue { initializer() }
-  }
-}
-
 @RequiresOptIn("Is this actually necessary?", level = RequiresOptIn.Level.WARNING)
 public annotation class ProcessorFlushingCheck
 
 /**
- * @param session
- * @property isFlushing If true, this processor will be invoked only after all non-isFlushing processors of the same type
+ * @property session
+ * @property isFlushing If true, this processor will be invoked only after all non-isFlushing
+ *   processors of the same type
  */
 public sealed class AnvilFirProcessor(
   protected val session: FirSession,

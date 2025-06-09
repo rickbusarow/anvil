@@ -263,13 +263,14 @@ public fun createOptInAnnotation(optInType: ClassId, session: FirSession): FirAn
 }
 
 /**
- * Creates a [FirAnnotation] instance with the specified type, argument mapping, source, and use-site target.
+ * Creates a [FirAnnotation] instance with the specified type, argument mapping, source, and
+ * use-site target.
  *
  * @param type The [ClassId] representing the annotation type.
  * @param containingDeclarationSymbol The symbol of the declaration to be annotated.
- * @param argumentList Named parameters.  Defaults to empty.
+ * @param argumentList Named parameters. Defaults to empty.
  * @param source `null` or a [org.jetbrains.kotlin.KtFakeSourceElement] is typically fine.
- * @param useSiteTarget `get`, `set`, `field`, `file`, etc.  see [AnnotationUseSiteTarget].
+ * @param useSiteTarget `get`, `set`, `field`, `file`, etc. see [AnnotationUseSiteTarget].
  * @return A [FirAnnotation] instance.
  */
 public fun createFirAnnotationCall(
