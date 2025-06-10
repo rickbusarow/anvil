@@ -136,7 +136,7 @@ interface FileStubs {
   fun androidBlockString(namespace: String = "com.squareup.anvil.android"): String {
     return """
     android {
-      compileSdk = 33
+      compileSdk = 35
       namespace = "$namespace"
 
       defaultConfig {

@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-  compileSdk = 33
+  compileSdk = 35
   namespace = "com.squareup.anvil.mpp"
 
   defaultConfig {
