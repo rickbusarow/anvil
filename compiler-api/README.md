@@ -25,44 +25,58 @@ Later you'll use this annotation to give your code generator a hint for work to 
 In the code generator module `:sample:code-generator` you need to import the `compiler-api`
 artifact:
 
+<!-- doks anvil-version:1 -->
 ```groovy
 dependencies {
-  api "com.squareup.anvil:compiler-api:${latest_version}"
+  api "com.squareup.anvil:compiler-api:2.5.2-SNAPSHOT"
 
   // Optional:
   compileOnly "com.google.auto.service:auto-service-annotations:1.0"
   kapt "com.google.auto.service:auto-service:1.0"
 }
 ```
+<!-- doks END -->
 
 After that implement the `CodeGenerator` interface:
 
+<!-- doks whole-CodeGenerator:1 -->
+
 ```kotlin
 @AutoService(CodeGenerator::class)
-class SampleCodeGenerator : CodeGenerator {
+class CustomCodeGeneratorSample : CodeGenerator {
+
   override fun isApplicable(context: AnvilContext): Boolean = true
 
   override fun generateCode(
     codeGenDir: File,
     module: ModuleDescriptor,
-    projectFiles: Collection<KtFile>
-  ): Collection<GeneratedFile> {
-    return projectFiles
-      .classAndInnerClassReferences(module)
+    projectFiles: Collection<KtFile>,
+  ): Collection<FileWithContent> {
+    return projectFiles.classAndInnerClassReferences(module)
       .filter { it.isAnnotatedWith(FqName("sample.MyAnnotation")) }
       .map { clazz ->
-        // ...
         createGeneratedFile(
-          codeGenDir = codeGenDir,
-          packageName = // ...
-          fileName = // ...
-          content = // ...
+          codeGenDir,
+          packageName = clazz.packageFqName.asString(),
+          fileName = "MyGeneratedClass",
+          content = """
+            package ${clazz.packageFqName}
+            
+            class MyGeneratedClass {
+              fun doSomething() {
+                println("Hello, World!")
+              }
+            }
+          """.trimIndent(),
+          sourceFile = clazz.containingFileAsJavaFile,
         )
       }
       .toList()
   }
 }
 ```
+
+<!-- doks END -->
 
 Note that the sample code generator is annotated with `@AutoService`. It's recommended to use the
 [AutoService](https://github.com/google/auto/tree/master/service) library to generate necessary
@@ -74,9 +88,11 @@ multiple times until no code generators generate code anymore.
 
 To use your new code generator in any module you need to add the module to the Anvil classpath:
 
+<!-- doks anvil-plugin:1 -->
+
 ```groovy
 plugins {
-  id 'com.squareup.anvil' version "${latest_version}"
+  id 'com.squareup.anvil' version "2.5.2-SNAPSHOT"
 }
 
 dependencies {
@@ -84,6 +100,8 @@ dependencies {
   implementation project(':sample:annotation')
 }
 ```
+
+<!-- doks END -->
 
 ## Limitations
 
