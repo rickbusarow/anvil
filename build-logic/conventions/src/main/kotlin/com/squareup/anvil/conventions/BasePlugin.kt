@@ -143,8 +143,12 @@ abstract class BasePlugin : Plugin<Project> {
         it.languageVersion.set(JavaLanguageVersion.of(target.libs.versions.jvm.toolchain.get()))
       }
       target.javaExtension.targetCompatibility = JavaVersion.toVersion(target.jvmTargetInt())
-      target.tasks.withType(JavaCompile::class.java).configureEach { task ->
-        task.options.release.set(target.jvmTargetInt())
+
+      // Don't set the release version for Android projects.  It will be set by the Android plugin.
+      if (target.extensions.findByName("android") == null) {
+        target.tasks.withType(JavaCompile::class.java).configureEach { task ->
+          task.options.release.set(target.jvmTargetInt())
+        }
       }
     }
   }
