@@ -1,14 +1,20 @@
-public final class com/squareup/anvil/compiler/k2/fir/AnvilFirContext {
-	public fun <init> (Lorg/jetbrains/kotlin/cli/common/messages/MessageCollector;)V
+public final class com/squareup/anvil/compiler/k2/fir/AnvilFirContext : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
+	public static final field Companion Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext$Companion;
+	public fun <init> (Lorg/jetbrains/kotlin/cli/common/messages/MessageCollector;Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public final fun getLogger ()Lorg/jetbrains/kotlin/util/Logger;
 	public final fun getMessageCollector ()Lorg/jetbrains/kotlin/cli/common/messages/MessageCollector;
 }
 
-public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirDeclarationGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirDeclarationGenerationExtension, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+public final class com/squareup/anvil/compiler/k2/fir/AnvilFirContext$Companion : org/jetbrains/kotlin/fir/util/ConeTypeRegistry {
 }
 
-public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirDeclarationGenerationExtension$Factory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionFactory {
+public final class com/squareup/anvil/compiler/k2/fir/AnvilFirContextKt {
+	public static final fun getAnvilContext (Lorg/jetbrains/kotlin/fir/FirSession;)Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+}
+
+public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirDeclarationGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirDeclarationGenerationExtension, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 }
 
 public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
@@ -16,22 +22,45 @@ public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExten
 }
 
 public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionFactory {
-	public abstract fun create (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;)Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
+	public abstract fun create ()Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
 }
 
-public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
+	protected final fun lazyValue (Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
+	protected final fun map (Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 }
 
-public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent$Factory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionFactory {
+public final class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent2 : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 }
 
 public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirSupertypeGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirSupertypeGenerationExtension, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
-	public fun <init> (Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 }
 
-public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirSupertypeGenerationExtension$Factory : com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionFactory {
+public abstract class com/squareup/anvil/compiler/k2/fir/AnvilSessionComponent : com/squareup/anvil/compiler/k2/fir/HasFirCachesFactory, com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
+	public fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+}
+
+public final class com/squareup/anvil/compiler/k2/fir/AnvilSessionComponentAccessor : org/jetbrains/kotlin/util/AbstractArrayMapOwner$AbstractArrayMapAccessor, kotlin/properties/ReadOnlyProperty {
+	public fun <init> (Ljava/lang/String;ILcom/squareup/anvil/compiler/k2/fir/AnvilSessionComponent;)V
+	public synthetic fun <init> (Ljava/lang/String;ILcom/squareup/anvil/compiler/k2/fir/AnvilSessionComponent;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDefault ()Lcom/squareup/anvil/compiler/k2/fir/AnvilSessionComponent;
+	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+	public fun getValue (Lorg/jetbrains/kotlin/util/AbstractArrayMapOwner;Lkotlin/reflect/KProperty;)Lcom/squareup/anvil/compiler/k2/fir/AnvilSessionComponent;
+}
+
+public abstract interface class com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
+	public abstract fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+}
+
+public abstract class com/squareup/anvil/compiler/k2/fir/HasFirCachesFactory {
+	public fun <init> (Lorg/jetbrains/kotlin/fir/caches/FirCachesFactory;)V
+	protected final fun getCachesFactory ()Lorg/jetbrains/kotlin/fir/caches/FirCachesFactory;
+	protected final fun lazyValue (Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
+	protected final fun map (Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 }
 

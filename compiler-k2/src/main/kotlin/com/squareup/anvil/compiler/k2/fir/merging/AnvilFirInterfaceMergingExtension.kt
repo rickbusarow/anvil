@@ -1,8 +1,5 @@
 package com.squareup.anvil.compiler.k2.fir.merging
 
-import com.google.auto.service.AutoService
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
-import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirSupertypeGenerationExtension
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.utils.fir.contributesToScope
@@ -15,7 +12,6 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
-import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConeType
 import org.jetbrains.kotlin.fir.resolve.fqName
@@ -29,18 +25,8 @@ import org.jetbrains.kotlin.fir.types.classId
  * components annotated with `@MergeComponent`
  */
 public class AnvilFirInterfaceMergingExtension(
-  anvilFirContext: AnvilFirContext,
   session: FirSession,
-) : AnvilFirSupertypeGenerationExtension(anvilFirContext, session) {
-
-  @AutoService(AnvilFirExtensionFactory::class)
-  public class Factory : AnvilFirSupertypeGenerationExtension.Factory {
-    override fun create(anvilFirContext: AnvilFirContext): FirSupertypeGenerationExtension.Factory {
-      return FirSupertypeGenerationExtension.Factory { session ->
-        AnvilFirInterfaceMergingExtension(anvilFirContext, session)
-      }
-    }
-  }
+) : AnvilFirSupertypeGenerationExtension(session) {
 
   override fun FirDeclarationPredicateRegistrar.registerPredicates() {
     register(AnvilPredicates.hasAnvilContributesTo)

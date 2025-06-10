@@ -1,15 +1,11 @@
 package com.squareup.anvil.compiler.testing.compilation
 
 import com.google.auto.service.AutoService
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
-import com.squareup.anvil.compiler.k2.fir.AnvilFirDeclarationGenerationExtension
-import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionFactory
-import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionSessionComponent
-import com.squareup.anvil.compiler.k2.fir.AnvilFirSupertypeGenerationExtension
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.messageCollector
+import org.jetbrains.kotlin.fir.extensions.FirExtension
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 
@@ -36,26 +32,23 @@ internal class Compile2CompilerPluginRegistrar : CompilerPluginRegistrar() {
   }
 
   data class Compile2RegistrarParams(
-    val firExtensionFactories: List<AnvilFirExtensionFactory<*>>,
+    val firExtensionFactories: List<FirExtension.Factory<*>>,
   )
 }
 
 public class Compile2FirExtensionRegistrar(
   private val messageCollector: MessageCollector,
-  private val factories: List<AnvilFirExtensionFactory<*>>,
+  private val factories: List<FirExtension.Factory<*>>,
 ) : FirExtensionRegistrar() {
 
   override fun ExtensionRegistrarContext.configurePlugin() {
 
-    val ctx = AnvilFirContext(messageCollector)
-
-    for (factory in factories) {
-
-      when (factory) {
-        is AnvilFirDeclarationGenerationExtension.Factory -> factory.create(ctx).unaryPlus()
-        is AnvilFirSupertypeGenerationExtension.Factory -> factory.create(ctx).unaryPlus()
-        is AnvilFirExtensionSessionComponent.Factory -> factory.create(ctx).unaryPlus()
-      }
+    check(factories.isEmpty()) {
+      """
+        |Custom factories are specified, but they're not supported currently...
+        |
+        |${factories.joinToString(separator = "\n") { it::class.qualifiedName ?: "<unknown>" }}
+      """.trimMargin()
     }
   }
 }

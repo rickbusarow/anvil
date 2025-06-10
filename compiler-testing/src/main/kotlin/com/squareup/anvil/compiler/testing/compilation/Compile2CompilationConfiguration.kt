@@ -2,10 +2,10 @@ package com.squareup.anvil.compiler.testing.compilation
 
 import com.rickbusarow.kase.stdlib.div
 import com.rickbusarow.kase.stdlib.letIf
-import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionFactory
 import com.squareup.anvil.compiler.testing.BuildConfig
 import com.squareup.anvil.compiler.testing.CompilationMode
 import org.jetbrains.kotlin.config.LanguageVersion
+import org.jetbrains.kotlin.fir.extensions.FirExtension
 import java.io.File
 
 /**
@@ -51,7 +51,7 @@ public data class Compile2CompilationConfiguration(
   val compilationClasspath: List<File>,
   val compilerPluginClasspath: List<File>,
   val kaptPluginClasspath: List<File>,
-  val firExtensions: List<AnvilFirExtensionFactory<*>>,
+  val firExtensions: List<FirExtension.Factory<*>>,
 ) {
 
   public companion object {
@@ -70,7 +70,7 @@ public data class Compile2CompilationConfiguration(
      */
     public fun default(
       sourceFiles: List<File>,
-      firExtensions: List<AnvilFirExtensionFactory<*>>,
+      firExtensions: List<FirExtension.Factory<*>>,
       workingDir: File,
       useKapt: Boolean,
       mode: CompilationMode,

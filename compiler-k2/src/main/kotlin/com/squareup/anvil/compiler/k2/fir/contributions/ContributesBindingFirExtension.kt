@@ -1,7 +1,6 @@
 package com.squareup.anvil.compiler.k2.fir.contributions
 
 import com.squareup.anvil.annotations.ContributesBinding
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirDeclarationGenerationExtension
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
@@ -42,9 +41,8 @@ import org.jetbrains.kotlin.name.Name
  */
 @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
 public class ContributesBindingFirExtension(
-  anvilFirContext: AnvilFirContext,
   session: FirSession,
-) : AnvilFirDeclarationGenerationExtension(anvilFirContext, session) {
+) : AnvilFirDeclarationGenerationExtension(session) {
 
   override fun FirDeclarationPredicateRegistrar.registerPredicates() {
     register(AnvilPredicates.hasAnvilContributesBinding)

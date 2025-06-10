@@ -1,6 +1,5 @@
 package com.squareup.anvil.compiler.k2.fir.contributions
 
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionSessionComponent
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates.hasAnvilContributesBinding
 import com.squareup.anvil.compiler.k2.utils.names.joinSimpleNames
@@ -16,10 +15,8 @@ import org.jetbrains.kotlin.name.ClassId
  * Responsible for tracking the classes annotated with @ContributesBinding and creating + caching
  * their generated Dagger module metadata.
  */
-public class ContributesBindingSessionComponent(
-  anvilFirContext: AnvilFirContext,
-  session: FirSession,
-) : AnvilFirExtensionSessionComponent(anvilFirContext, session) {
+public class ContributesBindingSessionComponent(session: FirSession) :
+  AnvilFirExtensionSessionComponent(session) {
   /**
    * A map to help us track the original annotated classes' bindings, and their generated module
    * IDs. E.g. Key: "Foo_BindingModule", Value: ClassSymbol<Foo>

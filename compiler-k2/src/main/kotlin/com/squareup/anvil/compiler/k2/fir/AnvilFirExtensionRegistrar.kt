@@ -1,7 +1,13 @@
 package com.squareup.anvil.compiler.k2.fir
 
+import com.squareup.anvil.compiler.k2.constructor.inject.FirInjectConstructorFactoryGenerationExtension
+import com.squareup.anvil.compiler.k2.fir.contributions.ContributesBindingFirExtension
+import com.squareup.anvil.compiler.k2.fir.contributions.ContributesBindingSessionComponent
+import com.squareup.anvil.compiler.k2.fir.merging.AnvilFirAnnotationMergingExtension
+import com.squareup.anvil.compiler.k2.fir.merging.AnvilFirInterfaceMergingExtension
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
+import org.jetbrains.kotlin.fir.extensions.FirExtensionSessionComponent
 import java.util.ServiceLoader
 
 public class AnvilFirExtensionRegistrar(
@@ -10,20 +16,21 @@ public class AnvilFirExtensionRegistrar(
 
   override fun ExtensionRegistrarContext.configurePlugin() {
 
-    val context = AnvilFirContext(messageCollector)
+    +FirExtensionSessionComponent.Factory { AnvilFirContext(messageCollector, it) }
 
     val factories = ServiceLoader.load(
-      AnvilFirExtensionFactory::class.java,
+      FirExtensionSessionComponent.Factory::class.java,
       javaClass.classLoader,
     )
 
     for (factory in factories) {
-
-      when (factory) {
-        is AnvilFirDeclarationGenerationExtension.Factory -> factory.create(context).unaryPlus()
-        is AnvilFirSupertypeGenerationExtension.Factory -> factory.create(context).unaryPlus()
-        is AnvilFirExtensionSessionComponent.Factory -> factory.create(context).unaryPlus()
-      }
+      +factory
     }
+
+    +::ContributesBindingFirExtension
+    +::FirInjectConstructorFactoryGenerationExtension
+    +::AnvilFirAnnotationMergingExtension
+    +::AnvilFirInterfaceMergingExtension
+    +::ContributesBindingSessionComponent
   }
 }

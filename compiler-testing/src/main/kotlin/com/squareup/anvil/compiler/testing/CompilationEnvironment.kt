@@ -7,12 +7,12 @@ import com.rickbusarow.kase.ParamTestEnvironmentFactory
 import com.rickbusarow.kase.TestEnvironment
 import com.rickbusarow.kase.asClueCatching
 import com.rickbusarow.kase.stdlib.createSafely
-import com.squareup.anvil.compiler.k2.fir.AnvilFirExtensionFactory
 import com.squareup.anvil.compiler.testing.compilation.Compile2Compilation
 import com.squareup.anvil.compiler.testing.compilation.Compile2CompilationConfiguration
 import com.squareup.anvil.compiler.testing.compilation.Compile2Result
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.cli.common.ExitCode
+import org.jetbrains.kotlin.fir.extensions.FirExtension
 import java.io.File
 
 public interface K2CodeGenerator
@@ -66,7 +66,7 @@ public interface CompilationEnvironment : TestEnvironment {
   public fun compile2(
     @Language("kotlin") vararg kotlinSources: String,
     javaSources: List<String> = emptyList(),
-    firExtensions: List<AnvilFirExtensionFactory<*>> = emptyList(),
+    firExtensions: List<FirExtension.Factory<*>> = emptyList(),
     configuration: (Compile2CompilationConfiguration) -> Compile2CompilationConfiguration = { it },
     expectedExitCode: ExitCode = ExitCode.OK,
     previousCompilation: Compile2Result? = null,
@@ -139,7 +139,7 @@ public interface CompilationEnvironment : TestEnvironment {
    */
   public fun compile2(
     sourceFiles: List<File>,
-    firExtensions: List<AnvilFirExtensionFactory<*>> = emptyList(),
+    firExtensions: List<FirExtension.Factory<*>> = emptyList(),
     configuration: (Compile2CompilationConfiguration) -> Compile2CompilationConfiguration = { it },
     expectedExitCode: ExitCode = ExitCode.OK,
     previousCompilation: Compile2Result? = null,

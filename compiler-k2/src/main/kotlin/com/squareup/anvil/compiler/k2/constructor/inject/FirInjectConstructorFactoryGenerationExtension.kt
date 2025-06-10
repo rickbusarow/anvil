@@ -1,6 +1,5 @@
 package com.squareup.anvil.compiler.k2.constructor.inject
 
-import com.squareup.anvil.compiler.k2.fir.AnvilFirContext
 import com.squareup.anvil.compiler.k2.fir.AnvilFirDeclarationGenerationExtension
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
 import org.jetbrains.kotlin.GeneratedDeclarationKey
@@ -50,9 +49,8 @@ import kotlin.collections.get
  * ```
  */
 internal class FirInjectConstructorFactoryGenerationExtension(
-  anvilFirContext: AnvilFirContext,
   session: FirSession,
-) : AnvilFirDeclarationGenerationExtension(anvilFirContext, session) {
+) : AnvilFirDeclarationGenerationExtension(session) {
 
   private val factoriesToGenerate: Map<ClassId, InjectConstructorGenerationModel> by lazy {
     session.predicateBasedProvider.getSymbolsByPredicate(injectAnnotationPredicate)
