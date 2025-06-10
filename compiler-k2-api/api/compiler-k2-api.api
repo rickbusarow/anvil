@@ -12,17 +12,9 @@ public final class com/squareup/anvil/compiler/k2/fir/AnvilFirContextKt {
 	public static final fun getAnvilContext (Lorg/jetbrains/kotlin/fir/FirSession;)Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 }
 
-public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirDeclarationGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirDeclarationGenerationExtension, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
+public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirDeclarationGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirDeclarationGenerationExtension, com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
 	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
-}
-
-public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
-	public abstract fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
-}
-
-public abstract interface class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionFactory {
-	public abstract fun create ()Lorg/jetbrains/kotlin/fir/extensions/FirExtension$Factory;
+	public fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 }
 
 public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
@@ -31,13 +23,9 @@ public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessio
 	protected final fun map (Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 }
 
-public final class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent2 : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
+public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirSupertypeGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirSupertypeGenerationExtension, com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
 	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
-}
-
-public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirSupertypeGenerationExtension : org/jetbrains/kotlin/fir/extensions/FirSupertypeGenerationExtension, com/squareup/anvil/compiler/k2/fir/AnvilFirExtension {
-	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
-	public fun getAnvilFirContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
+	public fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
 }
 
 public abstract class com/squareup/anvil/compiler/k2/fir/AnvilSessionComponent : com/squareup/anvil/compiler/k2/fir/HasFirCachesFactory, com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
