@@ -26,6 +26,7 @@ internal fun KaptOptions.Builder.toPluginOptions(): List<String> {
     @Suppress(
       "ktlint:standard:annotation",
       "ktlint:standard:trailing-comma-on-declaration-site",
+      "REDUNDANT_ELSE_IN_WHEN",
     )
     when (option) {
       KaptCliOption.SOURCE_OUTPUT_DIR_OPTION -> sourcesOutputDir?.pluginOption()
