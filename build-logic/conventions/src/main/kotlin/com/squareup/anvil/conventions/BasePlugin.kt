@@ -1,11 +1,15 @@
 package com.squareup.anvil.conventions
 
 import com.rickbusarow.kgx.fromInt
+import com.rickbusarow.kgx.getValue
 import com.rickbusarow.kgx.javaExtension
+import com.rickbusarow.kgx.provideDelegate
+import com.rickbusarow.kgx.withKotlinJvmPlugin
 import com.squareup.anvil.conventions.utils.libs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.PluginContainer
 import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
@@ -143,17 +147,23 @@ abstract class BasePlugin : Plugin<Project> {
         it.languageVersion.set(JavaLanguageVersion.of(target.libs.versions.jvm.toolchain.get()))
       }
       target.javaExtension.targetCompatibility = JavaVersion.toVersion(target.jvmTargetInt())
+    }
 
-      // Don't set the release version for Android projects.  It will be set by the Android plugin.
-      if (target.extensions.findByName("android") == null) {
-        target.tasks.withType(JavaCompile::class.java).configureEach { task ->
-          task.options.release.set(target.jvmTargetInt())
-        }
+    // Don't set the release version for Android projects.  It will be set by the Android plugin.
+    target.plugins.withKotlinJvmPlugin {
+      target.tasks.withType(JavaCompile::class.java).configureEach { task ->
+        task.options.release.set(target.jvmTargetInt())
       }
     }
   }
 
   private fun configureTests(target: Project) {
+
+    val runtimeDeps = listOf(
+      target.libs.junit.jupiter.engine,
+      target.libs.junit.vintage.engine,
+      target.libs.junit.platform.launcher,
+    )
     target.plugins.withId("test-suite-base") {
       @Suppress("UnstableApiUsage")
       target.extensions.getByType(TestingExtension::class.java)
@@ -163,16 +173,25 @@ abstract class BasePlugin : Plugin<Project> {
 
           suite.useJUnitJupiter(target.libs.versions.jUnit5)
           suite.dependencies {
-
             // https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle-bom
             // https://github.com/junit-team/junit5/issues/4374#issuecomment-2704880447
             it.implementation.add(target.libs.junit.jupiter.asProvider())
-            it.runtimeOnly.add(target.libs.junit.platform.launcher)
 
-            it.runtimeOnly.add(target.libs.junit.jupiter.engine)
-            it.runtimeOnly.add(target.libs.junit.vintage.engine)
+            for (dep in runtimeDeps) {
+              it.runtimeOnly.add(dep)
+            }
           }
         }
+    }
+
+    target.plugins.withAGP {
+      val testImplementation by target.configurations
+      val testRuntimeOnly by target.configurations
+
+      for (dep in runtimeDeps) {
+        testRuntimeOnly.dependencies.addLater(dep)
+      }
+      testImplementation.dependencies.addLater(target.libs.junit.jupiter.asProvider())
     }
 
     target.tasks.withType(Test::class.java).configureEach { task ->
@@ -224,6 +243,19 @@ abstract class BasePlugin : Plugin<Project> {
         logging.showStackTraces = true
         logging.showStandardStreams = false
       }
+    }
+  }
+
+  private fun PluginContainer.withAGP(action: (Plugin<*>) -> Unit) {
+
+    val agpPlugins = listOf(
+      "com.android.library",
+      "com.android.application",
+      "com.android.test",
+      "com.android.dynamic-feature",
+    )
+    agpPlugins.forEach { pluginId ->
+      withId(pluginId, action)
     }
   }
 }
