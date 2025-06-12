@@ -23,7 +23,6 @@ abstract class SettingsPlugin @Inject constructor(
         catalogBuilder.from(fileOperations.immutableFiles(maybeFile))
       }
 
-      @Suppress("UnstableApiUsage")
       target.providers
         .systemPropertiesPrefixedBy("override_")
         .get()
