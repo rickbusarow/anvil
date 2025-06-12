@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
 import org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
+import org.jetbrains.kotlin.gradle.plugin.extraProperties
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile
@@ -166,8 +167,9 @@ internal open class AnvilPlugin : KotlinCompilerPluginSupportPlugin {
             )
         }
 
-        it.languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
-        it.apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        kotlinCompilation.project.extraProperties.set("kapt.use.k2", false)
+        it.languageVersion.set(KOTLIN_1_9)
+        it.apiVersion.set(KOTLIN_1_9)
       }
     }
 
