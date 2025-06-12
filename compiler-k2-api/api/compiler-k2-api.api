@@ -34,10 +34,6 @@ public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessio
 	protected final fun map (Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 }
 
-public final class com/squareup/anvil/compiler/k2/fir/AnvilFirExtensionSessionComponent2 : org/jetbrains/kotlin/fir/extensions/FirExtensionSessionComponent {
-	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
-}
-
 public abstract class com/squareup/anvil/compiler/k2/fir/AnvilFirProcessor : com/squareup/anvil/compiler/k2/fir/HasFirCachesFactory, com/squareup/anvil/compiler/k2/fir/HasAnvilFirContext {
 	public synthetic fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getAnvilContext ()Lcom/squareup/anvil/compiler/k2/fir/AnvilFirContext;
@@ -245,10 +241,6 @@ public final class com/squareup/anvil/compiler/k2/fir/MergedComponent : com/squa
 	public final fun getModules ()Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 	public fun getScopeType ()Lorg/jetbrains/kotlin/fir/caches/FirLazyValue;
 	public fun getTargetType ()Lorg/jetbrains/kotlin/name/ClassId;
-}
-
-public final class com/squareup/anvil/compiler/k2/fir/MyAnvilSessionComponent : com/squareup/anvil/compiler/k2/fir/AnvilSessionComponent {
-	public fun <init> (Lorg/jetbrains/kotlin/fir/FirSession;)V
 }
 
 public abstract interface class com/squareup/anvil/compiler/k2/fir/OwnedGeneratedDeclarationFactory {
