@@ -274,10 +274,12 @@ public final class com/squareup/anvil/compiler/testing/classgraph/ScanResultKt {
 	public static final fun allModuleClasses (Lio/github/classgraph/ScanResult;)Ljava/util/List;
 	public static final fun declaredField (Lio/github/classgraph/ClassInfo;)Lkotlin/properties/ReadOnlyProperty;
 	public static final fun field (Lio/github/classgraph/ClassInfo;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun fqNames (Ljava/util/Collection;)Ljava/util/List;
 	public static final fun get (Lio/github/classgraph/ClassInfoList;Lorg/jetbrains/kotlin/name/ClassId;)Lio/github/classgraph/ClassInfo;
 	public static final fun get (Lio/github/classgraph/ScanResult;Ljava/lang/String;)Lio/github/classgraph/ClassInfo;
 	public static final fun get (Lio/github/classgraph/ScanResult;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/ClassInfo;
 	public static final fun getAllClassNames (Lio/github/classgraph/PackageInfo;)Ljava/util/List;
+	public static final fun getAnnotationInfo (Lio/github/classgraph/ClassInfo;Lorg/jetbrains/kotlin/name/FqName;)Lio/github/classgraph/AnnotationInfo;
 	public static final fun getAny (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
 	public static final fun getAnyQualifier (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;
 	public static final fun getAssistedService (Lio/github/classgraph/ScanResult;)Lio/github/classgraph/ClassInfo;

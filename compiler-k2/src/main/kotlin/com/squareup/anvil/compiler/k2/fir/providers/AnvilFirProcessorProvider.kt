@@ -1,4 +1,4 @@
-package com.squareup.anvil.compiler.k2.fir.abstraction.providers
+package com.squareup.anvil.compiler.k2.fir.providers
 
 import com.squareup.anvil.annotations.internal.InternalAnvilApi
 import com.squareup.anvil.compiler.k2.fir.AdditionalProcessorsHolder

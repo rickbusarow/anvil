@@ -1,10 +1,10 @@
-package com.squareup.anvil.compiler.k2.fir.abstraction.extensions
+package com.squareup.anvil.compiler.k2.fir.extensions
 
 import com.squareup.anvil.compiler.k2.fir.SupertypeProcessor
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirProcessorProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.daggerThingProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedMergeProvider
+import com.squareup.anvil.compiler.k2.fir.providers.anvilFirProcessorProvider
+import com.squareup.anvil.compiler.k2.fir.providers.daggerThingProvider
+import com.squareup.anvil.compiler.k2.fir.providers.scopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.providers.scopedMergeProvider
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration

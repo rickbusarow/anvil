@@ -14,7 +14,7 @@ import dagger.Module
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 
-class ContributesBindingFirExtensionTest : CompilationModeTest(
+class ContributesBindingTest : CompilationModeTest(
   MODE_DEFAULTS.filter { it.isK2 && !it.useKapt },
 ) {
 

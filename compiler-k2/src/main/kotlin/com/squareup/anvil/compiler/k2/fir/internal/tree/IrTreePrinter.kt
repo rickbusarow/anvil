@@ -18,7 +18,6 @@ internal class IrTreePrinter(
       stableOrder = true,
       verboseErrorTypes = false,
       printFacadeClassInFqNames = false,
-      printFlagsInDeclarationReferences = false,
       renderOriginForExternalDeclarations = false,
       printSignatures = true,
       printTypeAbbreviations = false,

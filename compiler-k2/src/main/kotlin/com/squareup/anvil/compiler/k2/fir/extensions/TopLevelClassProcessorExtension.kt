@@ -1,10 +1,10 @@
-package com.squareup.anvil.compiler.k2.fir.abstraction.extensions
+package com.squareup.anvil.compiler.k2.fir.extensions
 
 import com.squareup.anvil.annotations.internal.InternalAnvilApi
 import com.squareup.anvil.compiler.k2.fir.GeneratedMemberFunction
 import com.squareup.anvil.compiler.k2.fir.GeneratedMemberProperty
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirProcessorProvider
+import com.squareup.anvil.compiler.k2.fir.providers.anvilFirProcessorProvider
 import com.squareup.anvil.compiler.k2.utils.fir.AnvilPredicates
 import com.squareup.anvil.compiler.k2.utils.fir.wrapInSyntheticFile
 import com.squareup.anvil.compiler.k2.utils.names.requireClassId

@@ -5,10 +5,10 @@ import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
 import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.SupertypeProcessor
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirDependencyHintProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedMergeProvider
+import com.squareup.anvil.compiler.k2.fir.providers.anvilFirDependencyHintProvider
+import com.squareup.anvil.compiler.k2.fir.providers.anvilFirSymbolProvider
+import com.squareup.anvil.compiler.k2.fir.providers.scopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.providers.scopedMergeProvider
 import com.squareup.anvil.compiler.k2.utils.stdlib.mapToSet
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.getValue

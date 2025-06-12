@@ -1,13 +1,13 @@
 package com.squareup.anvil.compiler.k2.fir
 
-import com.squareup.anvil.compiler.k2.fir.abstraction.extensions.SupertypeProcessorExtension
-import com.squareup.anvil.compiler.k2.fir.abstraction.extensions.TopLevelClassProcessorExtension
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.AnvilFirDependencyHintProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.AnvilFirProcessorProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.AnvilFirSymbolProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.DaggerThingProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.ScopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.ScopedMergeProvider
+import com.squareup.anvil.compiler.k2.fir.extensions.SupertypeProcessorExtension
+import com.squareup.anvil.compiler.k2.fir.extensions.TopLevelClassProcessorExtension
+import com.squareup.anvil.compiler.k2.fir.providers.AnvilFirDependencyHintProvider
+import com.squareup.anvil.compiler.k2.fir.providers.AnvilFirProcessorProvider
+import com.squareup.anvil.compiler.k2.fir.providers.AnvilFirSymbolProvider
+import com.squareup.anvil.compiler.k2.fir.providers.DaggerThingProvider
+import com.squareup.anvil.compiler.k2.fir.providers.ScopedContributionProvider
+import com.squareup.anvil.compiler.k2.fir.providers.ScopedMergeProvider
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 import org.jetbrains.kotlin.fir.extensions.FirExtensionSessionComponent

@@ -34,6 +34,7 @@ public final class com/squareup/anvil/compiler/k2/utils/fir/FirAnnotationCallBui
 }
 
 public final class com/squareup/anvil/compiler/k2/utils/fir/FirAnnotationContainerUtilsKt {
+	public static final fun addAnnotations (Lorg/jetbrains/kotlin/fir/FirAnnotationContainer;Ljava/util/List;)Lorg/jetbrains/kotlin/fir/FirAnnotationContainer;
 	public static final fun requireAnnotation (Lorg/jetbrains/kotlin/fir/FirAnnotationContainer;Lorg/jetbrains/kotlin/name/ClassId;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/expressions/FirAnnotation;
 	public static final fun requireAnnotationCall (Lorg/jetbrains/kotlin/fir/FirAnnotationContainer;Lorg/jetbrains/kotlin/name/ClassId;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/expressions/FirAnnotationCall;
 }
@@ -76,6 +77,10 @@ public final class com/squareup/anvil/compiler/k2/utils/fir/FirClassLikeSymbolUt
 	public static final fun toKClassRef (Lorg/jetbrains/kotlin/fir/symbols/impl/FirClassLikeSymbol;)Lorg/jetbrains/kotlin/fir/types/ConeClassLikeType;
 }
 
+public final class com/squareup/anvil/compiler/k2/utils/fir/FirConstructorSymbolUtilsKt {
+	public static final fun requireContainingClassSymbol (Lorg/jetbrains/kotlin/fir/symbols/impl/FirConstructorSymbol;)Lorg/jetbrains/kotlin/fir/symbols/impl/FirRegularClassSymbol;
+}
+
 public final class com/squareup/anvil/compiler/k2/utils/fir/FirFileUtilsKt {
 	public static final fun createSyntheticFile (Lorg/jetbrains/kotlin/fir/FirSession;Lorg/jetbrains/kotlin/fir/declarations/FirDeclarationOrigin;Lorg/jetbrains/kotlin/name/FqName;Ljava/lang/String;Ljava/util/List;)Lorg/jetbrains/kotlin/fir/declarations/FirFile;
 	public static final fun wrapInSyntheticFile (Lorg/jetbrains/kotlin/fir/declarations/FirProperty;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/declarations/FirProperty;
@@ -113,6 +118,10 @@ public final class com/squareup/anvil/compiler/k2/utils/fir/ResolveUtilsKt {
 	public static final fun regularClassSymbolOrNull (Lorg/jetbrains/kotlin/name/ClassId;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/symbols/impl/FirRegularClassSymbol;
 	public static final fun requireClassLikeSymbol (Lorg/jetbrains/kotlin/name/ClassId;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/symbols/impl/FirClassLikeSymbol;
 	public static final fun requireRegularClassSymbol (Lorg/jetbrains/kotlin/name/ClassId;Lorg/jetbrains/kotlin/fir/FirSession;)Lorg/jetbrains/kotlin/fir/symbols/impl/FirRegularClassSymbol;
+}
+
+public final class com/squareup/anvil/compiler/k2/utils/names/CallableIdsKt {
+	public static final fun requireClassId (Lorg/jetbrains/kotlin/name/CallableId;)Lorg/jetbrains/kotlin/name/ClassId;
 }
 
 public final class com/squareup/anvil/compiler/k2/utils/names/ClassIds {
@@ -169,10 +178,13 @@ public final class com/squareup/anvil/compiler/k2/utils/names/FqNames {
 public final class com/squareup/anvil/compiler/k2/utils/names/Names {
 	public static final field INSTANCE Lcom/squareup/anvil/compiler/k2/utils/names/Names;
 	public final fun getBoundType ()Lorg/jetbrains/kotlin/name/Name;
+	public final fun getCreate ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getDependencies ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getExclude ()Lorg/jetbrains/kotlin/name/Name;
+	public final fun getGet ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getHints ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getModules ()Lorg/jetbrains/kotlin/name/Name;
+	public final fun getNewInstance ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getRank ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getReplaces ()Lorg/jetbrains/kotlin/name/Name;
 	public final fun getScope ()Lorg/jetbrains/kotlin/name/Name;

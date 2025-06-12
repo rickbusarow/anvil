@@ -1,4 +1,4 @@
-package com.squareup.anvil.compiler.k2.fir.abstraction
+package com.squareup.anvil.compiler.k2.fir.contributions
 
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.k2.fir.AbstractAnvilFirProcessorFactory
@@ -6,9 +6,8 @@ import com.squareup.anvil.compiler.k2.fir.AnvilFirProcessor
 import com.squareup.anvil.compiler.k2.fir.GeneratedTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.RequiresTypesResolutionPhase
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.anvilFirSymbolProvider
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.scopedContributionProvider
-import com.squareup.anvil.compiler.k2.fir.contributions.GeneratedBindingHintKey
+import com.squareup.anvil.compiler.k2.fir.providers.anvilFirSymbolProvider
+import com.squareup.anvil.compiler.k2.fir.providers.scopedContributionProvider
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
 import com.squareup.anvil.compiler.k2.utils.fir.createOptInAnnotation
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds

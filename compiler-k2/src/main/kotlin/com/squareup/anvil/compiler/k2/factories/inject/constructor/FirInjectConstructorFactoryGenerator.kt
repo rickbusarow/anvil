@@ -10,7 +10,7 @@ import com.squareup.anvil.compiler.k2.fir.GeneratedMemberProperty
 import com.squareup.anvil.compiler.k2.fir.GeneratedTopLevelClass
 import com.squareup.anvil.compiler.k2.fir.TopLevelClassProcessor
 import com.squareup.anvil.compiler.k2.fir.ValueParameter
-import com.squareup.anvil.compiler.k2.fir.abstraction.providers.daggerThingProvider
+import com.squareup.anvil.compiler.k2.fir.providers.daggerThingProvider
 import com.squareup.anvil.compiler.k2.utils.fir.createFirAnnotation
 import com.squareup.anvil.compiler.k2.utils.fir.requireClassLikeSymbol
 import com.squareup.anvil.compiler.k2.utils.names.ClassIds
