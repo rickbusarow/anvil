@@ -42,7 +42,7 @@ kotlinpoet = "2.2.0"
 ktlint-lib = "1.0.1"
 rickBusarow-ktlint = "0.2.2"
 rickBusarow-ktrules = "1.5.0"
-mavenPublish = "0.33.0"
+mavenPublish = "0.34.0"
 
 #
 # Configs that we can override in CI. Not exactly "versions" but useful to repurpose it here.
